@@ -16,6 +16,10 @@
 #define MAX_COREQUISITES       4
 #define MAX_APPROVED_COURSES   60   
 
+// tamaño máximo de una línea leída de catalogo.csv o historial.csv
+// una línea de catálogo puede tener hasta 20 grupos con horarios
+#define MAX_LINE_LENGTH         2048
+
 // rutas por defecto de los archivos de entrada y salida
 // se pueden sobreescribir si el programa recibe argumentos por consola
 #define DEFAULT_CATALOG_PATH   "data/catalogo.csv"
