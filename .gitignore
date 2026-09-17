@@ -1,0 +1,15 @@
+# ejecutables y objetos compilados
+*.o
+*.out
+cemestre
+build/
+
+# archivos de valgrind
+*.log
+vgcore.*
+
+# archivos temporales del editor
+.vscode/*
+!.vscode/settings.json
+*.swp
+.DS_Store
