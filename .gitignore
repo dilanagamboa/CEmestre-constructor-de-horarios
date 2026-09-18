@@ -2,6 +2,7 @@
 *.o
 *.out
 cemestre
+tests/run_tests
 build/
 
 # archivos de valgrind
