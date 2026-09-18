@@ -20,6 +20,8 @@ static int tests_passed = 0;
         }                                                                    \
     } while (0)
 
+/* ---------------- helpers ---------------- */
+
 static void course_init(Course *course, const char *code) {
     memset(course, 0, sizeof(*course));
     safe_strcpy(course->code, MAX_CODE_LENGTH, code);
@@ -51,14 +53,22 @@ static void history_add(StudentHistory *history, const char *code) {
 
 static int course_can_enroll(const Catalog *catalog, const char *code) {
     int idx = catalog_find_course_index(catalog, code);
-    if (idx < 0) {
-        return -1;
-    }
+    if (idx < 0) return -1;
     return catalog->courses[idx].can_enroll;
 }
 
+static int snapshot_can_enroll(const Catalog *catalog, int *out, int max) {
+    if (catalog->course_count > max) return 0;
+    for (int i = 0; i < catalog->course_count; i++) {
+        out[i] = catalog->courses[i].can_enroll;
+    }
+    return 1;
+}
+
+/* ---------------- main ---------------- */
+
 int main(void) {
-    Course courses[6];
+    Course courses[10];
     Catalog catalog;
     StudentHistory history;
     Course c;
@@ -66,7 +76,7 @@ int main(void) {
 
     catalog.courses = courses;
     catalog.course_count = 0;
-    catalog.capacity = 6;
+    catalog.capacity = 10;
 
     /* A: sin requisitos */
     course_init(&c, "A");
@@ -97,7 +107,28 @@ int main(void) {
     course_add_coreq(&c, "D");
     courses[catalog.course_count++] = c;
 
-    /* 1. Historial vacío */
+    /* G: multiples correquisitos A y D */
+    course_init(&c, "G");
+    course_add_coreq(&c, "A");
+    course_add_coreq(&c, "D");
+    courses[catalog.course_count++] = c;
+
+    /* Caso real: correquisitos mutuos, como CE2103 y CE2104 del TEC.
+     * Ambos comparten el prerrequisito comun R y se exigen entre si. */
+    course_init(&c, "R");
+    courses[catalog.course_count++] = c;
+
+    course_init(&c, "H");
+    course_add_prereq(&c, "R");
+    course_add_coreq(&c, "I");
+    courses[catalog.course_count++] = c;
+
+    course_init(&c, "I");
+    course_add_prereq(&c, "R");
+    course_add_coreq(&c, "H");
+    courses[catalog.course_count++] = c;
+
+    /* ============ Bloque 1: historial vacio ============ */
     history_init(&history);
     validation_mark_enrollable(&catalog, &history);
 
@@ -113,8 +144,10 @@ int main(void) {
           "historial vacio: E con correquisito A no es matriculable");
     CHECK(course_can_enroll(&catalog, "F") == 0,
           "historial vacio: F con correquisito D no es matriculable");
+    CHECK(course_can_enroll(&catalog, "G") == 0,
+          "historial vacio: G con multiples correquisitos no es matriculable");
 
-    /* 2. Historial con A aprobado */
+    /* ============ Bloque 2: solo A aprobado ============ */
     history_init(&history);
     history_add(&history, "A");
     validation_mark_enrollable(&catalog, &history);
@@ -128,7 +161,11 @@ int main(void) {
     CHECK(course_can_enroll(&catalog, "F") == 0,
           "A aprobado: F aun necesita D como correquisito");
 
-    /* 3. Historial con A y D aprobados */
+    /* Multiple correquisitos: solo uno cumplido -> no matriculable */
+    CHECK(course_can_enroll(&catalog, "G") == 0,
+          "A aprobado: G con multiples correquisitos (falta D) no es matriculable");
+
+    /* ============ Bloque 3: A y D aprobados ============ */
     history_init(&history);
     history_add(&history, "A");
     history_add(&history, "D");
@@ -138,27 +175,88 @@ int main(void) {
           "A y D aprobados: C cumple prerrequisitos");
     CHECK(course_can_enroll(&catalog, "F") == 1,
           "D aprobado: F cumple correquisito");
+    CHECK(course_can_enroll(&catalog, "G") == 1,
+          "A y D aprobados: G cumple multiples correquisitos");
 
-    /* 4. Pruebas directas de las funciones de validación */
+    /* ============ Bloque 4: idempotencia ============ */
+    {
+        int snap1[10];
+        int snap2[10];
+
+        history_init(&history);
+        history_add(&history, "A");
+        history_add(&history, "D");
+        history_add(&history, "R");
+
+        validation_mark_enrollable(&catalog, &history);
+        CHECK(snapshot_can_enroll(&catalog, snap1, 10),
+              "idempotencia: snapshot inicial tomado");
+
+        validation_mark_enrollable(&catalog, &history);
+        CHECK(snapshot_can_enroll(&catalog, snap2, 10),
+              "idempotencia: segundo snapshot tomado");
+
+        int equal = 1;
+        for (int i = 0; i < catalog.course_count; i++) {
+            if (snap1[i] != snap2[i]) { equal = 0; break; }
+        }
+        CHECK(equal, "idempotencia: segunda llamada produce el mismo estado");
+    }
+
+    /* ============ Bloque 5: caso real, correquisitos mutuos ============ */
+    history_init(&history);
+    history_add(&history, "R");
+    validation_mark_enrollable(&catalog, &history);
+
+    CHECK(course_can_enroll(&catalog, "H") == 0,
+          "caso real: H tiene R y exige I como correquisito (no aprobado) -> no matriculable");
+    CHECK(course_can_enroll(&catalog, "I") == 0,
+          "caso real: I tiene R y exige H como correquisito (no aprobado) -> no matriculable");
+
+    /* Si por alguna razon el estudiante ya trae H aprobado en el historial,
+     * I si seria matriculable: valida la simetria de la politica. */
+    history_init(&history);
+    history_add(&history, "R");
+    history_add(&history, "H");
+    validation_mark_enrollable(&catalog, &history);
+
+    CHECK(course_can_enroll(&catalog, "I") == 1,
+          "caso real: I es matriculable si H ya esta aprobado (politica simetrica)");
+
+    /* ============ Bloque 6: validaciones directas ============ */
     history_init(&history);
 
     idx = catalog_find_course_index(&catalog, "A");
     CHECK(validation_has_prerequisites(&catalog.courses[idx], &history) == 1,
-          "A no tiene prerrequisitos: validacion directa");
+          "validacion directa: A sin prerrequisitos cumple");
 
     idx = catalog_find_course_index(&catalog, "B");
     CHECK(validation_has_prerequisites(&catalog.courses[idx], &history) == 0,
-          "B con prerrequisito A incumplido: validacion directa");
+          "validacion directa: B con prerrequisito A incumplido");
 
     idx = catalog_find_course_index(&catalog, "E");
     CHECK(validation_has_corequisites(&catalog.courses[idx], &history) == 0,
-          "E con correquisito A incumplido: validacion directa");
+          "validacion directa: E con correquisito A incumplido");
 
     history_add(&history, "A");
     idx = catalog_find_course_index(&catalog, "E");
     CHECK(validation_has_corequisites(&catalog.courses[idx], &history) == 1,
-          "E con correquisito A aprobado: validacion directa");
+          "validacion directa: E con correquisito A aprobado");
+
+    /* Robustez ante NULL */
+    CHECK(validation_has_prerequisites(NULL, &history) == 0,
+          "robustez: course NULL devuelve 0");
+    CHECK(validation_has_corequisites(&catalog.courses[0], NULL) == 0,
+          "robustez: history NULL devuelve 0");
+
+    /* Independencia entre elegibilidad curricular y choque de horario */
+    history_init(&history);
+    history_add(&history, "A");
+    catalog.courses[catalog_find_course_index(&catalog, "B")].groups[0].has_conflict = 1;
+    validation_mark_enrollable(&catalog, &history);
+    CHECK(course_can_enroll(&catalog, "B") == 1, "independencia: can_enroll no depende de has_conflict");
 
     printf("\n%d/%d pruebas pasaron\n", tests_passed, tests_run);
     return (tests_passed == tests_run) ? 0 : 1;
+
 }
