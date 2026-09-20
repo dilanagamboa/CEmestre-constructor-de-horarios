@@ -256,6 +256,24 @@ int main(void) {
     validation_mark_enrollable(&catalog, &history);
     CHECK(course_can_enroll(&catalog, "B") == 1, "independencia: can_enroll no depende de has_conflict");
 
+    /* ============ Bloque 7: un curso ya aprobado no es matriculable ============ */
+    history_init(&history);
+    history_add(&history, "A");
+    history_add(&history, "D");
+    validation_mark_enrollable(&catalog, &history);
+
+    CHECK(course_can_enroll(&catalog, "A") == 0,
+          "aprobado: A esta en el historial, no es matriculable");
+    CHECK(course_can_enroll(&catalog, "D") == 0,
+          "aprobado: D esta en el historial, no es matriculable");
+    CHECK(course_can_enroll(&catalog, "B") == 1,
+          "aprobado: B sigue matriculable (A cumplido, B no esta aprobado)");
+
+    history_init(&history);
+    validation_mark_enrollable(&catalog, &history);
+    CHECK(course_can_enroll(&catalog, "A") == 1,
+          "aprobado: sin A en el historial, A vuelve a ser matriculable");
+
     printf("\n%d/%d pruebas pasaron\n", tests_passed, tests_run);
     return (tests_passed == tests_run) ? 0 : 1;
 

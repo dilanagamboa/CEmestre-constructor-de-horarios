@@ -24,7 +24,7 @@
 // se pueden sobreescribir si el programa recibe argumentos por consola
 #define DEFAULT_CATALOG_PATH   "data/catalogo.csv"
 #define DEFAULT_HISTORY_PATH   "data/historial.csv"
-#define DEFAULT_OUTPUT_PATH    "data/salida.csv"
+#define DEFAULT_OUTPUT_PATH    "data/salida.json"
 
 // códigos de error que se usan como valor de retorno en las funciones de carga
 typedef enum {
@@ -34,7 +34,19 @@ typedef enum {
     ERROR_INCOMPLETE_DATA = 3,
     ERROR_MEMORY_ALLOCATION = 4,
     ERROR_COURSE_NOT_FOUND = 5,
-    ERROR_LIMIT_EXCEEDED = 6
+    ERROR_LIMIT_EXCEEDED = 6,
+    ERROR_FILE_WRITE = 7
 } ErrorCode;
+
+#define OUTPUT_FORMAT_VERSION  1
+
+// codigos de dia que se escriben en el archivo de salida (mismos que usa catalogo.csv)
+#define DAY_CODE_MONDAY        "MON"
+#define DAY_CODE_TUESDAY       "TUE"
+#define DAY_CODE_WEDNESDAY     "WED"
+#define DAY_CODE_THURSDAY      "THU"
+#define DAY_CODE_FRIDAY        "FRI"
+#define DAY_CODE_SATURDAY      "SAT"
+#define DAY_CODE_UNKNOWN       "UNK"
 
 #endif

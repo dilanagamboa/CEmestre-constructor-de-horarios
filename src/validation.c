@@ -45,6 +45,11 @@ void validation_mark_enrollable(Catalog *catalog,
             continue;
         }
 
+        if (history_has_course(history, course->code)) {
+            course->can_enroll = 0;
+            continue;
+        }
+
         if (validation_has_prerequisites(course, history) &&
             validation_has_corequisites(course, history)) {
             course->can_enroll = 1;
