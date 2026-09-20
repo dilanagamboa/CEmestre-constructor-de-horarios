@@ -1,0 +1,108 @@
+{
+  "format_version": 1,
+  "course_count": 5,
+  "courses": [
+    {
+      "code": "CE1101",
+      "name": "Introduccion a la Computacion",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "Ana",
+          "blocks": [{"day": "MON", "start": "08:00", "end": "10:00"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CE1103",
+      "name": "Programacion I",
+      "credits": 4,
+      "prerequisites": ["CE1101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "Luis",
+          "blocks": [{"day": "TUE", "start": "10:00", "end": "12:00"}],
+          "has_conflict": false
+        },
+        {
+          "number": 2,
+          "professor": "Ana",
+          "blocks": [{"day": "WED", "start": "08:00", "end": "10:00"}],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CE1106",
+      "name": "Paradigmas de Programacion",
+      "credits": 4,
+      "prerequisites": ["CE1103"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "Juan",
+          "blocks": [{"day": "MON", "start": "08:00", "end": "10:00"}, {"day": "TUE", "start": "08:00", "end": "10:00"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "CE2103",
+      "name": "Estructuras de Datos",
+      "credits": 4,
+      "prerequisites": ["CE1106"],
+      "corequisites": ["CE2105"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "Maria",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:00"}],
+          "has_conflict": false
+        },
+        {
+          "number": 2,
+          "professor": "Pedro",
+          "blocks": [{"day": "THU", "start": "15:00", "end": "17:00"}],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE2105",
+      "name": "Matematica Discreta",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "Carlos",
+          "blocks": [{"day": "FRI", "start": "10:00", "end": "12:00"}],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    }
+  ]
+}
