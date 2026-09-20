@@ -45,19 +45,6 @@ static void test_utils(void) {
           strcmp(fields[2], "c") == 0, "split_fields separa bien");
 }
 
-//En desuso pero util para tests, no hace falta borrarla
-static const char *err_name(ErrorCode e) {
-    switch (e) {
-        case SUCCESS:                   return "SUCCESS";
-        case ERROR_FILE_NOT_FOUND:      return "ERROR_FILE_NOT_FOUND";
-        case ERROR_INVALID_FORMAT:      return "ERROR_INVALID_FORMAT";
-        case ERROR_INCOMPLETE_DATA:     return "ERROR_INCOMPLETE_DATA";
-        case ERROR_MEMORY_ALLOCATION:   return "ERROR_MEMORY_ALLOCATION";
-        case ERROR_COURSE_NOT_FOUND:    return "ERROR_COURSE_NOT_FOUND";
-        case ERROR_LIMIT_EXCEEDED:      return "ERROR_LIMIT_EXCEEDED";
-        default:                        return "???";
-    }
-}
 
 static void test_catalog(void) {
     printf("\n=== Fase 2: catalog ===\n");
