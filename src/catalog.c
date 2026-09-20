@@ -14,7 +14,7 @@
  *
  * - code     : hasta MAX_CODE_LENGTH-1 caracteres, no vacio, unico.
  * - name     : hasta MAX_NAME_LENGTH-1 caracteres, no vacio.
- * - credits  : entero positivo.
+ * - credits  : entero >= 0.
  * - prereqs  : codigos separados por '/', vacio si no hay.
  * - coreqs   : codigos separados por '/', vacio si no hay.
  * - groups   : grupos separados por '|', vacio si no hay.
@@ -167,7 +167,7 @@ static int parse_course_line(char *line, Course *course) {
     safe_strcpy(course->name, MAX_NAME_LENGTH, fields[1]);
 
     int credits;
-    if (!parse_int(fields[2], &credits) || credits <= 0) {
+    if (!parse_int(fields[2], &credits)) {
         return 0;
     }
     course->credits = credits;

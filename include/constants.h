@@ -10,15 +10,14 @@
 
 // límites de cantidad
 #define MAX_COURSES            200
-#define MAX_GROUPS_PER_COURSE  20
+#define MAX_GROUPS_PER_COURSE  40
 #define MAX_BLOCKS_PER_GROUP   3    // un grupo puede tener hasta 3 días de clases a la semana
 #define MAX_PREREQUISITES      6
 #define MAX_COREQUISITES       4
 #define MAX_APPROVED_COURSES   60   
 
 // tamaño máximo de una línea leída de catalogo.csv o historial.csv
-// una línea de catálogo puede tener hasta 20 grupos con horarios
-#define MAX_LINE_LENGTH         2048
+#define MAX_LINE_LENGTH         4096
 
 // rutas por defecto de los archivos de entrada y salida
 // se pueden sobreescribir si el programa recibe argumentos por consola
