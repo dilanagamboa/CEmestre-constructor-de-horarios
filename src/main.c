@@ -23,6 +23,20 @@ static const char *error_message(ErrorCode err) {
     }
 }
 
+/* dice donde esta el problema cuando la carga del catalogo fallo */
+static void print_load_detail(const LoadErrorInfo *info) {
+    if (info->line > 0) {
+        if (info->course[0] != '\0') {
+            fprintf(stderr, "  en la linea %d (curso: %s)\n", info->line, info->course);
+        } else {
+            fprintf(stderr, "  en la linea %d\n", info->line);
+        }
+    } else if (info->course[0] != '\0' && info->related[0] != '\0') {
+        fprintf(stderr, "  el curso %s pide %s, que no esta en el catalogo\n",
+                info->course, info->related);
+    }
+}
+
 static void print_usage(const char *program) {
     fprintf(stderr,
             "Uso: %s [catalogo.csv [historial.csv [salida.json]]]\n"
@@ -51,10 +65,12 @@ int main(int argc, char *argv[]) {
         Catalog catalog;
     StudentHistory history;
 
-    ErrorCode err = catalog_load(catalog_path, &catalog);
+    LoadErrorInfo load_info;
+    ErrorCode err = catalog_load_ex(catalog_path, &catalog, &load_info);
     if (err != SUCCESS) {
         fprintf(stderr, "Error al cargar el catalogo '%s': %s (codigo %d)\n",
                 catalog_path, error_message(err), (int)err);
+        print_load_detail(&load_info);
         return (int)err;
     }
 

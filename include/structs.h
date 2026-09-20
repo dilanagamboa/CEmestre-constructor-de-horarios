@@ -64,4 +64,11 @@ typedef struct {
     int approved_count;
 } StudentHistory;
 
+// detalle de un error de carga del catalogo, para que main pueda decir donde esta el problema
+typedef struct {
+    int line;                       // numero de linea del archivo (desde 1), 0 si no aplica
+    char course[MAX_CODE_LENGTH];   // codigo del curso involucrado, vacio si no se conoce
+    char related[MAX_CODE_LENGTH];  // codigo relacionado (por ejemplo el requisito inexistente)
+} LoadErrorInfo;
+
 #endif

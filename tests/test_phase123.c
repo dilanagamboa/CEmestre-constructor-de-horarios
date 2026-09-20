@@ -142,6 +142,39 @@ static void test_catalog_validation(void) {
                 "requisito definido en una linea posterior es valido");
 }
 
+        static void test_catalog_error_info(void) {
+            printf("\n=== Fase 2: detalle de errores de carga ===\n");
+            Catalog c;
+            LoadErrorInfo info;
+            ErrorCode err;
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_error_linea4.csv", &c, &info);
+            CHECK(err == ERROR_INVALID_FORMAT && info.line == 4 && strcmp(info.course, "B1") == 0,
+                "dato invalido: linea 4 y curso B1 (cuenta comentarios y lineas vacias)");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_codigo_duplicado.csv", &c, &info);
+            CHECK(err == ERROR_INVALID_FORMAT && info.line == 2 && strcmp(info.course, "A1") == 0,
+                "codigo duplicado: linea 2 y curso A1");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_prereq_desconocido.csv", &c, &info);
+            CHECK(err == ERROR_INCOMPLETE_DATA && strcmp(info.course, "A1") == 0 &&
+                strcmp(info.related, "ZZ9") == 0,
+                "requisito inexistente: curso A1 y requisito ZZ9");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_linea_larga.csv", &c, &info);
+            CHECK(err == ERROR_LIMIT_EXCEEDED && info.line == 1,
+                "linea mas larga que MAX_LINE_LENGTH -> ERROR_LIMIT_EXCEEDED en la linea 1");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_valid/catalogo_ref_adelante.csv", &c, &info);
+            CHECK(err == SUCCESS && info.line == 0 && info.course[0] == '\0',
+                "carga valida: info queda vacia");
+            catalog_free(&c);
+        }
+
 static void test_history(void) {
     printf("\n=== Fase 2: history ===\n");
 
@@ -220,6 +253,7 @@ int main(void) {
     test_utils();
     test_catalog();
     test_catalog_validation();
+    test_catalog_error_info();
     test_history();
     test_conflicts();
 

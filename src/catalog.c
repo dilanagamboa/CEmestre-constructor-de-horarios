@@ -14,7 +14,7 @@
  *
  * - code     : hasta MAX_CODE_LENGTH-1 caracteres, no vacio, unico.
  * - name     : hasta MAX_NAME_LENGTH-1 caracteres, no vacio.
- * - credits  : entero >= 0.
+ * - credits  : entero >= 0 (hay cursos de 0 creditos, como los SE y el examen diagnostico).
  * - prereqs  : codigos separados por '/', vacio si no hay.
  * - coreqs   : codigos separados por '/', vacio si no hay.
  * - groups   : grupos separados por '|', vacio si no hay.
@@ -253,22 +253,43 @@ int catalog_find_course_index(const Catalog *catalog, const char *code) {
     return -1;
 }
 
+/* anota en info (si no es NULL) donde fallo la carga */
+static void set_error_info(LoadErrorInfo *info, int line, const char *course, const char *related) {
+    if (info == NULL) return;
+    info->line = line;
+    safe_strcpy(info->course, MAX_CODE_LENGTH, course != NULL ? course : "");
+    safe_strcpy(info->related, MAX_CODE_LENGTH, related != NULL ? related : "");
+}
+
 /* 1 si todo prerrequisito y correquisito apunta a un curso del catalogo.
- * Se revisa al final de la carga porque un requisito puede definirse en una linea posterior. */
-static int requisites_exist(const Catalog *catalog) {
+ * Se revisa al final de la carga porque un requisito puede definirse en una linea posterior.
+ * Si falla, info dice que curso pide que requisito inexistente. */
+static int requisites_exist(const Catalog *catalog, LoadErrorInfo *info) {
     for (int i = 0; i < catalog->course_count; i++) {
         const Course *c = &catalog->courses[i];
         for (int p = 0; p < c->prerequisite_count; p++) {
-            if (catalog_find_course_index(catalog, c->prerequisites[p]) == -1) return 0;
+            if (catalog_find_course_index(catalog, c->prerequisites[p]) == -1) {
+                set_error_info(info, 0, c->code, c->prerequisites[p]);
+                return 0;
+            }
         }
         for (int q = 0; q < c->corequisite_count; q++) {
-            if (catalog_find_course_index(catalog, c->corequisites[q]) == -1) return 0;
+            if (catalog_find_course_index(catalog, c->corequisites[q]) == -1) {
+                set_error_info(info, 0, c->code, c->corequisites[q]);
+                return 0;
+            }
         }
     }
     return 1;
 }
 
 ErrorCode catalog_load(const char *path, Catalog *catalog) {
+    return catalog_load_ex(path, catalog, NULL);
+}
+
+ErrorCode catalog_load_ex(const char *path, Catalog *catalog, LoadErrorInfo *info) {
+    set_error_info(info, 0, NULL, NULL);
+
     if (catalog == NULL) return ERROR_INVALID_FORMAT;
 
     ErrorCode init_result = catalog_init(catalog);
@@ -283,7 +304,20 @@ ErrorCode catalog_load(const char *path, Catalog *catalog) {
     }
 
     char line[MAX_LINE_LENGTH];
+    int line_number = 0;
     while (fgets(line, sizeof(line), file) != NULL) {
+        line_number++;
+
+        /* si el buffer se lleno sin llegar al salto de linea, la linea no cabe en MAX_LINE_LENGTH:
+         * se rechaza en vez de leerla partida en pedazos */
+        size_t raw_len = strlen(line);
+        if (raw_len == sizeof(line) - 1 && line[raw_len - 1] != '\n' && !feof(file)) {
+            set_error_info(info, line_number, NULL, NULL);
+            fclose(file);
+            catalog_free(catalog);
+            return ERROR_LIMIT_EXCEEDED;
+        }
+
         trim_whitespace(line);
 
         if (line[0] == '\0') continue;
@@ -291,12 +325,15 @@ ErrorCode catalog_load(const char *path, Catalog *catalog) {
         
         Course course;
         if (!parse_course_line(line, &course)) {
+            /* parse_course_line deja el primer campo (el codigo) como inicio de 'line' */
+            set_error_info(info, line_number, line, NULL);
             fclose(file);
             catalog_free(catalog);
             return ERROR_INVALID_FORMAT;
         }
 
         if (catalog_find_course_index(catalog, course.code) != -1) {
+            set_error_info(info, line_number, course.code, NULL);
             fclose(file);
             catalog_free(catalog);
             return ERROR_INVALID_FORMAT;
@@ -304,6 +341,7 @@ ErrorCode catalog_load(const char *path, Catalog *catalog) {
 
         ErrorCode add_result = catalog_add_course(catalog, &course);
         if (add_result != SUCCESS) {
+            set_error_info(info, line_number, course.code, NULL);
             fclose(file);
             catalog_free(catalog);
             return add_result;
@@ -312,7 +350,7 @@ ErrorCode catalog_load(const char *path, Catalog *catalog) {
 
     fclose(file);
 
-    if (!requisites_exist(catalog)) {
+    if (!requisites_exist(catalog, info)) {
         catalog_free(catalog);
         return ERROR_INCOMPLETE_DATA;
     }

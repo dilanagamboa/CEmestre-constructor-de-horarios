@@ -16,6 +16,9 @@ ErrorCode catalog_add_course(Catalog *catalog, const Course *course);
 // carga el catalogo completo desde 'path', si hay errores lo rechaza
 ErrorCode catalog_load(const char *path, Catalog *catalog);
 
+// igual que catalog_load, pero si info != NULL lo llena con la linea y el curso donde fallo la carga
+ErrorCode catalog_load_ex(const char *path, Catalog *catalog, LoadErrorInfo *info);
+
 // busca un curso por código, devuelve su índice en catalog->courses o -1 si no existe
 int catalog_find_course_index(const Catalog *catalog, const char *code);
 
