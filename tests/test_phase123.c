@@ -93,10 +93,53 @@ static void test_catalog(void) {
     CHECK(err == ERROR_INVALID_FORMAT, "bloque con hora invalida -> ERROR_INVALID_FORMAT");
     catalog_free(&bad);
 
+     /* curso de 0 creditos (SE*, examen diagnostico): es valido */
+    Catalog zero;
+    err = catalog_load("tests/data_valid/catalogo_creditos_cero.csv", &zero);
+    CHECK(err == SUCCESS && zero.course_count == 1 && zero.courses[0].credits == 0,
+          "curso de 0 creditos se carga");
+    catalog_free(&zero);
+
+    /* curso con mas de 20 grupos (CI1107 real tiene 32) */
+    Catalog many;
+    err = catalog_load("tests/data_valid/catalogo_25_grupos.csv", &many);
+    CHECK(err == SUCCESS && many.course_count == 1 && many.courses[0].group_count == 25,
+          "curso con 25 grupos se carga");
+    catalog_free(&many);
+    
     /* archivo inexistente */
     Catalog nf;
     err = catalog_load("no_existe.csv", &nf);
     CHECK(err == ERROR_FILE_NOT_FOUND, "archivo inexistente -> ERROR_FILE_NOT_FOUND");
+}
+
+/* carga 'path' y verifica el codigo de error esperado */
+static void expect_load(const char *path, ErrorCode expected, const char *msg) {
+    Catalog c;
+    ErrorCode err = catalog_load(path, &c);
+    CHECK(err == expected, msg);
+    catalog_free(&c);
+}
+
+static void test_catalog_validation(void) {
+    printf("\n=== Fase 2: validaciones del catalogo ===\n");
+
+    expect_load("tests/data_invalid/catalogo_prereq_desconocido.csv", ERROR_INCOMPLETE_DATA,
+                "prerrequisito inexistente -> ERROR_INCOMPLETE_DATA");
+    expect_load("tests/data_invalid/catalogo_coreq_desconocido.csv", ERROR_INCOMPLETE_DATA,
+                "correquisito inexistente -> ERROR_INCOMPLETE_DATA");
+    expect_load("tests/data_invalid/catalogo_autorequisito.csv", ERROR_INVALID_FORMAT,
+                "curso que es requisito de si mismo -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_codigo_vacio.csv", ERROR_INVALID_FORMAT,
+                "codigo vacio -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_nombre_vacio.csv", ERROR_INVALID_FORMAT,
+                "nombre vacio -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_grupo_repetido.csv", ERROR_INVALID_FORMAT,
+                "numero de grupo repetido -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_codigo_largo.csv", ERROR_INVALID_FORMAT,
+                "codigo que no cabe -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_valid/catalogo_ref_adelante.csv", SUCCESS,
+                "requisito definido en una linea posterior es valido");
 }
 
 static void test_history(void) {
@@ -176,6 +219,7 @@ static void test_conflicts(void) {
 int main(void) {
     test_utils();
     test_catalog();
+    test_catalog_validation();
     test_history();
     test_conflicts();
 

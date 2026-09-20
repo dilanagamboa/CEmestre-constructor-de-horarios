@@ -129,6 +129,13 @@ static int parse_groups(char *field, Course *course) {
     for (int i = 0; i < n; i++) {
         if (!parse_group(parts[i], &course->groups[i])) return 0;
     }
+
+    /* dos grupos del mismo curso no pueden tener el mismo numero */
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (course->groups[i].group_number == course->groups[j].group_number) return 0;
+        }
+    }
     course->group_count = n;
     return 1;
 }
@@ -162,8 +169,12 @@ static int parse_course_line(char *line, Course *course) {
         return 0;
     }
 
-    safe_strcpy(course->code, MAX_CODE_LENGTH, fields[0]);
+    /* codigo y nombre son obligatorios; si no caben es un dato mal transcrito
+     * (se rechaza en vez de truncarlo en silencio) */
+    if (fields[0][0] == '\0' || strlen(fields[0]) >= MAX_CODE_LENGTH) return 0;
+    if (fields[1][0] == '\0' || strlen(fields[1]) >= MAX_NAME_LENGTH) return 0;
 
+    safe_strcpy(course->code, MAX_CODE_LENGTH, fields[0]);
     safe_strcpy(course->name, MAX_NAME_LENGTH, fields[1]);
 
     int credits;
@@ -184,6 +195,14 @@ static int parse_course_line(char *line, Course *course) {
 
     if (!parse_groups(fields[5], course)) {
         return 0;
+    }
+
+    /* un curso no puede ser requisito ni correquisito de si mismo */
+    for (int i = 0; i < course->prerequisite_count; i++) {
+        if (strcmp(course->prerequisites[i], course->code) == 0) return 0;
+    }
+    for (int i = 0; i < course->corequisite_count; i++) {
+        if (strcmp(course->corequisites[i], course->code) == 0) return 0;
     }
 
     course->can_enroll = 0;
@@ -234,6 +253,21 @@ int catalog_find_course_index(const Catalog *catalog, const char *code) {
     return -1;
 }
 
+/* 1 si todo prerrequisito y correquisito apunta a un curso del catalogo.
+ * Se revisa al final de la carga porque un requisito puede definirse en una linea posterior. */
+static int requisites_exist(const Catalog *catalog) {
+    for (int i = 0; i < catalog->course_count; i++) {
+        const Course *c = &catalog->courses[i];
+        for (int p = 0; p < c->prerequisite_count; p++) {
+            if (catalog_find_course_index(catalog, c->prerequisites[p]) == -1) return 0;
+        }
+        for (int q = 0; q < c->corequisite_count; q++) {
+            if (catalog_find_course_index(catalog, c->corequisites[q]) == -1) return 0;
+        }
+    }
+    return 1;
+}
+
 ErrorCode catalog_load(const char *path, Catalog *catalog) {
     if (catalog == NULL) return ERROR_INVALID_FORMAT;
 
@@ -277,6 +311,11 @@ ErrorCode catalog_load(const char *path, Catalog *catalog) {
     }
 
     fclose(file);
+
+    if (!requisites_exist(catalog)) {
+        catalog_free(catalog);
+        return ERROR_INCOMPLETE_DATA;
+    }
     return SUCCESS;
 }
 
