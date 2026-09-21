@@ -9,7 +9,7 @@
 #include "../include/utils.h"
 
 #define TEST_OUTPUT_PATH "tests/out_test.json"
-#define BUFFER_SIZE      65536
+#define BUFFER_SIZE      262144
 
 static int tests_run    = 0;
 static int tests_passed = 0;
@@ -211,10 +211,110 @@ static void test_errors(void) {
           "ruta de salida inaccesible -> ERROR_FILE_WRITE");
 }
 
+/* ---------------- extremo a extremo con los catalogos reales ---------------- */
+
+/* can_enroll de 'code' en el catalogo, o -1 si no existe */
+static int can_enroll_of(const Catalog *cat, const char *code) {
+    int idx = catalog_find_course_index(cat, code);
+    return idx < 0 ? -1 : cat->courses[idx].can_enroll;
+}
+
+static int count_enrollable(const Catalog *cat) {
+    int n = 0;
+    for (int i = 0; i < cat->course_count; i++) n += cat->courses[i].can_enroll;
+    return n;
+}
+
+static int count_without_groups(const Catalog *cat) {
+    int n = 0;
+    for (int i = 0; i < cat->course_count; i++) {
+        if (cat->courses[i].group_count == 0) n++;
+    }
+    return n;
+}
+
+/* carga catalogo e historial y corre el flujo completo de main; devuelve 1 si todo cargo */
+static int process_career(const char *catalog_path, const char *history_path,
+                          Catalog *cat, StudentHistory *hist) {
+    if (catalog_load(catalog_path, cat) != SUCCESS) return 0;
+    if (history_load(history_path, cat, hist) != SUCCESS) {
+        catalog_free(cat);
+        return 0;
+    }
+    conflicts_detect_catalog(cat);
+    validation_mark_enrollable(cat, hist);
+    return 1;
+}
+
+static void check_real_export(const Catalog *cat, const StudentHistory *hist) {
+    CHECK(export_catalog_json(TEST_OUTPUT_PATH, cat, hist) == SUCCESS, "exporta el JSON");
+    CHECK(read_output(TEST_OUTPUT_PATH), "lee el JSON generado");
+    CHECK(json_is_balanced(buffer), "JSON balanceado");
+    CHECK(count_occurrences(buffer, "\"code\": ") == cat->course_count, "un objeto por curso");
+}
+
+static void test_real_computadores(void) {
+    printf("\n=== Extremo a extremo: Ingenieria en Computadores ===\n");
+
+    Catalog cat;
+    StudentHistory hist;
+    int ok = process_career("data/catalogo_computadores.csv",
+                            "data/historial_computadores.csv", &cat, &hist);
+    CHECK(ok, "catalogo e historial de Computadores cargan");
+    if (!ok) return;
+
+    CHECK(cat.course_count == 26 && hist.approved_count == 14, "26 cursos y 14 aprobados");
+    CHECK(count_without_groups(&cat) == 0, "todos los cursos tienen al menos un grupo");
+    CHECK(count_enrollable(&cat) == 6, "6 cursos matriculables");
+    CHECK(can_enroll_of(&cat, "CE2103") == 1, "CE2103 matriculable (CE1103 y CE1105 aprobados)");
+    CHECK(can_enroll_of(&cat, "CE1106") == 0, "CE1106 (Paradigmas) no matriculable: falta CE2103");
+    CHECK(can_enroll_of(&cat, "FI1202") == 1, "FI1202 matriculable: su correquisito FI1102 se lleva junto");
+    CHECK(can_enroll_of(&cat, "EL2114") == 0, "EL2114 no matriculable: falta EL2113");
+    CHECK(can_enroll_of(&cat, "CE1101") == 0, "CE1101 ya aprobado no es matriculable");
+
+    check_real_export(&cat, &hist);
+    catalog_free(&cat);
+}
+
+static void test_real_fisica(void) {
+    printf("\n=== Extremo a extremo: Fisica ===\n");
+
+    Catalog cat;
+    StudentHistory hist;
+    int ok = process_career("data/catalogo_fisica.csv",
+                            "data/historial_fisica.csv", &cat, &hist);
+    CHECK(ok, "catalogo e historial de Fisica cargan");
+    if (!ok) return;
+
+    int examen = catalog_find_course_index(&cat, "CI0200");
+    CHECK(cat.course_count == 27 && hist.approved_count == 14, "27 cursos y 14 aprobados");
+    CHECK(examen >= 0 && cat.courses[examen].group_count == 0 && count_without_groups(&cat) == 1,
+          "solo CI0200 (examen diagnostico) queda sin grupos");
+    CHECK(count_enrollable(&cat) == 8, "8 cursos matriculables");
+    CHECK(can_enroll_of(&cat, "PI2610") == 1, "PI2610 matriculable: su correquisito CA2125 se lleva junto");
+    CHECK(can_enroll_of(&cat, "MT2002") == 0, "MT2002 no matriculable: su correquisito MT2001 necesita FI1102");
+    CHECK(can_enroll_of(&cat, "QU1106") == 0, "QU1106 ya aprobado no es matriculable");
+
+    check_real_export(&cat, &hist);
+
+    /* caso limite real: correquisitos mutuos con historial vacio */
+    StudentHistory empty;
+    history_init(&empty);
+    validation_mark_enrollable(&cat, &empty);
+    CHECK(can_enroll_of(&cat, "QU1102") == 1 && can_enroll_of(&cat, "QU1106") == 1,
+          "historial vacio: QU1102 y QU1106 (correquisitos mutuos) se matriculan juntos");
+    CHECK(can_enroll_of(&cat, "FI1101") == 0,
+          "historial vacio: FI1101 no matriculable (su correquisito MA1102 necesita MA0101)");
+
+    catalog_free(&cat);
+}
+
 int main(void) {
     test_pipeline_real();
     test_escape_and_edge_shapes();
     test_errors();
+    test_real_computadores();
+    test_real_fisica();
 
     remove(TEST_OUTPUT_PATH);
 

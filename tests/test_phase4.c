@@ -68,7 +68,7 @@ static int snapshot_can_enroll(const Catalog *catalog, int *out, int max) {
 /* ---------------- main ---------------- */
 
 int main(void) {
-    Course courses[10];
+    Course courses[12];
     Catalog catalog;
     StudentHistory history;
     Course c;
@@ -76,7 +76,7 @@ int main(void) {
 
     catalog.courses = courses;
     catalog.course_count = 0;
-    catalog.capacity = 10;
+    catalog.capacity = 12;
 
     /* A: sin requisitos */
     course_init(&c, "A");
@@ -128,6 +128,11 @@ int main(void) {
     course_add_coreq(&c, "H");
     courses[catalog.course_count++] = c;
 
+    /* J: correquisito B, y B necesita A: el correquisito solo es alcanzable si B es matriculable */
+    course_init(&c, "J");
+    course_add_coreq(&c, "B");
+    courses[catalog.course_count++] = c;
+
     /* ============ Bloque 1: historial vacio ============ */
     history_init(&history);
     validation_mark_enrollable(&catalog, &history);
@@ -140,12 +145,14 @@ int main(void) {
           "historial vacio: B con prerrequisito A no es matriculable");
     CHECK(course_can_enroll(&catalog, "C") == 0,
           "historial vacio: C con prerrequisitos A y D no es matriculable");
-    CHECK(course_can_enroll(&catalog, "E") == 0,
-          "historial vacio: E con correquisito A no es matriculable");
-    CHECK(course_can_enroll(&catalog, "F") == 0,
-          "historial vacio: F con correquisito D no es matriculable");
-    CHECK(course_can_enroll(&catalog, "G") == 0,
-          "historial vacio: G con multiples correquisitos no es matriculable");
+    CHECK(course_can_enroll(&catalog, "E") == 1,
+          "historial vacio: E con correquisito A es matriculable (A se lleva en el mismo periodo)");
+    CHECK(course_can_enroll(&catalog, "F") == 1,
+          "historial vacio: F con correquisito D es matriculable (D se lleva en el mismo periodo)");
+    CHECK(course_can_enroll(&catalog, "G") == 1,
+          "historial vacio: G con multiples correquisitos alcanzables es matriculable");
+    CHECK(course_can_enroll(&catalog, "J") == 0,
+          "historial vacio: J con correquisito B no es matriculable (B necesita A)");
 
     /* ============ Bloque 2: solo A aprobado ============ */
     history_init(&history);
@@ -158,12 +165,12 @@ int main(void) {
           "A aprobado: C aun necesita D");
     CHECK(course_can_enroll(&catalog, "E") == 1,
           "A aprobado: E con correquisito A es matriculable");
-    CHECK(course_can_enroll(&catalog, "F") == 0,
-          "A aprobado: F aun necesita D como correquisito");
-
-    /* Multiple correquisitos: solo uno cumplido -> no matriculable */
-    CHECK(course_can_enroll(&catalog, "G") == 0,
-          "A aprobado: G con multiples correquisitos (falta D) no es matriculable");
+    CHECK(course_can_enroll(&catalog, "F") == 1,
+          "A aprobado: F con correquisito D es matriculable (D se lleva en el mismo periodo)");
+    CHECK(course_can_enroll(&catalog, "G") == 1,
+          "A aprobado: G con A aprobado y D alcanzable es matriculable");
+    CHECK(course_can_enroll(&catalog, "J") == 1,
+          "A aprobado: J es matriculable porque B ya se puede llevar en el mismo periodo");
 
     /* ============ Bloque 3: A y D aprobados ============ */
     history_init(&history);
@@ -180,8 +187,8 @@ int main(void) {
 
     /* ============ Bloque 4: idempotencia ============ */
     {
-        int snap1[10];
-        int snap2[10];
+        int snap1[12];
+        int snap2[12];
 
         history_init(&history);
         history_add(&history, "A");
@@ -189,11 +196,11 @@ int main(void) {
         history_add(&history, "R");
 
         validation_mark_enrollable(&catalog, &history);
-        CHECK(snapshot_can_enroll(&catalog, snap1, 10),
+        CHECK(snapshot_can_enroll(&catalog, snap1, 12),
               "idempotencia: snapshot inicial tomado");
 
         validation_mark_enrollable(&catalog, &history);
-        CHECK(snapshot_can_enroll(&catalog, snap2, 10),
+        CHECK(snapshot_can_enroll(&catalog, snap2, 12),
               "idempotencia: segundo snapshot tomado");
 
         int equal = 1;
@@ -208,10 +215,10 @@ int main(void) {
     history_add(&history, "R");
     validation_mark_enrollable(&catalog, &history);
 
-    CHECK(course_can_enroll(&catalog, "H") == 0,
-          "caso real: H tiene R y exige I como correquisito (no aprobado) -> no matriculable");
-    CHECK(course_can_enroll(&catalog, "I") == 0,
-          "caso real: I tiene R y exige H como correquisito (no aprobado) -> no matriculable");
+    CHECK(course_can_enroll(&catalog, "H") == 1,
+          "correquisitos mutuos: H (con R aprobado) es matriculable junto con I");
+    CHECK(course_can_enroll(&catalog, "I") == 1,
+          "correquisitos mutuos: I (con R aprobado) es matriculable junto con H");
 
     /* Si por alguna razon el estudiante ya trae H aprobado en el historial,
      * I si seria matriculable: valida la simetria de la politica. */
@@ -248,6 +255,8 @@ int main(void) {
           "robustez: course NULL devuelve 0");
     CHECK(validation_has_corequisites(&catalog.courses[0], NULL) == 0,
           "robustez: history NULL devuelve 0");
+    CHECK(validation_corequisites_ok(NULL, &catalog.courses[0], &history) == 0,
+          "robustez: catalogo NULL devuelve 0 (corequisites_ok)");
 
     /* Independencia entre elegibilidad curricular y choque de horario */
     history_init(&history);

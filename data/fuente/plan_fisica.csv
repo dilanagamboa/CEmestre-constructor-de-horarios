@@ -1,0 +1,32 @@
+# Plan de Fisica, primeros 4 semestres. Fuente: capturas de la Guia (TEC-Digital).
+# Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
+# Los grupos y horarios NO van aqui: se toman de horarios_guia.csv por codigo.
+CI0200;Examen diagnostico;0;;
+CI0202;Ingles basico;2;;
+CI1106;Comunicacion escrita;2;;
+CI1230;Ingles I;2;CI0200/CI0202;
+IF1101;Introduccion a la ingenieria fisica;3;;
+MA0101;Matematica general;2;;
+QU1102;Laboratorio de quimica basica I;1;;QU1106
+QU1106;Quimica basica I;3;;QU1102
+CI1107;Comunicacion oral;1;CI1106;
+CI1231;Ingles II;2;CI1230;
+CS2101;Ambiente humano;2;CI1106/IF1101;
+FI1101;Fisica general I;3;;MA1102
+FI1201;Laboratorio fisica general I;1;;FI1101
+CA2125;Elementos de computacion;3;;
+FI1102;Fisica general II;3;FI1101/MA1102;
+FI1202;Laboratorio fisica general II;1;FI1201;FI1102
+MA1103;Calculo y algebra lineal;4;MA1102;
+MI2101;Dibujo tecnico;3;MA0101;
+MI2106;Estatica;3;FI1101;
+FI2103;Fisica general III;3;FI1101/MA1102;
+IF3502;Instrumentacion I;1;;MT2001/MT2002
+MA2105;Ecuaciones diferenciales;4;MA1103;
+MI3117;Dinamica;3;MI2106;
+MT2001;Circuitos electricos en CC y CA;3;FI1102;
+MT2002;Laboratorio de circuitos de corriente continua y corriente alterna;1;MA1102;MT2001
+PI2610;Probabilidad y estadistica I;3;MA1102;CA2125
+# MA1102 no aparece en las capturas pero lo piden FI1101, FI1102, FI2103, MT2002 y PI2610.
+# Sus requisitos se copiaron del catalogo de computadores: VERIFICAR contra el plan de Fisica.
+MA1102;Calculo diferencial e integral;4;MA0101;

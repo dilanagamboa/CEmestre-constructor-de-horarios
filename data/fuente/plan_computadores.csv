@@ -1,0 +1,30 @@
+# Plan de Computadores, primeros 4 semestres (mas nivelacion: MA0101). Fuente: capturas de la Guia (TEC-Digital).
+# Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
+# Fuera de alcance: CI0205 (prueba de ingles, examen sin grupos), FH1000 (bimestral) y SE1100/SE1200/SE1400
+# (actividades de 0 creditos que la Guia ofrece bajo otros codigos SE11xx/SE12xx).
+MA0101;Matematica general;2;;
+CE1101;Introduccion a la programacion;3;;
+CE1104;Fundamentos de sistemas computacionales;3;;CE1101
+MA1102;Calculo diferencial e integral;4;MA0101;
+MA1403;Matematica discreta;4;;
+QU1102;Laboratorio de quimica basica I;1;;QU1106
+QU1106;Quimica basica I;3;;QU1102
+CE1103;Algoritmos y estructuras de datos I;4;CE1101/CE1104/MA1403;
+CE1105;Principios de modelado en ingenieria;3;CE1104;
+CI1407;Habilidades de comunicacion en ingenieria;2;;
+CS1502;Introduccion a la tecnica ciencia y tecnologia;1;;
+FI1101;Fisica general I;3;MA1102;
+FI1201;Laboratorio fisica general I;1;;FI1101
+MA1103;Calculo y algebra lineal;4;MA1102;
+CE2103;Algoritmos y estructuras de datos II;4;CE1103/CE1105;
+CS2101;Ambiente humano;2;;
+EL2113;Circuitos electricos en corriente continua;4;FI1101/MA1102;
+FI1102;Fisica general II;3;FI1101;MA1102
+FI1202;Laboratorio fisica general II;1;FI1201;FI1102
+MA2104;Calculo superior;4;MA1103;
+CE1106;Paradigmas de programacion;3;CE2103;
+CE2201;Laboratorio de circuitos electricos;1;FI1202;
+EL2114;Circuitos electricos en corriente alterna;4;EL2113;EL2207
+EL2207;Elementos activos;4;EL2113;
+PI2609;Probabilidad y estadistica;2;MA2104;
+SO4604;Seguridad y salud ocupacional;3;FI1102;
