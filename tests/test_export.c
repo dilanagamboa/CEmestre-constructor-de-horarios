@@ -263,8 +263,9 @@ static void test_real_computadores(void) {
     CHECK(ok, "catalogo e historial de Computadores cargan");
     if (!ok) return;
 
-    CHECK(cat.course_count == 26 && hist.approved_count == 14, "26 cursos y 14 aprobados");
-    CHECK(count_without_groups(&cat) == 0, "todos los cursos tienen al menos un grupo");
+    CHECK(cat.course_count == 29 && hist.approved_count == 17, "29 cursos y 17 aprobados");
+    CHECK(count_without_groups(&cat) == 3 && can_enroll_of(&cat, "SE1100") == 0,
+          "solo las 3 actividades SE del plan quedan sin grupos (SE1100 aprobada, no matriculable)");
     CHECK(count_enrollable(&cat) == 6, "6 cursos matriculables");
     CHECK(can_enroll_of(&cat, "CE2103") == 1, "CE2103 matriculable (CE1103 y CE1105 aprobados)");
     CHECK(can_enroll_of(&cat, "CE1106") == 0, "CE1106 (Paradigmas) no matriculable: falta CE2103");
