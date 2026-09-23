@@ -218,3 +218,11 @@ El historial tiene un código de curso por línea. Cada código debe existir en 
 | `tests/test_export.c`   | 73      | El exportador (escapes, formas límite, errores) y el flujo completo con los datos reales de las dos carreras                 |
 
 Los archivos incorrectos a propósito están en `tests/data_invalid/` y los casos válidos límite en `tests/data_valid/`, de modo que cada regla del cargador tiene su archivo y su prueba. En cuanto a la memoria, todo `malloc` o `realloc` tiene su `free` en todos los caminos, incluidos los de error, y `make valgrind` no reporta fugas ni errores.
+
+## 5. Referencias
+
+Durante el desarrollo se utilizó Claude como apoyo para revisar el código, depurar errores y redactar la documentación. Todo el contenido fue revisado y comprendido por los integrantes del grupo.
+
+Anthropic. (2026). *Claude* (versión Claude Opus 5.5) [Modelo de lenguaje de gran escala]. https://claude.ai
+
+Kernighan, B. W., & Ritchie, D. M. (1988). *The C Programming Language* (2.ª ed.). Prentice Hall.
