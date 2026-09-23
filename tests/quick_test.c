@@ -1,3 +1,7 @@
+/* PROVISIONAL: prueba rapida del exportador antes de que exista main.c.
+ * Borrar antes de la entrega final. */
+
+
 #include <stdio.h>
 #include "../include/catalog.h"
 #include "../include/history.h"

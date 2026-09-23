@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     if (argc > 2) history_path = argv[2];
     if (argc > 3) output_path  = argv[3];
 
-        Catalog catalog;
+    Catalog catalog;
     StudentHistory history;
 
     LoadErrorInfo load_info;
@@ -82,11 +82,11 @@ int main(int argc, char *argv[]) {
         return (int)err;
     }
 
-    /* 3. choques de horario y 4. elegibilidad segun requisitos */
+    /*choques de horario y elegibilidad segun requisitos*/
     int conflict_groups = conflicts_detect_catalog(&catalog);
     validation_mark_enrollable(&catalog, &history);
 
-    /* 5. exportar */
+    /*exportar*/
     err = export_catalog_json(output_path, &catalog, &history);
     if (err != SUCCESS) {
         fprintf(stderr, "Error al exportar a '%s': %s (codigo %d)\n",
