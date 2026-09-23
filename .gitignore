@@ -17,3 +17,17 @@ vgcore.*
 !.vscode/settings.json
 *.swp
 .DS_Store
+
+*.po
+
+# salidas generadas por los tests
+data/salida.json
+
+# cobertura / profiling
+*.gcda
+*.gcno
+*.gcov
+
+# backups
+*~
+*.bak

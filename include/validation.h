@@ -40,7 +40,7 @@ int validation_corequisites_ok(const Catalog *catalog,
 /* Recorre el catálogo y actualiza can_enroll para cada curso:
  * 1 si cumple prerrequisitos y correquisitos (según validation_corequisites_ok),
  * 0 en caso contrario.
- * Es idempotente: reinicia can_enroll en cada llamada. 
+ * Es idempotente: reinicia can_enroll en cada llamada.
  * Un curso aprobado tampoco es matriculable*/
 void validation_mark_enrollable(Catalog *catalog,
                                 const StudentHistory *history);

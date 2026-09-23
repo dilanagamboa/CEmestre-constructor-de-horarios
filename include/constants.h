@@ -4,8 +4,8 @@
 // todas las constantes del proyecto viven acá, separadas de structs.h
 
 // límites de tamaño para strings, para evitar usar malloc en todo lado
-#define MAX_CODE_LENGTH        10   
-#define MAX_NAME_LENGTH        80   
+#define MAX_CODE_LENGTH        10
+#define MAX_NAME_LENGTH        80
 #define MAX_PROFESSOR_LENGTH   60
 
 // límites de cantidad
@@ -14,7 +14,7 @@
 #define MAX_BLOCKS_PER_GROUP   3    // un grupo puede tener hasta 3 días de clases a la semana
 #define MAX_PREREQUISITES      6
 #define MAX_COREQUISITES       4
-#define MAX_APPROVED_COURSES   60   
+#define MAX_APPROVED_COURSES   60
 
 // tamaño máximo de una línea leída de catalogo.csv o historial.csv
 #define MAX_LINE_LENGTH         4096
