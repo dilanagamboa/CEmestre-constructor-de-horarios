@@ -1,0 +1,33 @@
+# ejecutables y objetos compilados
+*.o
+*.out
+cemestre
+tests/run_tests
+tests/run_phase4
+tests/run_export
+tests/out_test.json
+build/
+
+# archivos de valgrind
+*.log
+vgcore.*
+
+# archivos temporales del editor
+.vscode/*
+!.vscode/settings.json
+*.swp
+.DS_Store
+
+*.po
+
+# salidas generadas por los tests
+data/salida.json
+
+# cobertura / profiling
+*.gcda
+*.gcno
+*.gcov
+
+# backups
+*~
+*.bak

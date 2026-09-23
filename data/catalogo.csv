@@ -1,0 +1,6 @@
+# code;name;credits;prereqs;coreqs;groups
+CE1101;Introduccion a la Computacion;3;;;1@Ana@MON,08:00,10:00
+CE1103;Programacion I;4;CE1101;;1@Luis@TUE,10:00,12:00|2@Ana@WED,08:00,10:00
+CE1106;Paradigmas de Programacion;4;CE1103;;1@Juan@MON,08:00,10:00+TUE,08:00,10:00
+CE2103;Estructuras de Datos;4;CE1106;CE2105;1@Maria@WED,13:00,15:00|2@Pedro@THU,15:00,17:00
+CE2105;Matematica Discreta;3;;;1@Carlos@FRI,10:00,12:00

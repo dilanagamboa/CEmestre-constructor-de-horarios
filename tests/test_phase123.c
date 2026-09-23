@@ -1,0 +1,265 @@
+#include <stdio.h>
+#include <string.h>
+
+#include "../include/utils.h"
+#include "../include/catalog.h"
+#include "../include/history.h"
+#include "../include/conflicts.h"
+
+static int tests_run    = 0;
+static int tests_passed = 0;
+
+#define CHECK(cond, msg) do {                                        \
+    tests_run++;                                                     \
+    if (cond) {                                                      \
+        tests_passed++;                                              \
+        printf("  [OK]   %s\n", msg);                                \
+    } else {                                                         \
+        printf("  [FAIL] %s\n", msg);                                \
+    }                                                                \
+} while (0)
+
+static void test_utils(void) {
+    printf("\n=== Fase 1: utils ===\n");
+
+    char buf[64];
+
+    safe_strcpy(buf, sizeof(buf), "  hola mundo \r\n");
+    trim_whitespace(buf);
+    CHECK(strcmp(buf, "hola mundo") == 0, "trim_whitespace quita espacios y \\r\\n");
+
+    safe_strcpy(buf, sizeof(buf), "   ");
+    trim_whitespace(buf);
+    CHECK(buf[0] == '\0', "trim_whitespace deja cadena vacia si todo es espacio");
+
+    char small[4];
+    int ok = safe_strcpy(small, sizeof(small), "abcdef");
+    CHECK(ok == 0 && strcmp(small, "abc") == 0, "safe_strcpy trunca sin desbordar");
+
+    char line[] = "a;b;c";
+    char *fields[3];
+    int n = split_fields(line, ';', fields, 3);
+    CHECK(n == 3, "split_fields devuelve 3 campos");
+    CHECK(strcmp(fields[0], "a") == 0 &&
+          strcmp(fields[1], "b") == 0 &&
+          strcmp(fields[2], "c") == 0, "split_fields separa bien");
+}
+
+
+static void test_catalog(void) {
+    printf("\n=== Fase 2: catalog ===\n");
+
+    Catalog cat;
+    ErrorCode err = catalog_load("data/catalogo.csv", &cat);
+
+    CHECK(err == SUCCESS, "catalog_load archivo valido devuelve SUCCESS");
+    CHECK(cat.course_count == 5, "catalog_load carga los 5 cursos");
+
+    if (cat.course_count > 0) {
+        int idx = catalog_find_course_index(&cat, "CE1106");
+        CHECK(idx != -1, "catalog_find_course_index encuentra CE1106");
+
+        if (idx != -1) {
+            CHECK(strcmp(cat.courses[idx].name, "Paradigmas de Programacion") == 0,
+                  "el nombre se parseo bien");
+            CHECK(cat.courses[idx].credits == 4, "los creditos se parsearon bien");
+            CHECK(cat.courses[idx].prerequisite_count == 1 &&
+                  strcmp(cat.courses[idx].prerequisites[0], "CE1103") == 0,
+                  "prerequisito de CE1106 es CE1103");
+            CHECK(cat.courses[idx].group_count == 1, "CE1106 tiene 1 grupo");
+            CHECK(cat.courses[idx].groups[0].block_count == 2,
+                  "el grupo 1 de CE1106 tiene 2 bloques");
+        }
+
+        int idx2103 = catalog_find_course_index(&cat, "CE2103");
+        if (idx2103 != -1) {
+            CHECK(cat.courses[idx2103].corequisite_count == 1 &&
+                  strcmp(cat.courses[idx2103].corequisites[0], "CE2105") == 0,
+                  "correquisito de CE2103 es CE2105");
+        }
+    }
+
+    catalog_free(&cat);
+
+    /* archivo con codigo duplicado */
+    Catalog dup;
+    err = catalog_load("tests/data_invalid/catalogo_dup.csv", &dup);
+    CHECK(err == ERROR_INVALID_FORMAT, "catalogo con codigo duplicado -> ERROR_INVALID_FORMAT");
+    catalog_free(&dup);
+
+    /* archivo con hora final antes de la inicial */
+    Catalog bad;
+    err = catalog_load("tests/data_invalid/catalogo_bad_time.csv", &bad);
+    CHECK(err == ERROR_INVALID_FORMAT, "bloque con hora invalida -> ERROR_INVALID_FORMAT");
+    catalog_free(&bad);
+
+     /* curso de 0 creditos (SE*, examen diagnostico): es valido */
+    Catalog zero;
+    err = catalog_load("tests/data_valid/catalogo_creditos_cero.csv", &zero);
+    CHECK(err == SUCCESS && zero.course_count == 1 && zero.courses[0].credits == 0,
+          "curso de 0 creditos se carga");
+    catalog_free(&zero);
+
+    /* curso con mas de 20 grupos (CI1107 real tiene 32) */
+    Catalog many;
+    err = catalog_load("tests/data_valid/catalogo_25_grupos.csv", &many);
+    CHECK(err == SUCCESS && many.course_count == 1 && many.courses[0].group_count == 25,
+          "curso con 25 grupos se carga");
+    catalog_free(&many);
+    
+    /* archivo inexistente */
+    Catalog nf;
+    err = catalog_load("no_existe.csv", &nf);
+    CHECK(err == ERROR_FILE_NOT_FOUND, "archivo inexistente -> ERROR_FILE_NOT_FOUND");
+}
+
+/* carga 'path' y verifica el codigo de error esperado */
+static void expect_load(const char *path, ErrorCode expected, const char *msg) {
+    Catalog c;
+    ErrorCode err = catalog_load(path, &c);
+    CHECK(err == expected, msg);
+    catalog_free(&c);
+}
+
+static void test_catalog_validation(void) {
+    printf("\n=== Fase 2: validaciones del catalogo ===\n");
+
+    expect_load("tests/data_invalid/catalogo_prereq_desconocido.csv", ERROR_INCOMPLETE_DATA,
+                "prerrequisito inexistente -> ERROR_INCOMPLETE_DATA");
+    expect_load("tests/data_invalid/catalogo_coreq_desconocido.csv", ERROR_INCOMPLETE_DATA,
+                "correquisito inexistente -> ERROR_INCOMPLETE_DATA");
+    expect_load("tests/data_invalid/catalogo_autorequisito.csv", ERROR_INVALID_FORMAT,
+                "curso que es requisito de si mismo -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_codigo_vacio.csv", ERROR_INVALID_FORMAT,
+                "codigo vacio -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_nombre_vacio.csv", ERROR_INVALID_FORMAT,
+                "nombre vacio -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_grupo_repetido.csv", ERROR_INVALID_FORMAT,
+                "numero de grupo repetido -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_invalid/catalogo_codigo_largo.csv", ERROR_INVALID_FORMAT,
+                "codigo que no cabe -> ERROR_INVALID_FORMAT");
+    expect_load("tests/data_valid/catalogo_ref_adelante.csv", SUCCESS,
+                "requisito definido en una linea posterior es valido");
+}
+
+        static void test_catalog_error_info(void) {
+            printf("\n=== Fase 2: detalle de errores de carga ===\n");
+            Catalog c;
+            LoadErrorInfo info;
+            ErrorCode err;
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_error_linea4.csv", &c, &info);
+            CHECK(err == ERROR_INVALID_FORMAT && info.line == 4 && strcmp(info.course, "B1") == 0,
+                "dato invalido: linea 4 y curso B1 (cuenta comentarios y lineas vacias)");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_codigo_duplicado.csv", &c, &info);
+            CHECK(err == ERROR_INVALID_FORMAT && info.line == 2 && strcmp(info.course, "A1") == 0,
+                "codigo duplicado: linea 2 y curso A1");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_prereq_desconocido.csv", &c, &info);
+            CHECK(err == ERROR_INCOMPLETE_DATA && strcmp(info.course, "A1") == 0 &&
+                strcmp(info.related, "ZZ9") == 0,
+                "requisito inexistente: curso A1 y requisito ZZ9");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_invalid/catalogo_linea_larga.csv", &c, &info);
+            CHECK(err == ERROR_LIMIT_EXCEEDED && info.line == 1,
+                "linea mas larga que MAX_LINE_LENGTH -> ERROR_LIMIT_EXCEEDED en la linea 1");
+            catalog_free(&c);
+
+            err = catalog_load_ex("tests/data_valid/catalogo_ref_adelante.csv", &c, &info);
+            CHECK(err == SUCCESS && info.line == 0 && info.course[0] == '\0',
+                "carga valida: info queda vacia");
+            catalog_free(&c);
+        }
+
+static void test_history(void) {
+    printf("\n=== Fase 2: history ===\n");
+
+    Catalog cat;
+    catalog_load("data/catalogo.csv", &cat);
+
+    StudentHistory hist;
+    ErrorCode err = history_load("data/historial.csv", &cat, &hist);
+    CHECK(err == SUCCESS, "history_load archivo valido devuelve SUCCESS");
+    CHECK(hist.approved_count == 2, "history_load carga 2 cursos");
+
+    CHECK(history_has_course(&hist, "CE1101") == 1, "historial contiene CE1101");
+    CHECK(history_has_course(&hist, "CE1106") == 0, "historial no contiene CE1106");
+
+    StudentHistory bad;
+    err = history_load("tests/data_invalid/historial_unknown.csv", &cat, &bad);
+    CHECK(err == ERROR_COURSE_NOT_FOUND,
+          "historial con codigo desconocido -> ERROR_COURSE_NOT_FOUND");
+
+    err = history_load("no_existe.csv", &cat, &bad);
+    CHECK(err == ERROR_FILE_NOT_FOUND, "historial inexistente -> ERROR_FILE_NOT_FOUND");
+
+    catalog_free(&cat);
+}
+
+static void test_conflicts(void) {
+    printf("\n=== Fase 3: conflicts ===\n");
+
+    /* caso directo: mismo dia, mismo horario -> choque */
+    TimeBlock a = { MONDAY, 8, 0, 10, 0 };
+    TimeBlock b = { MONDAY, 8, 0, 10, 0 };
+    CHECK(conflicts_blocks_overlap(&a, &b) == 1, "bloques identicos chocan");
+
+    /* traslape parcial */
+    TimeBlock c = { MONDAY, 9, 0, 11, 0 };
+    CHECK(conflicts_blocks_overlap(&a, &c) == 1, "traslape parcial choca");
+
+    /* dias distintos -> no choca */
+    TimeBlock d = { TUESDAY, 8, 0, 10, 0 };
+    CHECK(conflicts_blocks_overlap(&a, &d) == 0, "dias distintos no chocan");
+
+    /* adyacente pero sin solapar: 8-10 y 10-12 */
+    TimeBlock e = { MONDAY, 10, 0, 12, 0 };
+    CHECK(conflicts_blocks_overlap(&a, &e) == 0, "adyacentes sin solape no chocan");
+
+    /* un bloque dentro de otro */
+    TimeBlock f = { MONDAY, 9, 0, 9, 30 };
+    CHECK(conflicts_blocks_overlap(&a, &f) == 1, "bloque contenido choca");
+
+    /* ahora sobre el catalogo real */
+    Catalog cat;
+    catalog_load("data/catalogo.csv", &cat);
+
+    int marked = conflicts_detect_catalog(&cat);
+    CHECK(marked > 0, "conflicts_detect_catalog marca al menos un grupo");
+
+    int ce1101 = catalog_find_course_index(&cat, "CE1101");
+    int ce1106 = catalog_find_course_index(&cat, "CE1106");
+    int ce2105 = catalog_find_course_index(&cat, "CE2105");
+
+    CHECK(cat.courses[ce1101].groups[0].has_conflict == 1,
+          "grupo 1 de CE1101 marcado como conflictivo");
+    CHECK(cat.courses[ce1106].groups[0].has_conflict == 1,
+          "grupo 1 de CE1106 marcado como conflictivo");
+    CHECK(cat.courses[ce2105].groups[0].has_conflict == 0,
+          "grupo 1 de CE2105 NO marcado (viernes, sin choque)");
+
+    /* idempotencia: llamar dos veces no acumula */
+    int marked2 = conflicts_detect_catalog(&cat);
+    CHECK(marked2 == marked, "conflicts_detect_catalog es idempotente");
+
+    catalog_free(&cat);
+}
+
+int main(void) {
+    test_utils();
+    test_catalog();
+    test_catalog_validation();
+    test_catalog_error_info();
+    test_history();
+    test_conflicts();
+
+    printf("\n===============================\n");
+    printf("Pasaron %d/%d pruebas\n", tests_passed, tests_run);
+    printf("===============================\n");
+
+    return (tests_passed == tests_run) ? 0 : 1;
+}
