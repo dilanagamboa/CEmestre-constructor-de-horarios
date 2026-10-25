@@ -414,3 +414,19 @@ void catalog_free(Catalog *catalog) {
     catalog->course_count = 0;
     catalog->capacity = 0;
 }
+
+/* Un catalogo corresponde a una sola carrera, asi que la carrera se recibe
+ * una vez y se copia a cada curso, sin tocar el formato de catalogo.csv. */
+int catalog_is_valid_career(const char *career) {
+    if (career == NULL) return 0;
+    return strcmp(career, CAREER_COMPUTADORES) == 0 ||
+           strcmp(career, CAREER_FISICA) == 0;
+}
+
+ErrorCode catalog_set_career(Catalog *catalog, const char *career) {
+    if (catalog == NULL || !catalog_is_valid_career(career)) return ERROR_INVALID_FORMAT;
+    for (int i = 0; i < catalog->course_count; i++) {
+        safe_strcpy(catalog->courses[i].career, MAX_CAREER_LENGTH, career);
+    }
+    return SUCCESS;
+}

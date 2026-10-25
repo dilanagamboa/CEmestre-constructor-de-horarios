@@ -7,6 +7,7 @@
 #define MAX_CODE_LENGTH        10
 #define MAX_NAME_LENGTH        80
 #define MAX_PROFESSOR_LENGTH   60
+#define MAX_CAREER_LENGTH      16
 
 // límites de cantidad
 #define MAX_COURSES            200
@@ -24,6 +25,11 @@
 #define DEFAULT_CATALOG_PATH   "data/catalogo.csv"
 #define DEFAULT_HISTORY_PATH   "data/historial.csv"
 #define DEFAULT_OUTPUT_PATH    "data/salida.json"
+
+// carreras validas, se escriben tal cual en el campo "career" del JSON
+#define CAREER_COMPUTADORES    "computadores"
+#define CAREER_FISICA          "fisica"
+#define DEFAULT_CAREER         CAREER_COMPUTADORES
 
 // códigos de error que se usan como valor de retorno en las funciones de carga
 typedef enum {
