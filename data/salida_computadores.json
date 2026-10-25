@@ -1,10 +1,11 @@
 {
   "format_version": 1,
-  "course_count": 29,
+  "course_count": 39,
   "courses": [
     {
       "code": "MA0101",
       "name": "Matematica general",
+      "career": "computadores",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -89,6 +90,7 @@
     {
       "code": "CE1101",
       "name": "Introduccion a la programacion",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],
@@ -113,6 +115,7 @@
     {
       "code": "CE1104",
       "name": "Fundamentos de sistemas computacionales",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": [],
       "corequisites": ["CE1101"],
@@ -131,6 +134,7 @@
     {
       "code": "MA1102",
       "name": "Calculo diferencial e integral",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["MA0101"],
       "corequisites": [],
@@ -275,6 +279,7 @@
     {
       "code": "MA1403",
       "name": "Matematica discreta",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": [],
       "corequisites": [],
@@ -323,6 +328,7 @@
     {
       "code": "QU1102",
       "name": "Laboratorio de quimica basica I",
+      "career": "computadores",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["QU1106"],
@@ -413,6 +419,7 @@
     {
       "code": "QU1106",
       "name": "Quimica basica I",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": [],
       "corequisites": ["QU1102"],
@@ -467,6 +474,7 @@
     {
       "code": "SE1100",
       "name": "Actividad cultural I",
+      "career": "computadores",
       "credits": 0,
       "prerequisites": [],
       "corequisites": [],
@@ -478,6 +486,7 @@
     {
       "code": "SE1200",
       "name": "Actividad deportiva I",
+      "career": "computadores",
       "credits": 0,
       "prerequisites": [],
       "corequisites": [],
@@ -489,6 +498,7 @@
     {
       "code": "CE1103",
       "name": "Algoritmos y estructuras de datos I",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["CE1101", "CE1104", "MA1403"],
       "corequisites": [],
@@ -519,6 +529,7 @@
     {
       "code": "CE1105",
       "name": "Principios de modelado en ingenieria",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": ["CE1104"],
       "corequisites": [],
@@ -549,6 +560,7 @@
     {
       "code": "CI1407",
       "name": "Habilidades de comunicacion en ingenieria",
+      "career": "computadores",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -585,6 +597,7 @@
     {
       "code": "CS1502",
       "name": "Introduccion a la tecnica ciencia y tecnologia",
+      "career": "computadores",
       "credits": 1,
       "prerequisites": [],
       "corequisites": [],
@@ -627,6 +640,7 @@
     {
       "code": "FI1101",
       "name": "Fisica general I",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": ["MA1102"],
       "corequisites": [],
@@ -741,6 +755,7 @@
     {
       "code": "FI1201",
       "name": "Laboratorio fisica general I",
+      "career": "computadores",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["FI1101"],
@@ -903,6 +918,7 @@
     {
       "code": "MA1103",
       "name": "Calculo y algebra lineal",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["MA1102"],
       "corequisites": [],
@@ -1029,6 +1045,7 @@
     {
       "code": "SE1400",
       "name": "Actividad cultural-deportiva",
+      "career": "computadores",
       "credits": 0,
       "prerequisites": [],
       "corequisites": [],
@@ -1040,6 +1057,7 @@
     {
       "code": "CE2103",
       "name": "Algoritmos y estructuras de datos II",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["CE1103", "CE1105"],
       "corequisites": [],
@@ -1058,6 +1076,7 @@
     {
       "code": "CS2101",
       "name": "Ambiente humano",
+      "career": "computadores",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -1118,6 +1137,7 @@
     {
       "code": "EL2113",
       "name": "Circuitos electricos en corriente continua",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["FI1101", "MA1102"],
       "corequisites": [],
@@ -1154,6 +1174,7 @@
     {
       "code": "FI1102",
       "name": "Fisica general II",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": ["FI1101"],
       "corequisites": ["MA1102"],
@@ -1232,6 +1253,7 @@
     {
       "code": "FI1202",
       "name": "Laboratorio fisica general II",
+      "career": "computadores",
       "credits": 1,
       "prerequisites": ["FI1201"],
       "corequisites": ["FI1102"],
@@ -1298,6 +1320,7 @@
     {
       "code": "MA2104",
       "name": "Calculo superior",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["MA1103"],
       "corequisites": [],
@@ -1352,6 +1375,7 @@
     {
       "code": "CE1106",
       "name": "Paradigmas de programacion",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": ["CE2103"],
       "corequisites": [],
@@ -1376,6 +1400,7 @@
     {
       "code": "CE2201",
       "name": "Laboratorio de circuitos electricos",
+      "career": "computadores",
       "credits": 1,
       "prerequisites": ["FI1202"],
       "corequisites": [],
@@ -1394,6 +1419,7 @@
     {
       "code": "EL2114",
       "name": "Circuitos electricos en corriente alterna",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["EL2113"],
       "corequisites": ["EL2207"],
@@ -1430,6 +1456,7 @@
     {
       "code": "EL2207",
       "name": "Elementos activos",
+      "career": "computadores",
       "credits": 4,
       "prerequisites": ["EL2113"],
       "corequisites": [],
@@ -1466,6 +1493,7 @@
     {
       "code": "PI2609",
       "name": "Probabilidad y estadistica",
+      "career": "computadores",
       "credits": 2,
       "prerequisites": ["MA2104"],
       "corequisites": [],
@@ -1490,6 +1518,7 @@
     {
       "code": "SO4604",
       "name": "Seguridad y salud ocupacional",
+      "career": "computadores",
       "credits": 3,
       "prerequisites": ["FI1102"],
       "corequisites": [],
@@ -1528,6 +1557,280 @@
       "has_conflict": true,
       "approved": false,
       "can_enroll": false
+    },
+    {
+      "code": "CE1107",
+      "name": "Fundamentos de arquitectura de computadores",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["EL2207"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CHAVARRIA ZAMORA LUIS",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE3101",
+      "name": "Bases de datos",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["CE1106"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "HERNANDEZ VASQUEZ MARCO",
+          "blocks": [{"day": "WED", "start": "19:00", "end": "20:50"}, {"day": "FRI", "start": "19:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "RIVERA MENESES MARCO",
+          "blocks": [{"day": "WED", "start": "19:00", "end": "20:50"}, {"day": "FRI", "start": "19:00", "end": "20:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE3201",
+      "name": "Taller de diseno digital",
+      "career": "computadores",
+      "credits": 2,
+      "prerequisites": ["CE2201"],
+      "corequisites": ["CE1107"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CALDERON PRADO KIMBERLY",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "14:50"}, {"day": "SAT", "start": "08:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CALDERON PRADO KIMBERLY",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "SAT", "start": "10:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "GARCIA FERNANDEZ RONALD",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "14:50"}, {"day": "SAT", "start": "08:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "GARCIA FERNANDEZ RONALD",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "SAT", "start": "10:30", "end": "12:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MA2105",
+      "name": "Ecuaciones diferenciales",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["MA1103"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ACUÑA PRADO LUIS",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALPIZAR BRENES GEISEL",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "BRENES GOMEZ RANDALL",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "MARIN SANCHEZ MARIO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MARIN SANCHEZ MARIO",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MORA CASASOLA MARIA FERNANDA",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "MORA CASASOLA MARIA FERNANDA",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "OVIEDO UGALDE NORBERTO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "PRENDAS ROJAS JUAN PABLO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "RAMIREZ ARCE GREIVIN",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "PI5516",
+      "name": "Ingenieria economica",
+      "career": "computadores",
+      "credits": 3,
+      "prerequisites": ["PI2609"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CHACON ROJAS FERNANDO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "FARAH GUZMAN BILJHANA SHAKIRA",
+          "blocks": [{"day": "FRI", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE1108",
+      "name": "Compiladores e interpretes",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["CE1107"],
+      "corequisites": ["CE4301"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "LEITON JIMENEZ JASON",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE1109",
+      "name": "Circuitos analogicos",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["EL2207", "SO4604"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ARAYA RODRIGUEZ LISANDRO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE1110",
+      "name": "Analisis de senales mixtas",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["EL2114", "MA2105"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CHAVARRIA ZAMORA LUIS",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CE4301",
+      "name": "Arquitectura de computadores I",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": ["CE1107", "CE3201"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "GONZALEZ GOMEZ JEFERSON",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "CI3203",
+      "name": "Ingles especializado para ingenierias en computadores",
+      "career": "computadores",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "JIMENEZ RODRIGUEZ ROXANA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
     }
   ]
 }

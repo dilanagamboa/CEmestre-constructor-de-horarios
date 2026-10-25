@@ -263,10 +263,10 @@ static void test_real_computadores(void) {
     CHECK(ok, "catalogo e historial de Computadores cargan");
     if (!ok) return;
 
-    CHECK(cat.course_count == 29 && hist.approved_count == 17, "29 cursos y 17 aprobados");
+        CHECK(cat.course_count == 39 && hist.approved_count == 17, "39 cursos y 17 aprobados");
     CHECK(count_without_groups(&cat) == 3 && can_enroll_of(&cat, "SE1100") == 0,
           "solo las 3 actividades SE del plan quedan sin grupos (SE1100 aprobada, no matriculable)");
-    CHECK(count_enrollable(&cat) == 6, "6 cursos matriculables");
+    CHECK(count_enrollable(&cat) == 8, "8 cursos matriculables");
     CHECK(can_enroll_of(&cat, "CE2103") == 1, "CE2103 matriculable (CE1103 y CE1105 aprobados)");
     CHECK(can_enroll_of(&cat, "CE1106") == 0, "CE1106 (Paradigmas) no matriculable: falta CE2103");
     CHECK(can_enroll_of(&cat, "FI1202") == 1, "FI1202 matriculable: su correquisito FI1102 se lleva junto");
@@ -288,9 +288,9 @@ static void test_real_fisica(void) {
     if (!ok) return;
 
     int examen = catalog_find_course_index(&cat, "CI0200");
-    CHECK(cat.course_count == 27 && hist.approved_count == 14, "27 cursos y 14 aprobados");
-    CHECK(examen >= 0 && cat.courses[examen].group_count == 0 && count_without_groups(&cat) == 1,
-          "solo CI0200 (examen diagnostico) queda sin grupos");
+    CHECK(cat.course_count == 39 && hist.approved_count == 14, "39 cursos y 14 aprobados");
+    CHECK(examen >= 0 && cat.courses[examen].group_count == 0 && count_without_groups(&cat) == 3,
+          "CI0200, FI2104 e IF3501 quedan sin grupos");
     CHECK(count_enrollable(&cat) == 8, "8 cursos matriculables");
     CHECK(can_enroll_of(&cat, "PI2610") == 1, "PI2610 matriculable: su correquisito CA2125 se lleva junto");
     CHECK(can_enroll_of(&cat, "MT2002") == 0, "MT2002 no matriculable: su correquisito MT2001 necesita FI1102");
