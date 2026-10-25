@@ -12,7 +12,23 @@
   (struct grupo ([numero exact-positive-integer?]
                  [profesor string?]
                  [bloques (listof bloque?)]
-                 [choque boolean?]))))
+                 [choque boolean?]))
+  (struct curso ([carrera carrera/c]
+                 [codigo non-empty-string?]
+                 [nombre non-empty-string?]
+                 [creditos exact-nonnegative-integer?]
+                 [prerrequisitos (listof non-empty-string?)]
+                 [correquisitos (listof non-empty-string?)]
+                 [grupos (listof grupo?)]
+                 [aprobado boolean?]
+                 [matriculable boolean?]))
+  (struct catalogo ([cursos (listof curso?)]))
+  (struct interes ([carrera carrera/c]
+                   [codigo non-empty-string?]
+                   [grupos (non-empty-listof exact-positive-integer?)]))
+  (struct preferencias ([intereses (listof interes?)]
+                        [creditos-min exact-nonnegative-integer?]
+                        [creditos-max exact-nonnegative-integer?]))))
 
 ;; dias que usa el JSON de la Etapa 1
 (define dia/c (or/c 'MON 'TUE 'WED 'THU 'FRI 'SAT))
@@ -25,3 +41,21 @@
 
 ;; choque es la bandera has_conflict de C, solo se usa para verificar choques.rkt
 (struct grupo (numero profesor bloques choque) #:transparent)
+
+;; carrera que aporta el curso, mismo valor que escribe el modulo de C
+(define carrera/c (or/c 'computadores 'fisica))
+
+;; un curso se identifica por carrera y codigo, porque un mismo codigo puede
+;; tener requisitos distintos en cada carrera
+(struct curso (carrera codigo nombre creditos prerrequisitos correquisitos
+                       grupos aprobado matriculable)
+  #:transparent)
+
+;; cursos de las dos carreras
+(struct catalogo (cursos) #:transparent)
+
+;; un curso de interes con los grupos que el estudiante acepta
+(struct interes (carrera codigo grupos) #:transparent)
+
+;; lo que lee preferencias.rkt: cursos de interes y rango de creditos
+(struct preferencias (intereses creditos-min creditos-max) #:transparent)
