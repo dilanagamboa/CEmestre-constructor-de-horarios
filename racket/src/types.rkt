@@ -28,7 +28,10 @@
                    [grupos (non-empty-listof exact-positive-integer?)]))
   (struct preferencias ([intereses (listof interes?)]
                         [creditos-min exact-nonnegative-integer?]
-                        [creditos-max exact-nonnegative-integer?]))))
+                        [creditos-max exact-nonnegative-integer?]))
+  (struct par-curso-grupo ([curso curso?] [grupo grupo?]))
+  (struct combinacion ([pares (non-empty-listof par-curso-grupo?)]
+                       [creditos exact-nonnegative-integer?]))))
 
 ;; dias que usa el JSON de la Etapa 1
 (define dia/c (or/c 'MON 'TUE 'WED 'THU 'FRI 'SAT))
@@ -59,3 +62,10 @@
 
 ;; lo que lee preferencias.rkt: cursos de interes y rango de creditos
 (struct preferencias (intereses creditos-min creditos-max) #:transparent)
+
+;; un curso con el grupo elegido; guarda los structs completos para que el
+;; exportador tenga creditos y carrera sin volver a buscar en el catalogo
+(struct par-curso-grupo (curso grupo) #:transparent)
+
+;; una combinacion valida; creditos se acumula en la recursion del generador
+(struct combinacion (pares creditos) #:transparent)
