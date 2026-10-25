@@ -1,0 +1,2039 @@
+{
+  "format_version": 1,
+  "course_count": 27,
+  "courses": [
+    {
+      "code": "CI0200",
+      "name": "Examen diagnostico",
+      "credits": 0,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CI0202",
+      "name": "Ingles basico",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALBERTAZZI OSORIO SONIA",
+          "blocks": [{"day": "THU", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALBERTAZZI OSORIO SONIA",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "GOMEZ MONTOYA CARLOS ANDRES",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "KENNEDY RUSSELL ANA",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "KENNEDY RUSSELL ANA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MURILLO ESCALANTE ROCIO",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "RIVERA VEGA KATERINE",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "VALLECILLO ALFARO JOHANNY",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "VALLECILLO ALFARO JOHANNY",
+          "blocks": [{"day": "MON", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "VINDAS FERNANDEZ NURIA",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CI1106",
+      "name": "Comunicacion escrita",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "AMADOR SOLANO GABRIELA",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ARCE FUENTES JOSE DANIEL",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "RIOS SANCHEZ ARMANDO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "ROMERO ALVAREZ ERICKA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "VARGAS CASTRO ERICKA",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CI1230",
+      "name": "Ingles I",
+      "credits": 2,
+      "prerequisites": ["CI0200", "CI0202"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALBERTAZZI OSORIO SONIA",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALBERTAZZI OSORIO SONIA",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "BRENES ROJAS LEONARDO",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "GOMEZ MONTOYA CARLOS ANDRES",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "GOMEZ MONTOYA CARLOS ANDRES",
+          "blocks": [{"day": "THU", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "GUILLEN JIMENEZ LUIS DIEGO",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "HERRERA JIMENEZ INGRID",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "MOLINA VILLALOBOS TANIA",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "RAMIREZ CASTRO MONSERRAT",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "SOLANO SOLANO JOSE EDUARDO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "SOLANO SOLANO JOSE EDUARDO",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "IF1101",
+      "name": "Introduccion a la ingenieria fisica",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "LOBO ZAMORA JUAN CARLOS",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "LOBO ZAMORA JUAN CARLOS",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "MA0101",
+      "name": "Matematica general",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "AZOFEIFA CUBERO ROBERTO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CORDERO QUIROS MARCIAL",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CORDERO QUIROS MARCIAL",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}, {"day": "THU", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "JIMENEZ MADRIGAL JORGE",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MARRERO CALVO MARCELA",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "PRENDAS ROJAS JUAN PABLO",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "18:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "QUESADA VILLALOBOS LOURDES",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "RODRIGUEZ CASTRO BRYAN",
+          "blocks": [{"day": "TUE", "start": "16:00", "end": "18:50"}, {"day": "THU", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "SANCHEZ FERNANDEZ IVONNE",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "SOLANO VARELA DANIEL JESUS",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "SOLIS PALMA ANGIE",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "VEGA VASQUEZ ARTURO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "QU1102",
+      "name": "Laboratorio de quimica basica I",
+      "credits": 1,
+      "prerequisites": [],
+      "corequisites": ["QU1106"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CALLEJA AMADOR CARLOS ENRIQUE",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CALLEJA AMADOR CARLOS ENRIQUE",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CALLEJA AMADOR CARLOS ENRIQUE",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "LEDEZMA ESPINOZA AURA",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "HERNANDEZ ALPIZAR LAURA",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MATA MATA ALEJANDRA",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "MORA MOLINA JESUS",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "MORA MOLINA JESUS",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "MORA MOLINA JESUS",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "QUIROS BUSTOS NOEMI",
+          "blocks": [{"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "QUIROS BUSTOS NOEMI",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "SALAS JIMENEZ JUAN CARLOS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "SOTO CORDOBA SILVIA",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "QU1106",
+      "name": "Quimica basica I",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": ["QU1102"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CALLEJA AMADOR CARLOS ENRIQUE",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "PORRAS ACOSTA MARIA",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "PORRAS ACOSTA MARIA",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "PORRAS ACOSTA MARIA",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "QUIROS BUSTOS NOEMI",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "SOTO CORDOBA SILVIA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "VILLALTA ROMERO FABIAN",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CI1107",
+      "name": "Comunicacion oral",
+      "credits": 1,
+      "prerequisites": ["CI1106"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "AMADOR SOLANO GABRIELA",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "AMADOR SOLANO GABRIELA",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "ARCE FUENTES JOSE DANIEL",
+          "blocks": [{"day": "THU", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "ARCE FUENTES JOSE DANIEL",
+          "blocks": [{"day": "FRI", "start": "17:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "TUE", "start": "16:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "CASTILLO RODRIGUEZ LARISSA",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "MORALES GARAY SARAY",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "MORALES GARAY SARAY",
+          "blocks": [{"day": "THU", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "MORALES GARAY SARAY",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "MORALES SOLANO PAOLA NATALIA",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "MORALES SOLANO PAOLA NATALIA",
+          "blocks": [{"day": "THU", "start": "17:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "MORALES SOLANO PAOLA NATALIA",
+          "blocks": [{"day": "FRI", "start": "16:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "PEREZ ROJAS NELSON",
+          "blocks": [{"day": "MON", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 18,
+          "professor": "PEREZ ROJAS NELSON",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 19,
+          "professor": "RIOS SANCHEZ ARMANDO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 20,
+          "professor": "RODRIGUEZ HERRA NATALIA",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 21,
+          "professor": "RODRIGUEZ HERRA NATALIA",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 22,
+          "professor": "ROMERO ALVAREZ ERICKA",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 23,
+          "professor": "ROMERO ALVAREZ ERICKA",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 24,
+          "professor": "ROMERO ALVAREZ ERICKA",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 25,
+          "professor": "SANCHEZ SANCHEZ DANIELA",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 26,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 27,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 28,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 29,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 30,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 31,
+          "professor": "SHILTAGH PRADA DIMITRI",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 32,
+          "professor": "SOLANO MORAGA SIGRID",
+          "blocks": [{"day": "THU", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CI1231",
+      "name": "Ingles II",
+      "credits": 2,
+      "prerequisites": ["CI1230"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALBERTAZZI OSORIO SONIA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "FUENTES MORA ESTEBAN",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "GOMEZ MONTOYA CARLOS ANDRES",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "HERRERA JIMENEZ INGRID",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "KENNEDY RUSSELL ANA",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "SOLANO OBANDO MABEL",
+          "blocks": [{"day": "MON", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "SOLANO OBANDO MABEL",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "SOLANO OBANDO MABEL",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "SOLANO OBANDO MABEL",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "VALLECILLO ALFARO JOHANNY",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "VALLECILLO ALFARO JOHANNY",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CS2101",
+      "name": "Ambiente humano",
+      "credits": 2,
+      "prerequisites": ["CI1106", "IF1101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "MURILLO SOLIS JAVIER",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ORTIZ ALVAREZ JORGE ISAAC",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "ORTIZ ALVAREZ JORGE ISAAC",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "ORTIZ ALVAREZ JORGE ISAAC",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "RODRIGUEZ MORALES OSCAR",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "RODRIGUEZ MORALES OSCAR",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "RODRIGUEZ MORALES OSCAR",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "ROJAS MOLINA BETSY",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "FI1101",
+      "name": "Fisica general I",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": ["MA1102"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CAMBRONERO CORDERO MICHAEL",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CORRALES QUESADA ESTEBAN",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CORRALES QUESADA ESTEBAN",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "ELIZONDO ZUÑIGA JENNIFER",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "ELIZONDO ZUÑIGA JENNIFER",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MONTERO ZELEDON ERNESTO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "MOYA SERRANO ROY DAVID",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "MURILLO SALAZAR DENNIS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "MURILLO ZUMBADO GUSTAVO",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "PINEDA LIZANO JUAN JOSE",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "PINEDA LIZANO JUAN JOSE",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "SEGURA ZARATE ANA YANCY",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "SEGURA ZARATE ANA YANCY",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "SEGURA ZARATE ANA YANCY",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "VARGAS BLANCO IVAN",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "FI1201",
+      "name": "Laboratorio fisica general I",
+      "credits": 1,
+      "prerequisites": [],
+      "corequisites": ["FI1101"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALFARO ALVARADO JOSE ABRAHAN",
+          "blocks": [{"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALFARO ALVARADO JOSE ABRAHAN",
+          "blocks": [{"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CAMBRONERO CORDERO MICHAEL",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "CAMBRONERO CORDERO MICHAEL",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "CAMPOS RODRIGUEZ MELANIA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "CAMPOS RODRIGUEZ MELANIA",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "CORRALES QUESADA ESTEBAN",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "CORRALES QUESADA ESTEBAN",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "ELIZONDO ZUÑIGA JENNIFER",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "JIMENEZ CARBALLO CARLOS ADRIAN",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "JIMENEZ CARBALLO CARLOS ADRIAN",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "MAYORGA ESPINOZA CARLOS",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "MONTERO ZELEDON ERNESTO",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 18,
+          "professor": "OREAMUNO MADRIZ RAFAEL",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 19,
+          "professor": "PEREZ HIDALGO JOSE ESTEBAN",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 20,
+          "professor": "SEGURA CARVAJAL MARCOS",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 21,
+          "professor": "SEGURA CARVAJAL MARCOS",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 22,
+          "professor": "SEGURA CARVAJAL MARCOS",
+          "blocks": [{"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 23,
+          "professor": "SEVILLA QUESADA EVAR",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 24,
+          "professor": "SOLANO PIEDRA RICARDO ADOLFO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 25,
+          "professor": "SOLANO PIEDRA RICARDO ADOLFO",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "CA2125",
+      "name": "Elementos de computacion",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "BOGARIN NAVARRO RODRIGO",
+          "blocks": [{"day": "TUE", "start": "19:00", "end": "20:50"}, {"day": "THU", "start": "19:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CAMPOS FERNANDEZ IVAN",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CAMPOS FERNANDEZ IVAN",
+          "blocks": [{"day": "TUE", "start": "19:00", "end": "20:50"}, {"day": "THU", "start": "19:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "CERDAS QUESADA IVANNIA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "COTO SARMIENTO LAURA",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "COTO SARMIENTO LAURA",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "HERNANDEZ SIBAJA BRYAN",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "MATA RODRIGUEZ WILLIAM",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "MATA RODRIGUEZ WILLIAM",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "MATA RODRIGUEZ WILLIAM",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "NAVAS SU JOSE DOLORES",
+          "blocks": [{"day": "TUE", "start": "19:00", "end": "20:50"}, {"day": "THU", "start": "19:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "QUIROS RAMIREZ FRANCO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "VILLALOBOS ARIAS LUIS ROBERTO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "FI1102",
+      "name": "Fisica general II",
+      "credits": 3,
+      "prerequisites": ["FI1101", "MA1102"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "AMADOR JARA ALVARO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CORRALES QUESADA ESTEBAN",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "LOBO ZAMORA JUAN CARLOS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "MURILLO ZUMBADO GUSTAVO",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MURILLO ZUMBADO GUSTAVO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "OREAMUNO MADRIZ RAFAEL",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "PEREZ HIDALGO JOSE ESTEBAN",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "PINEDA LIZANO JUAN JOSE",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "PINEDA LIZANO JUAN JOSE",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "SOTO CHINCHILLA YERRY",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "VARGAS BLANCO IVAN",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "FI1202",
+      "name": "Laboratorio fisica general II",
+      "credits": 1,
+      "prerequisites": ["FI1201"],
+      "corequisites": ["FI1102"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ARAYA SOLANO LUIS ALONSO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ARAYA SOLANO LUIS ALONSO",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "JIMENEZ CARBALLO CARLOS ADRIAN",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MORALES MUÑOZ WALTER",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MURILLO ZUMBADO GUSTAVO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "OREAMUNO MADRIZ RAFAEL",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "ROJAS ROJAS LAURA",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "SEVILLA QUESADA EVAR",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "MA1103",
+      "name": "Calculo y algebra lineal",
+      "credits": 4,
+      "prerequisites": ["MA1102"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ACUÑA PRADO LUIS",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALPIZAR BRENES GEISEL",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "19:50"}, {"day": "THU", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "BRENES GOMEZ RANDALL",
+          "blocks": [{"day": "TUE", "start": "16:00", "end": "17:50"}, {"day": "THU", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "BRENES GOMEZ RANDALL",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "CALDERON SOLANO MANUEL",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "CALDERON SOLANO MANUEL",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "CHAVARRIA MOLINA JEFFRY",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "CHAVARRIA MOLINA JEFFRY",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "CHINCHILLA VALVERDE JORGE LUIS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "CHINCHILLA VALVERDE JORGE LUIS",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "FIGUEROA MATA GEOVANNI",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "FIGUEROA MATA GEOVANNI",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "19:50"}, {"day": "THU", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "FIGUEROA MATA GEOVANNI",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "GUTIERREZ MONTENEGRO MARCO VINICIO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "GUTIERREZ MONTENEGRO MARCO VINICIO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "JIMENEZ MADRIGAL JORGE",
+          "blocks": [{"day": "THU", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "JIMENEZ ROMERO ALEJANDRA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 18,
+          "professor": "MORA PICADO LUIS FERNANDO",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "19:50"}, {"day": "FRI", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 19,
+          "professor": "PARRA RODRIGUEZ EMMANUELLE",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "17:50"}, {"day": "FRI", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "MI2101",
+      "name": "Dibujo tecnico",
+      "credits": 3,
+      "prerequisites": ["MA0101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "BERMUDEZ CHACON MARVIN",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "BONILLA GUIDO FRANCISCO",
+          "blocks": [{"day": "MON", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "BONILLA GUIDO FRANCISCO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "CORDOBA RAMIREZ LUIS FELIPE",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "GUZMAN CONEJO JOSHUA",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "HERNANDEZ GONZALEZ VICTOR JULIO",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "HERNANDEZ GONZALEZ VICTOR JULIO",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "JACKSON QUIROS HERBERT",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "JIMENEZ CECILIANO MAXIMINO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "MARIN GUILLEN FRANK",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "MARIN GUILLEN FRANK",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "ROJAS GOMEZ JULIO CESAR",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "UREÑA SANDI NOEL",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "MI2106",
+      "name": "Estatica",
+      "credits": 3,
+      "prerequisites": ["FI1101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "GUERRERO FERNANDEZ JUAN LUIS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "MATA COTO MANUEL",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "MATA COTO MANUEL",
+          "blocks": [{"day": "THU", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "MONTERO JIMENEZ JUAN JOSE",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MORERA HIDALGO JULIO",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MORERA HIDALGO JULIO",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "SALAS MOYA LAURA",
+          "blocks": [{"day": "FRI", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "VEGA SANCHEZ CHRISTOPHER",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "FI2103",
+      "name": "Fisica general III",
+      "credits": 3,
+      "prerequisites": ["FI1101", "MA1102"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ARAYA SOLANO LUIS ALONSO",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "FONT CRUZ EDUARDO",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "GUTIERREZ CHAVES CARLOS ROBERTO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "LOBO ZAMORA JUAN CARLOS",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "LOBO ZAMORA JUAN CARLOS",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MONTERO ZELEDON ERNESTO",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "OREAMUNO MADRIZ RAFAEL",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "ROJAS ROJAS LAURA",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "SEGURA ZARATE ANA YANCY",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "IF3502",
+      "name": "Instrumentacion I",
+      "credits": 1,
+      "prerequisites": [],
+      "corequisites": ["MT2001", "MT2002"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "FONT CRUZ EDUARDO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "MOYA SERRANO ROY DAVID",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MA2105",
+      "name": "Ecuaciones diferenciales",
+      "credits": 4,
+      "prerequisites": ["MA1103"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ACUÑA PRADO LUIS",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALPIZAR BRENES GEISEL",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "BRENES GOMEZ RANDALL",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "MARIN SANCHEZ MARIO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "14:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "MARIN SANCHEZ MARIO",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "18:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "MORA CASASOLA MARIA FERNANDA",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "MORA CASASOLA MARIA FERNANDA",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "OVIEDO UGALDE NORBERTO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "PRENDAS ROJAS JUAN PABLO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "11:20"}, {"day": "FRI", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "RAMIREZ ARCE GREIVIN",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MI3117",
+      "name": "Dinamica",
+      "credits": 3,
+      "prerequisites": ["MI2106"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "MONTERO JIMENEZ JUAN JOSE",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "OTAROLA ZUÑIGA CARLOS",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "RICHMOND NAVARRO GUSTAVO",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MT2001",
+      "name": "Circuitos electricos en CC y CA",
+      "credits": 3,
+      "prerequisites": ["FI1102"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "MEZA OBANDO FELIPE",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "MEZA OBANDO FELIPE",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "VAQUERANO PINEDA NICOLAS",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MT2002",
+      "name": "Laboratorio de circuitos de corriente continua y corriente alterna",
+      "credits": 1,
+      "prerequisites": ["MA1102"],
+      "corequisites": ["MT2001"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ARIAS ESQUIVEL YEINER",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ASENJO CASTILLO EDUARDO JOSE",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "MELENDEZ POLTRONIERI ROGER",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "VILCHEZ MONGE MARTA",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "PI2610",
+      "name": "Probabilidad y estadistica I",
+      "credits": 3,
+      "prerequisites": ["MA1102"],
+      "corequisites": ["CA2125"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALEGRIA GRANADOS MELISSA",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "11:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ROBLES OBANDO NATALIA",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "SILES SOLANO ANA CATALINA",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "20:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "MA1102",
+      "name": "Calculo diferencial e integral",
+      "credits": 4,
+      "prerequisites": ["MA0101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CORDERO QUIROS MARCIAL",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ESQUIVEL SAMUDIO JEISON",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "19:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "FALLAS MONGE JUAN JOSE",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}, {"day": "THU", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "GUTIERREZ MONTENEGRO MARCO VINICIO",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "18:50"}, {"day": "FRI", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "JIMENEZ MADRIGAL JORGE",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "10:20"}, {"day": "FRI", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "JIMENEZ MADRIGAL JORGE",
+          "blocks": [{"day": "SAT", "start": "07:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "LOPEZ MORA VERONICA",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "20:50"}, {"day": "FRI", "start": "18:00", "end": "19:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "MASIS FLORES DAVID",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "MASIS FLORES DAVID",
+          "blocks": [{"day": "TUE", "start": "16:00", "end": "18:50"}, {"day": "THU", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "MORA CASASOLA MARIA FERNANDA",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "19:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "MORA PICADO LUIS FERNANDO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}, {"day": "FRI", "start": "10:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "MORA PICADO LUIS FERNANDO",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "NUÑEZ VANEGAS FELIX",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}, {"day": "FRI", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "PAEZ PAEZ CRISTIAN",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}, {"day": "THU", "start": "10:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "PAEZ PAEZ CRISTIAN",
+          "blocks": [{"day": "WED", "start": "07:30", "end": "09:20"}, {"day": "FRI", "start": "07:30", "end": "10:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "PARRA SALAZAR EDWARD",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "16:50"}, {"day": "THU", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "PARRA SALAZAR EDWARD",
+          "blocks": [{"day": "WED", "start": "10:30", "end": "12:20"}, {"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 18,
+          "professor": "PARRA SALAZAR EDWARD",
+          "blocks": [{"day": "WED", "start": "17:00", "end": "19:50"}, {"day": "FRI", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 19,
+          "professor": "QUESADA VILLALOBOS LOURDES",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "10:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 20,
+          "professor": "QUESADA VILLALOBOS LOURDES",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "17:50"}, {"day": "THU", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 21,
+          "professor": "RODRIGUEZ GRANADOS NATALIA",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 22,
+          "professor": "SANCHEZ FERNANDEZ IVONNE",
+          "blocks": [{"day": "WED", "start": "16:00", "end": "18:50"}, {"day": "FRI", "start": "16:00", "end": "17:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": true,
+      "can_enroll": false
+    }
+  ]
+}
