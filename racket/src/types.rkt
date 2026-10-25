@@ -7,6 +7,7 @@
 (provide
  dia/c
  minuto/c
+ carrera/c
  (contract-out
   (struct bloque ([dia dia/c] [inicio minuto/c] [fin minuto/c]))
   (struct grupo ([numero exact-positive-integer?]
