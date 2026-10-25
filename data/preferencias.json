@@ -1,0 +1,14 @@
+{
+  "min_credits": 12,
+  "max_credits": 18,
+  "courses": [
+    {"career": "computadores", "code": "CE2103", "groups": [1]},
+    {"career": "computadores", "code": "EL2113", "groups": [1, 2]},
+    {"career": "computadores", "code": "FI1102", "groups": [1, 2, 3]},
+    {"career": "computadores", "code": "FI1202", "groups": [2, 3]},
+    {"career": "computadores", "code": "MA2104", "groups": [1, 2]},
+    {"career": "fisica", "code": "MA1103", "groups": [1, 2]},
+    {"career": "fisica", "code": "MI2106", "groups": [2, 3]},
+    {"career": "fisica", "code": "FI2103", "groups": [1, 3]}
+  ]
+}

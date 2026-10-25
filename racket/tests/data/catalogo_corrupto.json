@@ -1,0 +1,198 @@
+{
+  "format_version": 1,
+  "course_count": 7,
+  "courses": [
+    {
+      "code": "S1",
+      "name": "Curso sintetico 1",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "MON",
+              "start": "08:00",
+              "end": "10:00"
+            }
+          ],
+          "has_conflict": false
+        },
+        {
+          "number": 2,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "TUE",
+              "start": "08:00",
+              "end": "10:00"
+            }
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "S2",
+      "name": "Curso sintetico 2",
+      "career": "computadores",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "MON",
+              "start": "25:00",
+              "end": "11:00"
+            }
+          ],
+          "has_conflict": false
+        },
+        {
+          "number": 2,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "MON",
+              "start": "10:00",
+              "end": "12:00"
+            }
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "S3",
+      "name": "Curso sintetico 3",
+      "career": "fisica",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "TUE",
+              "start": "09:00",
+              "end": "11:00"
+            }
+          ],
+          "has_conflict": false
+        },
+        {
+          "number": 2,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "WED",
+              "start": "08:00",
+              "end": "10:00"
+            },
+            {
+              "day": "FRI",
+              "start": "08:00",
+              "end": "10:00"
+            }
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "S4",
+      "name": "Curso sintetico 4",
+      "career": "computadores",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "THU",
+              "start": "13:00",
+              "end": "15:00"
+            }
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "S5",
+      "name": "Curso sintetico 5",
+      "career": "computadores",
+      "credits": 4,
+      "prerequisites": [
+        "S6"
+      ],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR SINTETICO",
+          "blocks": [
+            {
+              "day": "FRI",
+              "start": "13:00",
+              "end": "15:00"
+            }
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "S6",
+      "name": "Curso sintetico 6",
+      "career": "computadores",
+      "credits": 0,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": true,
+      "can_enroll": false
+    },
+    {
+      "code": "S7",
+      "name": "Curso sintetico 7",
+      "career": "fisica",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    }
+  ]
+}

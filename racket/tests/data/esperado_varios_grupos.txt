@@ -1,0 +1,28 @@
+# combinaciones esperadas para catalogo_sintetico.json (una por linea: pares curso-grupo | creditos)
+# rango de creditos 6 a 10; choques: S1-1 con S2-1 y S1-2 con S3-1; S1-1 y S2-2 se tocan en el borde (no chocan)
+S2-1 S3-1 | 6
+S2-1 S3-1 S4-1 | 8
+S2-1 S3-2 | 6
+S2-1 S3-2 S4-1 | 8
+S2-2 S3-1 | 6
+S2-2 S3-1 S4-1 | 8
+S2-2 S3-2 | 6
+S2-2 S3-2 S4-1 | 8
+S1-1 S4-1 | 6
+S1-1 S3-1 | 7
+S1-1 S3-1 S4-1 | 9
+S1-1 S3-2 | 7
+S1-1 S3-2 S4-1 | 9
+S1-1 S2-2 | 7
+S1-1 S2-2 S4-1 | 9
+S1-1 S2-2 S3-1 | 10
+S1-1 S2-2 S3-2 | 10
+S1-2 S4-1 | 6
+S1-2 S3-2 | 7
+S1-2 S3-2 S4-1 | 9
+S1-2 S2-1 | 7
+S1-2 S2-1 S4-1 | 9
+S1-2 S2-1 S3-2 | 10
+S1-2 S2-2 | 7
+S1-2 S2-2 S4-1 | 9
+S1-2 S2-2 S3-2 | 10
