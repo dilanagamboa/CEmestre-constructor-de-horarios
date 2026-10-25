@@ -31,3 +31,11 @@ data/salida.json
 # backups
 *~
 *.bak
+
+# archivos compilados de Racket (raco make y DrRacket)
+compiled/
+*.zo
+*.dep
+
+# autoguardado de DrRacket
+\#*\#
