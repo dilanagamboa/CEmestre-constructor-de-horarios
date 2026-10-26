@@ -221,4 +221,8 @@ Los archivos incorrectos a propósito están en `tests/data_invalid/` y los caso
 
 ## 5. Referencias
 
+Anthropic. (2026). *Claude* (versión Claude Opus 5.5) [Modelo de lenguaje de gran escala]. https://claude.ai
+
+DeepSeek. (2026). *DeepSeek* (versión V4.1 Flash) [Modelo de lenguaje de gran escala]. https://www.deepseek.com
+
 Kernighan, B. W., & Ritchie, D. M. (1988). *The C Programming Language* (2.ª ed.). Prentice Hall.
