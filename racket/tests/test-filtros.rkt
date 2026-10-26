@@ -70,3 +70,8 @@
   (check-equal? (stream-first primeros) 100)
   (check-true (< (unbox contador) 200)
               "no se recorrio el stream completo para obtener el primer resultado"))
+
+(test-case "en-rango es parametrico: mismo criterio para tres tipos"
+  (check-true ((en-rango identity 1 5) 3))
+  (check-false ((en-rango string-length 1 2) "abc"))
+  (check-true ((en-rango (lambda (p) (car p)) 0 10) (cons 7 "x"))))

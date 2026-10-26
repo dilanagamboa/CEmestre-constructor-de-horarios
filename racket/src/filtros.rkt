@@ -15,11 +15,19 @@
 
 (provide
  (contract-out
+  [en-rango (parametric->/c (A) (-> (-> A real?) real? real? (-> A boolean?)))]
   [filtrar-por-rango (-> (stream/c any/c)
                          (-> any/c real?)
                          real?
                          real?
                          (stream/c any/c))]))
+
+;; construye el criterio: #t si el valor que extraer saca del elemento esta en
+;; [minimo, maximo]; es parametrico en A porque nunca inspecciona el elemento,
+;; solo se lo pasa a extraer
+(define (en-rango extraer minimo maximo)
+  (lambda (elemento)
+    (<= minimo (extraer elemento) maximo)))
 
 (define (filtrar-por-rango elementos extraer minimo maximo)
   (unless (<= minimo maximo)
@@ -27,7 +35,4 @@
                            "el minimo no puede ser mayor que el maximo"
                            "minimo" minimo
                            "maximo" maximo))
-  (stream-filter (lambda (elemento)
-                   (define valor (extraer elemento))
-                   (and (<= minimo valor) (<= valor maximo)))
-                 elementos))
+  (stream-filter (en-rango extraer minimo maximo) elementos))
