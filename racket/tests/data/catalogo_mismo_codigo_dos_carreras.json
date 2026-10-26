@@ -1,0 +1,30 @@
+{
+  "format_version": 1,
+  "course_count": 2,
+  "courses": [
+    {
+      "code": "X1",
+      "name": "Curso X1 en Computadores",
+      "career": "computadores",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "X1",
+      "name": "Curso X1 en Fisica",
+      "career": "fisica",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    }
+  ]
+}

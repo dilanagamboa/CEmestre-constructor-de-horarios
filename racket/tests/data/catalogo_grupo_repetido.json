@@ -1,0 +1,35 @@
+{
+  "format_version": 1,
+  "course_count": 1,
+  "courses": [
+    {
+      "code": "X1",
+      "name": "Curso X1",
+      "career": "computadores",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "PROFESOR UNO",
+          "blocks": [
+            {"day": "MON", "start": "08:00", "end": "10:00"}
+          ],
+          "has_conflict": false
+        },
+        {
+          "number": 1,
+          "professor": "PROFESOR DOS",
+          "blocks": [
+            {"day": "TUE", "start": "08:00", "end": "10:00"}
+          ],
+          "has_conflict": false
+        }
+      ],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    }
+  ]
+}

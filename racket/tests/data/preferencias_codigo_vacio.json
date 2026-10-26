@@ -1,0 +1,11 @@
+{
+  "min_credits": 0,
+  "max_credits": 10,
+  "courses": [
+    {
+      "career": "computadores",
+      "code": "",
+      "groups": [1]
+    }
+  ]
+}

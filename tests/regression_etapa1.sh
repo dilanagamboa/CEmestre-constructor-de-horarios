@@ -6,6 +6,14 @@
 
 set -e
 BASE="${1:-main}"
+
+# en algunos clones el main local puede estar en un commit inicial sin codigo;
+# en ese caso se usa la rama remota, que contiene la Etapa 1 entregada
+if ! git cat-file -e "$BASE:Makefile" > /dev/null 2>&1; then
+    echo "AVISO - $BASE no contiene Makefile; se usa origin/main"
+    BASE="origin/main"
+fi
+
 TMP="$(mktemp -d)"
 
 # copia limpia de la version base en una carpeta temporal

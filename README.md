@@ -11,7 +11,7 @@ Paradigmas de Programación (CE1106). Proyecto, Etapa 1 (paradigma imperativo, l
 
 CEmestre es una herramienta de apoyo a la matrícula universitaria, pues a partir del plan de estudios de una carrera y de los cursos que un estudiante ya aprobó determina qué cursos puede matricular y cuáles presentan choques de horario, como base para construir un horario de matrícula válido. El sistema completo se desarrolla en cuatro etapas, una por paradigma (C, Racket, Prolog y Java), y cada etapa corresponde a un programa independiente que lee y escribe archivos.
 
-Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial y limitadas a los cuatro primeros semestres de su plan.
+Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial; los catálogos cubren los seis primeros semestres de su plan y los historiales representan a estudiantes que aprobaron los dos primeros.
 
 ## 1. Uso
 
@@ -110,7 +110,7 @@ Los datos reales obligaron a ajustar los límites iniciales. `CI0200` demostró 
 
 La Guía escribe los días en español (`LUN`, `MAR`, `MIE`...), pero el formato usa `MON`, `TUE`, `WED`, `THU`, `FRI` y `SAT`, los mismos del JSON, para que la Etapa 2 no dependa del idioma de la fuente. Los nombres de curso se escribieron sin tildes, así como los profesores se conservaron tal como los da la Guía, en mayúsculas.
 
-Cada historial representa a un estudiante que aprobó los dos primeros semestres de su plan, así como los cursos previos que estos requieren (`MA0101` en Computadores, y `CI0200`, `CI0202` y `MA1102` en Física), lo que da 17 cursos en Computadores y 14 en Física. Con ellos quedan 6 cursos matriculables en Computadores (`CE2103`, `CS2101`, `EL2113`, `FI1102`, `FI1202` y `MA2104`) y 8 en Física.
+Cada historial representa a un estudiante que aprobó los dos primeros semestres de su plan, así como los cursos previos que estos requieren (`MA0101` en Computadores, y `CI0200`, `CI0202` y `MA1102` en Física), lo que da 17 cursos en Computadores y 14 en Física. Con ellos quedan 8 cursos matriculables en Computadores (`CE2103`, `CS2101`, `EL2113`, `FI1102`, `FI1202`, `MA2104`, `MA2105` y `CI3203`) y 8 en Física.
 
 #### 2.2.2 Un caso límite real, los correquisitos mutuos
 
@@ -118,7 +118,7 @@ El caso límite más importante apareció al correr el programa con los datos re
 
 La solución fue cambiar la política, tal que un correquisito se considera cumplido si el curso ya está aprobado o si el estudiante podría matricularlo en el mismo periodo, es decir, si cumple sus propios prerrequisitos y, recursivamente, sus propios correquisitos. Para que la recursión termine con correquisitos mutuos, se marcan los cursos de la cadena actual y, al volver a uno ya visitado, se asume que se matriculan juntos (`validation_corequisites_ok`, en `src/validation.c`).
 
-Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
+Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. Las Fases 0–3 conservan esa lista pero todavía no imponen la restricción; queda para una fase posterior. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
 
 #### 2.2.3 Formato de salida
 
@@ -152,7 +152,7 @@ El archivo completo incluye además `format_version` y `course_count`. Los ocho 
 | Campo                  | Justificación                                                                                                                                                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `has_conflict` (grupo) | Los grupos de un mismo curso son alternativas y no se comparan entre sí. Un bloque que termina a las 10:00 no choca con otro que empieza a las 10:00.                                                                               |
-| `has_conflict` (curso) | Es verdadero si algún grupo choca, como pide el enunciado. Casi siempre lo es (196 de 197 grupos en Computadores y 285 de 285 en Física), por lo que la Etapa 2 usa el indicador por grupo y los bloques para recalcular los pares. |
+| `has_conflict` (curso) | Es verdadero si algún grupo choca, como pide el enunciado. En los datos actuales lo tienen los 36 cursos con grupos (los otros 3 no tienen grupos); a nivel de grupo chocan 220 de 221 en Computadores y 308 de 308 en Física, por lo que la Etapa 2 usa el indicador por grupo y los bloques para recalcular los pares. |
 | `approved`             | Distingue un curso ya aprobado de uno con requisitos faltantes, pues ambos dejan `can_enroll` en falso.                                                                                                                             |
 | `can_enroll`           | Mide la elegibilidad curricular, independiente de los choques (los correquisitos se explican en 2.2.2).                                                                                                                             |
 | `format_version`       | Protege el contrato con la Etapa 2, pues se sube `OUTPUT_FORMAT_VERSION` si el formato cambia de forma incompatible.                                                                                                                |
@@ -220,9 +220,5 @@ El historial tiene un código de curso por línea. Cada código debe existir en 
 Los archivos incorrectos a propósito están en `tests/data_invalid/` y los casos válidos límite en `tests/data_valid/`, de modo que cada regla del cargador tiene su archivo y su prueba. En cuanto a la memoria, todo `malloc` o `realloc` tiene su `free` en todos los caminos, incluidos los de error, y `make valgrind` no reporta fugas ni errores.
 
 ## 5. Referencias
-
-Durante el desarrollo se utilizó Claude como apoyo para revisar el código, depurar errores y redactar la documentación. Todo el contenido fue revisado y comprendido por los integrantes del grupo.
-
-Anthropic. (2026). *Claude* (versión Claude Opus 5.5) [Modelo de lenguaje de gran escala]. https://claude.ai
 
 Kernighan, B. W., & Ritchie, D. M. (1988). *The C Programming Language* (2.ª ed.). Prentice Hall.

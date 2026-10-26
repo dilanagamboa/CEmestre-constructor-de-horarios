@@ -1,7 +1,7 @@
 #lang racket
 
 ;; tipos del modulo de Racket, modelados con structs inmutables y contratos
-;; los structs de Racket son inmutables por defecto (no se usa #:mutable)
+;; los structs de Racket son inmutables por defecto (no se declaran campos mutables)
 ;; #:transparent permite comparar con equal? e imprimir el contenido en las pruebas
 
 (provide

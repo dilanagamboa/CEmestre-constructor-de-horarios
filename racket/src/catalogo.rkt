@@ -18,6 +18,13 @@
 (define DIAS '(MON TUE WED THU FRI SAT))
 (define CARRERAS '(computadores fisica))
 
+;; primera clave repetida de la lista, o #f si no hay
+(define (primer-repetido claves)
+  (cond
+    [(empty? claves) #f]
+    [(member (first claves) (rest claves)) (first claves)]
+    [else (primer-repetido (rest claves))]))
+
 ;; "HH:MM" a minutos desde las 00:00, igual que minutes_of en conflicts.c
 ;; #f si el texto no es una hora valida
 (define (hora->minutos texto)
@@ -52,14 +59,30 @@
   (define carrera (string->symbol (campo donde j 'career string? "un texto")))
   (unless (memq carrera CARRERAS)
     (error-lectura donde "carrera invalida ~a" carrera))
+  (define prerrequisitos
+    (campo donde j 'prerequisites (lista-de non-empty-string?) "una lista de codigos"))
+  (define correquisitos
+    (campo donde j 'corequisites (lista-de non-empty-string?) "una lista de codigos"))
+  (when (or (member codigo prerrequisitos) (member codigo correquisitos))
+    (error-lectura donde "un curso no puede ser requisito de si mismo"))
+  (define grupos
+    (map (lambda (g) (json->grupo donde g))
+         (campo donde j 'groups (lista-de hash?) "una lista de grupos")))
+  (define grupo-repetido (primer-repetido (map grupo-numero grupos)))
+  (when grupo-repetido
+    (error-lectura donde "el grupo ~a aparece mas de una vez" grupo-repetido))
+  ;; C resume en el curso la bandera de sus grupos; se valida el campo y su
+  ;; coherencia, aunque los choques reales se recalculan desde los bloques.
+  (define choque-curso (campo donde j 'has_conflict boolean? "true o false"))
+  (unless (eq? choque-curso (ormap grupo-choque grupos))
+    (error-lectura donde "has_conflict del curso no coincide con sus grupos"))
   (curso carrera
          codigo
          (campo donde j 'name non-empty-string? "un texto no vacio")
          (campo donde j 'credits exact-nonnegative-integer? "un entero no negativo")
-         (campo donde j 'prerequisites (lista-de non-empty-string?) "una lista de codigos")
-         (campo donde j 'corequisites (lista-de non-empty-string?) "una lista de codigos")
-         (map (lambda (g) (json->grupo donde g))
-              (campo donde j 'groups (lista-de hash?) "una lista de grupos"))
+         prerrequisitos
+         correquisitos
+         grupos
          (campo donde j 'approved boolean? "true o false")
          (campo donde j 'can_enroll boolean? "true o false")))
 
@@ -77,13 +100,6 @@
   (if (= (length cursos) (campo donde datos 'course_count exact-nonnegative-integer? "un entero"))
       cursos
       (error-lectura donde "course_count no coincide con la cantidad de cursos")))
-
-;; primera clave repetida de la lista, o #f si no hay
-(define (primer-repetido claves)
-  (cond
-    [(empty? claves) #f]
-    [(member (first claves) (rest claves)) (first claves)]
-    [else (primer-repetido (rest claves))]))
 
 ;; un curso se identifica por carrera y codigo, asi que esa pareja no se puede repetir
 (define (leer-catalogo rutas)
