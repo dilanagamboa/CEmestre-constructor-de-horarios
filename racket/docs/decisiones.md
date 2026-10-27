@@ -10,7 +10,7 @@ La regla general es que el código de `racket/src/` sea funcional: structs inmut
 | --- | --- |
 | D1 | Una combinación es un subconjunto no vacío de los cursos habilitados del universo; se permite omitir cursos y se excluye la combinación vacía. |
 | D2 | Se usan structs inmutables y contratos de Racket (`contract-out`), no Typed Racket. |
-| D3 | Para la Fase 4 se propone JSON Lines (un objeto JSON por combinación); todavía no se implementa la exportación. |
+| D3 | La salida es JSON Lines: un objeto JSON por combinación, escrito a medida que se consume el stream (ver `formato_salida.md`). |
 | D4 | Una combinación guarda pares curso-grupo y el total de créditos; la carrera y el horario se obtienen del curso y del grupo de cada par. |
 | D5 | En el borde, un bloque que termina exactamente cuando empieza otro no choca. La comparación usa `<` estricto. |
 | D6 | Racket recalcula los choques a partir de los bloques. La bandera `has_conflict` de C se usa solo como referencia de consistencia. |
@@ -112,7 +112,7 @@ El proyecto ya tenía `types.rkt` con structs y `contract-out`, y el resto de lo
 
 ### Decisión final
 
-Para la Fase 4 se propone **JSON Lines**, con un objeto JSON por combinación y una línea por objeto. La decisión es preliminar: la exportación final no se implementa en las Fases 0–3. El contrato de entrada de C sigue siendo JSON normal y no se modifica.
+La salida es **JSON Lines**, con un objeto JSON por combinación y una línea por objeto, implementada en `exportador.rkt`. El contrato completo está en `formato_salida.md`. El contrato de entrada de C sigue siendo JSON normal y no se modifica.
 
 ### Justificación
 
@@ -314,3 +314,9 @@ La separación permite que C siga siendo un programa independiente y que Racket 
 - **D1** queda preparada para cambiar en un solo módulo si el profesor exige que todos los cursos estén presentes.
 - El formato exacto de cada línea JSONL y la conversión a hechos de Prolog se definirán en la Fase 4.
 - La revisión final de los datos de Física y de los horarios de los semestres 5–6 sigue siendo responsabilidad del equipo; este documento registra lo que se pudo verificar con las pruebas y los archivos disponibles.
+
+---
+
+## D8 — Correquisitos dentro de una combinación
+
+C marca un curso como matriculable si su correquisito está aprobado o también es matriculable, es decir, asume que ambos se llevan juntos. El generador no exige que vayan en la misma combinación (por ejemplo, `FI1202` puede aparecer sin `FI1102`), pues el enunciado indica que esta etapa no aplica restricciones distintas a los créditos y que esas reglas le corresponden a Prolog. Para que Prolog pueda aplicarla sin volver a abrir el catálogo, el exportador incluye los correquisitos de cada curso en la salida.
