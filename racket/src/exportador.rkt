@@ -11,7 +11,8 @@
 (provide
  (contract-out
   [minutos->hora (-> minuto/c string?)]
-  [combinacion->jsexpr (-> exact-positive-integer? combinacion? jsexpr?)]))
+  [combinacion->jsexpr (-> exact-positive-integer? combinacion? jsexpr?)]
+  [exportar-combinaciones (-> (stream/c combinacion?) path-string? exact-nonnegative-integer?)]))
   
 
 ;; minutos desde las 00:00 a "HH:MM", el mismo formato que exporta C
@@ -43,3 +44,19 @@
           'total_credits (combinacion-creditos k)
           'course_count (length (combinacion-pares k))
           'courses (map par->jsexpr (combinacion-pares k))))
+
+;; escribe una linea por combinacion; id avanza como parametro de la recursion
+;; devuelve cuantas combinaciones escribio
+(define (escribir-lineas combinaciones id salida)
+  (cond
+    [(stream-empty? combinaciones) (- id 1)]
+    [else
+     (write-json (combinacion->jsexpr id (stream-first combinaciones)) salida)
+     (newline salida)
+     (escribir-lineas (stream-rest combinaciones) (+ id 1) salida)]))
+
+;; crea o reemplaza el archivo; si no hay combinaciones queda vacio
+(define (exportar-combinaciones combinaciones ruta)
+  (call-with-output-file ruta
+    (lambda (salida) (escribir-lineas combinaciones 1 salida))
+    #:exists 'replace))
