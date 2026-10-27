@@ -11,11 +11,13 @@
 ;; solo pide elementos al stream original cuando alguien pide elementos del
 ;; resultado.
 
-(require racket/stream)
+(require racket/stream
+         "types.rkt")
 
 (provide
  (contract-out
   [en-rango (parametric->/c (A) (-> (-> A real?) real? real? (-> A boolean?)))]
+  [filtrar-por-creditos (-> (stream/c combinacion?) preferencias? (stream/c combinacion?))]
   [filtrar-por-rango (-> (stream/c any/c)
                          (-> any/c real?)
                          real?
@@ -36,3 +38,12 @@
                            "minimo" minimo
                            "maximo" maximo))
   (stream-filter (en-rango extraer minimo maximo) elementos))
+
+
+;; instancia del filtro generico para la Etapa 2: creditos totales de cada
+;; combinacion dentro del rango inclusivo de las preferencias
+(define (filtrar-por-creditos combinaciones prefs)
+  (filtrar-por-rango combinaciones
+                     combinacion-creditos
+                     (preferencias-creditos-min prefs)
+                     (preferencias-creditos-max prefs)))

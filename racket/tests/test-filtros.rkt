@@ -75,3 +75,12 @@
   (check-true ((en-rango identity 1 5) 3))
   (check-false ((en-rango string-length 1 2) "abc"))
   (check-true ((en-rango (lambda (p) (car p)) 0 10) (cons 7 "x"))))
+
+  
+(define-runtime-path varios-grupos "data/preferencias_varios_grupos.json")
+
+(test-case "filtro de creditos con el rango de las preferencias"
+  (define prefs (leer-preferencias varios-grupos))
+  (define filtradas (stream->list (filtrar-por-creditos combinaciones prefs)))
+  (check-equal? (length filtradas) 26)
+  (check-true (andmap (lambda (k) (<= 6 (combinacion-creditos k) 10)) filtradas)))
