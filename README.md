@@ -118,7 +118,7 @@ El caso límite más importante apareció al correr el programa con los datos re
 
 La solución fue cambiar la política, tal que un correquisito se considera cumplido si el curso ya está aprobado o si el estudiante podría matricularlo en el mismo periodo, es decir, si cumple sus propios prerrequisitos y, recursivamente, sus propios correquisitos. Para que la recursión termine con correquisitos mutuos, se marcan los cursos de la cadena actual y, al volver a uno ya visitado, se asume que se matriculan juntos (`validation_corequisites_ok`, en `src/validation.c`).
 
-Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. Las Fases 0–3 conservan esa lista pero todavía no imponen la restricción; queda para una fase posterior. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
+Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. La Etapa 2 conserva esa lista y la incluye en su salida para que la Etapa 3 (Prolog) aplique la restricción; el generador no la impone porque el enunciado prohíbe restricciones distintas a los créditos. El caso real y su resolución se explican en 2.2.2 y en la decisión D8. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
 
 #### 2.2.3 Formato de salida
 
@@ -326,3 +326,188 @@ La pereza se demuestra con 60 cursos de un grupo cada uno: hay 2^60 − 1 combin
 #### Correquisitos y alcance de la etapa
 
 C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D8 de `racket/docs/decisiones.md`.
+
+### 2.2.2 Un caso límite real y cómo se resolvió
+
+#### Correquisitos que no se imponen en esta etapa
+
+El caso más delicado apareció con los correquisitos reales de Computadores. `FI1202` (Laboratorio de Física General II) tiene como correquisito `FI1102` (Física General II), y `FI1102` tiene a su vez como correquisito `MA1102`. C marca `FI1202` como matriculable porque `FI1102` se puede llevar en el mismo periodo, no porque ya esté aprobado. La Etapa 2, por diseño, no impone esa relación: el enunciado pide generar combinaciones sin choques y filtrar por créditos, y prohíbe aplicar restricciones distintas a los créditos. Por eso el generador puede producir una combinación con `FI1202` sin `FI1102`.
+
+El caso se observa en la salida real. La combinación con `id = 13` contiene `FI1202` grupo 2, `MA2104` grupo 1, `MA1103` grupo 1 y `FI2103` grupo 1, pero no contiene `FI1102`; la línea incluye `"corequisites":["FI1102"]` dentro del curso. La combinación con `id = 52` sí contiene `FI1102` grupo 1 y `FI1202` grupo 2, además de otros tres cursos. Ambas son válidas para esta etapa porque no tienen choques y suman créditos dentro del rango; la diferencia es que la primera no cumple la regla de correquisitos que le corresponde a Prolog.
+
+La solución no fue agregar una restricción al generador, sino dejar el dato disponible y documentar la frontera entre etapas (decisión D8). El exportador incluye `corequisites` en cada curso, de modo que la Etapa 3 puede exigir que los correquisitos se elijan juntos sin volver a abrir el catálogo de C. El mismo criterio cubre el caso de `QU1102` y `QU1106` en Física, que se exigen mutuamente como correquisito, y el de `FI1102` en Computadores, que exige `MA1102` como correquisito. Si el profesor pidiera que la restricción se aplicara ya en esta etapa, el cambio quedaría localizado en el generador y en el universo, no en el formato de salida.
+
+#### El mismo código en dos carreras
+
+Otro caso real es la identidad de un curso. Doce códigos aparecen en las dos carreras, pero no siempre significan lo mismo: `FI1102` exige `FI1101` en Computadores y `FI1101` más `MA1102` en Física; `CS2101` no tiene requisitos en Computadores y exige `CI1106` e `IF1101` en Física. Por eso un curso se identifica con la pareja `(carrera, código)` y no solo con el código. `leer-catalogo` acepta el mismo código en carreras distintas, pero rechaza la pareja repetida; `buscar-curso` recibe carrera y código; y el archivo de preferencias también incluye `career`. Sin esta decisión, mezclar las dos carreras habría obligado a elegir una versión de los requisitos y a equivocarse en la otra.
+
+### 2.2.3 Formato de salida
+
+La salida es `data/combinaciones.jsonl`, en formato JSON Lines: un objeto JSON independiente por línea y una línea por combinación. No hay encabezado, pie ni arreglo global; si ninguna combinación cumple el rango de créditos, el archivo queda vacío. El contrato completo, con el tipo de cada campo, está en `racket/docs/formato_salida.md`.
+
+Un ejemplo real es la combinación `id = 13`, que también sirve para ilustrar el caso de los correquisitos.
+
+```json
+{"course_count":4,"courses":[{"blocks":[{"day":"TUE","end":"14:50","start":"13:00"}],"career":"computadores","code":"FI1202","corequisites":["FI1102"],"credits":1,"group":2,"name":"Laboratorio fisica general II"},{"blocks":[{"day":"TUE","end":"19:50","start":"18:00"},{"day":"THU","end":"19:50","start":"18:00"}],"career":"computadores","code":"MA2104","corequisites":[],"credits":4,"group":1,"name":"Calculo superior"},{"blocks":[{"day":"WED","end":"09:20","start":"07:30"},{"day":"FRI","end":"09:20","start":"07:30"}],"career":"fisica","code":"MA1103","corequisites":[],"credits":4,"group":1,"name":"Calculo y algebra lineal"},{"blocks":[{"day":"TUE","end":"16:50","start":"15:00"},{"day":"THU","end":"16:50","start":"15:00"}],"career":"fisica","code":"FI2103","corequisites":[],"credits":3,"group":1,"name":"Fisica general III"}],"id":13,"total_credits":12}
+```
+
+| Campo | Tipo | Obligatorio | Justificación |
+| --- | --- | --- | --- |
+| `id` | entero positivo | extra | Permite que Prolog y la Etapa 4 se refieran a una combinación concreta sin depender de su posición en el archivo. |
+| `total_credits` | entero no negativo | sí | Es la suma de los créditos de los cursos elegidos; el filtro de la Etapa 2 ya la usó para aceptar la combinación. |
+| `course_count` | entero positivo | extra | Permite aplicar restricciones por cantidad de cursos sin recorrer la lista. |
+| `courses` | lista no vacía | sí | Contiene los pares curso-grupo seleccionados. |
+| `career` | `"computadores"` o `"fisica"` | sí | Identifica la carrera de origen del curso y evita confundir códigos repetidos entre carreras. |
+| `code` | texto | sí | Código del curso. |
+| `group` | entero positivo | sí | Número del grupo elegido. |
+| `name` | texto | extra | La Etapa 4 lo muestra al usuario sin volver al catálogo. |
+| `credits` | entero no negativo | extra | Prolog puede recalcular o comparar créditos por curso. |
+| `corequisites` | lista de códigos | extra | Es la información que Prolog necesita para aplicar la regla de correquisitos (D8). |
+| `blocks` | lista de bloques | extra | Prolog revisa compatibilidades de horario sin abrir el catálogo; cada bloque trae `day`, `start` y `end` en `HH:MM`. |
+
+La elección de JSON Lines responde a una decisión de diseño concreta, no solo estética. El exportador consume el stream de combinaciones de a un elemento y escribe cada línea en el momento en que la recibe; no necesita saber cuál es la última combinación, no acumula comas y no tiene que materializar la lista completa para cerrar un arreglo. Si el proceso se interrumpe, las líneas anteriores siguen siendo objetos JSON válidos. Cada línea es autocontenida, de modo que Prolog puede leerla y convertirla en un hecho sin conservar el estado de un documento mayor. Las estructuras anidadas (varios cursos, varios bloques por grupo y listas de correquisitos) se conservan; un CSV plano habría exigido inventar separadores dentro de las celdas y convertir el orden de las columnas en parte del contrato.
+
+La salida garantiza que ninguna combinación tiene choques entre sus grupos, que `total_credits` está en el rango inclusivo de las preferencias, que un curso `(career, code)` aparece una sola vez por combinación y que todos los cursos estaban marcados como matriculables por C. El archivo de la Etapa 1 sigue siendo un JSON normal con `format_version` y `course_count`; la salida de la Etapa 2 no modifica ese contrato de entrada.
+
+## 2.3 Estructuras de datos desarrolladas
+
+Los tipos están en `racket/src/types.rkt` y el struct `universo` en `racket/src/universo.rkt`. Todos son structs de Racket sin campos mutables, con `#:transparent` para poder compararlos con `equal?` e imprimirlos en las pruebas. Las funciones públicas se exportan con `contract-out`.
+
+```
+catalogo
+  └── cursos: (listof curso)
+        ├── carrera, codigo, nombre, creditos
+        ├── prerrequisitos, correquisitos
+        ├── aprobado, matriculable
+        └── grupos: (listof grupo)
+              ├── numero, profesor, choque
+              └── bloques: (listof bloque)
+                    ├── dia
+                    ├── inicio
+                    └── fin
+
+preferencias
+  ├── creditos-min, creditos-max
+  └── intereses: (listof interes)
+        ├── carrera, codigo
+        └── grupos: (non-empty-listof exact-positive-integer)
+
+universo
+  ├── cursos: (listof curso)   ; copias recortadas del catálogo
+  └── avisos: (listof string)
+
+combinacion
+  ├── pares: (non-empty-listof par-curso-grupo)
+  │     ├── curso
+  │     └── grupo
+  └── creditos
+```
+
+| Estructura | Campos principales | Propósito e invariantes |
+| --- | --- | --- |
+| `bloque` | `dia`, `inicio`, `fin` | Día de la clase y minutos desde las 00:00. El día es `MON` a `SAT`; las horas están entre 0 y 1439 y el lector exige `fin > inicio`. |
+| `grupo` | `numero`, `profesor`, `bloques`, `choque` | Oferta de un curso. `numero` es positivo y no se repite dentro del curso; `bloques` puede ser vacío y entonces el grupo nunca choca; `choque` es la bandera de C y se usa solo para la prueba de consistencia. |
+| `curso` | `carrera`, `codigo`, `nombre`, `creditos`, `prerrequisitos`, `correquisitos`, `grupos`, `aprobado`, `matriculable` | Curso del catálogo. La pareja `(carrera, codigo)` es su identidad; `creditos` puede ser 0; `grupos` puede ser vacío; `aprobado` y `matriculable` son banderas independientes. |
+| `catalogo` | `cursos` | Agrupa los cursos de una o varias carreras ya leídos. El lector exige al menos un archivo y no permite repetir la pareja `(carrera, codigo)`. |
+| `interes` | `carrera`, `codigo`, `grupos` | Curso que el estudiante quiere llevar y los números de grupo que acepta. La lista de grupos no está vacía y sus elementos son positivos; el lector exige que no se repitan. |
+| `preferencias` | `intereses`, `creditos-min`, `creditos-max` | Entrada del estudiante. Los créditos no son negativos y el lector exige `creditos-min <= creditos-max`; `intereses` puede estar vacío. |
+| `par-curso-grupo` | `curso`, `grupo` | Un curso con el grupo elegido. Es la unidad de una combinación y guarda los structs completos para que el exportador no dependa de un catálogo global. |
+| `combinacion` | `pares`, `creditos` | Matrícula candidata. `pares` nunca está vacío, los grupos son compatibles entre sí y `creditos` es la suma de los créditos de los cursos elegidos. |
+| `universo` | `cursos`, `avisos` | Resultado del cruce entre catálogo y preferencias. Solo contiene cursos no aprobados, matriculables y con al menos un grupo solicitado que existe; los avisos son textos legibles para el usuario. |
+
+Tres invariantes sostienen el resto del diseño. Primero, la identidad `(carrera, código)` permite que el mismo código exista en dos carreras con requisitos distintos sin mezclarse. Segundo, el universo se construye con `struct-copy` sobre el curso original, así que recortar los grupos no modifica el catálogo y una misma combinación puede compartir cursos y grupos sin efectos laterales. Tercero, la combinación guarda los pares completos y no índices, de modo que el exportador conoce carrera, nombre, créditos, correquisitos y bloques sin volver a buscar en el catálogo.
+
+La generación acumula estado como parámetros de la recursión: `pendientes` es la lista de cursos que faltan, `seleccion` es la lista inversa de pares ya elegidos y `creditos` es la suma acumulada. Al llegar al final se invierte la selección, se construye la combinación y se emite en el stream. Ningún paso modifica un struct ya construido: se crean valores nuevos con los constructores o con `struct-copy`.
+
+## 2.4 Uso, pruebas y estructura del repositorio
+
+El proyecto completo se compila y se prueba en Linux. La Etapa 2 requiere Racket 9.3 o una versión compatible con `racket/stream`, `json` y `rackunit`; no necesita paquetes externos. La Etapa 1 requiere `gcc`, `make` y, para la revisión de memoria, `valgrind`.
+
+### 2.4.1 Ejecución
+
+Desde la raíz del repositorio, el programa usa por defecto `data/preferencias.json`, `data/salida_computadores.json`, `data/salida_fisica.json` y escribe `data/combinaciones.jsonl`:
+
+```bash
+racket racket/src/main.rkt
+```
+
+También se pueden indicar las rutas en el orden preferencias, salida y uno o más catálogos:
+
+```bash
+racket racket/src/main.rkt data/preferencias.json data/combinaciones.jsonl \
+    data/salida_computadores.json data/salida_fisica.json
+```
+
+Las rutas por defecto se resuelven desde la ubicación de `constantes.rkt`, así que el programa funciona aunque se ejecute desde otra carpeta. Si faltan argumentos o el número no es válido, muestra el uso y termina con código 1. Los errores de lectura y de escritura se informan por `stderr` con un mensaje que incluye el archivo o el campo problemático, y el programa termina con código 1; un error de datos nunca se convierte en una traza interna sin explicación.
+
+La salida del ejemplo real tiene 762 líneas. Para inspeccionarla:
+
+```bash
+wc -l data/combinaciones.jsonl
+head -1 data/combinaciones.jsonl
+```
+
+### 2.4.2 Pruebas de Racket
+
+```bash
+raco test racket/tests
+raco make racket/src/*.rkt
+```
+
+La suite completa tiene 65 pruebas y todas pasan. Las suites se reparten así.
+
+| Suite | Pruebas | Qué cubre |
+| --- | ---: | --- |
+| `test-catalogo.rkt` | 6 | Catálogo válido, archivo vacío e inexistente, carrera inválida, conteo, código repetido, mismo código en dos carreras, grupo repetido, campo faltante, auto-requisito, choque incoherente, versión y JSON malformado. |
+| `test-preferencias.rkt` | 4 | Preferencias válidas, archivo vacío e inexistente, JSON malformado, créditos negativos, rango imposible, carrera inválida, código vacío, grupos vacíos, no positivos y repetidos, `courses` que no es lista y campo faltante. |
+| `test-universo.rkt` | 6 | Universo vacío, orden de preferencias, avisos de cursos no habilitados, aprobados, inexistentes, repetidos y grupos inexistentes; no modificación del catálogo. |
+| `test-choques.rkt` | 5 | Horario idéntico, traslape parcial, bloque contenido, borde, días distintos, grupos con varios bloques, grupos vacíos y consistencia con las banderas de C. |
+| `test-generador.rkt` | 14 | Oráculos manuales, combinación vacía, omisión de cursos, un curso con uno o varios grupos, choques, borde, créditos acumulados y pereza con 60 cursos. |
+| `test-filtros.rkt` | 9 | Límites inclusivos con enteros, cadenas y combinaciones, segundo extractor, rango sin resultados, mínimo mayor que máximo, pereza y el criterio paramétrico. |
+| `test-streams.rkt` | 3 | `stream-cons` y `stream-append` difieren la cola, y el generador no usa `list->stream` ni `stream->list`. |
+| `test-exportador.rkt` | 6 | Formato `HH:MM`, campos obligatorios, ida y vuelta, coherencia de créditos y cantidad, primera línea y archivo vacío. |
+| `test-main.rkt` | 4 | Flujo completo con el catálogo sintético, avisos, rango sin resultados y archivo de entrada inexistente. |
+| `test-casos-limite.rkt` | 3 | Mínimo igual a máximo, un solo curso y universo grande con las primeras 100 combinaciones. |
+| `test-validar-salida.rkt` | 5 | Validación de la salida real contra el catálogo de C: campos, créditos, rango, choques, cursos matriculables y unicidad. |
+
+### 2.4.3 Pruebas de la Etapa 1 y regresión
+
+```bash
+make clean
+make
+make test
+bash tests/regression_etapa1.sh origin/main
+```
+
+Las tres suites de C pasan con 48/48, 35/35 y 73/73 pruebas. La regresión confirma que la salida de C es idéntica a la de `origin/main` salvo por el campo `career`, que es el cambio propio de la Etapa 2. El detalle de la validación final está en `racket/docs/revision_final.md` y la auditoría de mutación y tipos en `racket/docs/auditoria_fase_5.md`.
+
+### 2.4.4 Estructura del repositorio
+
+```
+.
+├── data/                     datos compartidos, fuentes, salidas de C y combinaciones.jsonl
+├── include/                  cabeceras de la Etapa 1 en C
+├── src/                      código de la Etapa 1 en C
+├── tests/                    pruebas y datos de la Etapa 1
+├── racket/
+│   ├── src/                  módulos funcionales de la Etapa 2
+│   ├── tests/                suites de Racket, fixtures y oráculos manuales
+│   └── docs/                 decisiones, contratos, auditorías, guía de defensa y revisión final
+├── Makefile                  compilación y pruebas de C
+├── README.md                 documentación de las dos etapas
+└── planDocTest.md            plan de trabajo de la Etapa 2
+```
+
+El archivo `data/preferencias.json` mezcla cursos de Computadores y Física para ejercitar los dos catálogos. El programa no impone una carrera de estudiante porque el enunciado no la pide; la carrera se conserva por curso para que la salida siga siendo inequívoca.
+
+## Referencias de la Etapa 2
+
+Racket. (2026). *The Racket Reference* (versión 9.3). https://docs.racket-lang.org/reference/
+
+Racket. (2026). *Streams*. https://docs.racket-lang.org/reference/streams.html
+
+Racket. (2026). *Contracts*. https://docs.racket-lang.org/reference/contracts.html
+
+Racket. (2026). *JSON*. https://docs.racket-lang.org/reference/json.html
+
+Racket. (2026). *RackUnit*. https://docs.racket-lang.org/rackunit/
