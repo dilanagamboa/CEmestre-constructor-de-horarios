@@ -79,7 +79,7 @@ La carrera forma parte de la identidad del curso porque un mismo código puede t
 
 `can_enroll` mide la elegibilidad **curricular**: prerrequisitos y correquisitos. No tiene en cuenta los choques de horario. Un curso puede ser `can_enroll = true` y aun así no caber en una combinación por choques.
 
-Un correquisito se considera cumplido si ya está aprobado o si el estudiante podría matricularlo en el mismo periodo. Por eso `can_enroll` no garantiza que los correquisitos estén aprobados. Las Fases 0–3 conservan la lista `corequisites` para que fases posteriores exijan elegir juntos los cursos que se necesitan; el generador actual solo aplica choques y créditos, no esa restricción. El caso más claro es la pareja mutua `QU1102` / `QU1106` en Física.
+Un correquisito se considera cumplido si ya está aprobado o si el estudiante podría matricularlo en el mismo periodo. Por eso `can_enroll` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` y la incluye en su salida para que Prolog exija elegir juntos los cursos que se necesitan; el generador solo aplica choques y créditos, no esa restricción. El caso más claro es la pareja mutua `QU1102` / `QU1106` en Física y el de `FI1202`, que exige `FI1102` como correquisito.
 
 ### 2.4 `has_conflict`
 
@@ -181,5 +181,7 @@ raco test racket/tests/test-catalogo.rkt
 3. `universo.rkt` cruza ambas entradas, elimina aprobados y no habilitados, y deja solo los grupos solicitados que existen.
 4. `generador.rkt` recibe ese universo y produce combinaciones.
 5. `filtros.rkt` filtra las combinaciones por créditos.
+6. `exportador.rkt` escribe una línea JSON por combinación.
+7. `main.rkt` une el flujo y maneja las rutas y los errores.
 
 El catálogo original no se modifica: `universo.rkt` usa `struct-copy` para crear cursos con la lista de grupos recortada, y las pruebas comprueban que el catálogo conserva sus grupos originales.

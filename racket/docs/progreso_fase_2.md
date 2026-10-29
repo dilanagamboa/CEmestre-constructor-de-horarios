@@ -1,5 +1,7 @@
 # Progreso de la Fase 2: tipos, lectura y universo
 
+> Documento histórico del cierre de la Fase 2. Las afirmaciones sobre la ausencia de `main.rkt` o del exportador describen ese momento; el estado final de la Etapa 2 está en `revision_final.md` y en el README.
+
 Fecha de revisión: 2026-10-26.
 Rama: `feature/etapa2-fases-0-3`.
 

@@ -1,6 +1,6 @@
 # Guía de defensa del código de la Etapa 2
 
-Esta guía permite explicar el código de las Fases 0–3 y sirve como material de estudio para la defensa. Para cada módulo se indica responsabilidad, entradas, salidas, invariantes, dependencias, funciones principales, errores, pruebas y cambios que se pueden hacer en vivo durante la defensa.
+Esta guía permite explicar el código de la Etapa 2 (Fases 0–5) y sirve como material de estudio para la defensa. Para cada módulo se indica responsabilidad, entradas, salidas, invariantes, dependencias, funciones principales, errores, pruebas y cambios que se pueden hacer en vivo durante la defensa. El estado final y la evidencia de la revisión están en `revision_final.md`.
 
 ## 1. Preguntas sobre el diseño
 
@@ -26,7 +26,7 @@ Por la pareja `(carrera, código)`, no solo por el código. Un mismo código pue
 
 ### ¿Por qué se conserva la carrera dentro del curso?
 
-Porque el curso viaja dentro de cada combinación y el futuro exportador necesita saber a qué carrera pertenece sin volver a buscar en el catálogo. También porque la carrera es parte de la identidad y de la interpretación de los requisitos.
+Porque el curso viaja dentro de cada combinación y el exportador necesita saber a qué carrera pertenece sin volver a buscar en el catálogo. También porque la carrera es parte de la identidad y de la interpretación de los requisitos.
 
 ## 2. Preguntas sobre la lectura
 
@@ -163,6 +163,32 @@ Cada llamada recibe una versión nueva; no se modifica la anterior.
 
 La selección se acumula con `(cons (par-curso-grupo curso grupo) seleccion)` y se invierte al emitir para conservar el orden del universo. Los créditos se acumulan con `(+ creditos (curso-creditos curso))` en la misma llamada recursiva. Ambos son parámetros, no variables globales.
 
+## 6.5 Preguntas sobre el filtro de créditos, la salida y el flujo principal
+
+### ¿Cómo se aplica el filtro de créditos?
+
+`filtrar-por-creditos` es una instancia de `filtrar-por-rango`: recibe el stream de combinaciones, usa `combinacion-creditos` como extractora y toma `preferencias-creditos-min` y `preferencias-creditos-max`. El rango es inclusivo, así que una combinación con exactamente el mínimo o el máximo se conserva. El generador no conoce los límites; el filtro se aplica después, en el flujo principal.
+
+### ¿Qué se escribe cuando no hay combinaciones?
+
+El exportador crea o reemplaza el archivo y, si el stream está vacío, lo deja vacío. `exportar-combinaciones` devuelve 0 y `main.rkt` informa “0 combinaciones exportadas”. El caso se prueba en `test-main.rkt` con un rango imposible y en `test-exportador.rkt` con `empty-stream`.
+
+### ¿Por qué la salida es JSON Lines y no un arreglo JSON?
+
+Porque el exportador consume el stream de a un elemento y escribe cada combinación en cuanto la recibe. Un arreglo exigiría saber cuál es el último elemento para cerrar corchetes y comas, o materializar la lista completa. JSON Lines permite escribir de forma incremental, tolera una interrupción sin invalidar las líneas anteriores y cada línea se puede leer desde Prolog como un objeto autocontenido.
+
+### ¿Qué campos extra tiene la salida y por qué?
+
+`id`, `course_count`, `name`, `credits`, `corequisites` y `blocks`. `id` permite referirse a una combinación concreta; `course_count` y `credits` evitan recalcular restricciones; `name` lo usa la Etapa 4 para mostrar; `corequisites` deja la regla de correquisitos a Prolog; `blocks` permite revisar compatibilidades sin abrir el catálogo. La justificación completa está en `formato_salida.md` y en el README 2.2.3.
+
+### ¿Cómo se manejan los errores del programa principal?
+
+`main.rkt` captura `exn:fail:user?` (errores de lectura y datos) y `exn:fail:filesystem?` (errores de escritura), muestra el mensaje por `stderr` y termina con código 1. Si los argumentos no son válidos, muestra el uso y también sale con 1. Así un archivo inexistente o una ruta de salida inválida no producen una traza interna sin explicación.
+
+### ¿Qué pasa si el estudiante pide cursos de las dos carreras?
+
+El programa los trata como cursos distintos y puede combinarlos, porque el enunciado no impone una carrera de estudiante ni prohíbe mezclar intereses. La carrera se conserva por curso en la salida, de modo que la información sigue siendo inequívoca. El archivo `data/preferencias.json` mezcla ambas carreras para ejercitar los dos catálogos.
+
 ## 7. Explicación por módulo
 
 ### 7.1 `types.rkt`
@@ -251,15 +277,39 @@ La selección se acumula con `(cons (par-curso-grupo curso grupo) seleccion)` y 
 
 ### 7.8 `filtros.rkt`
 
-- **Responsabilidad:** filtrar cualquier stream por un rango inclusivo.
-- **Entradas:** stream, extractora, mínimo, máximo.
+- **Responsabilidad:** filtrar cualquier stream por un rango inclusivo y ofrecer la instancia de créditos.
+- **Entradas:** stream, extractora, mínimo, máximo; o stream de combinaciones y preferencias.
 - **Salidas:** stream filtrado.
-- **Invariantes:** `min <= max`; límites inclusivos; no conoce `combinacion`.
-- **Dependencias:** `racket/stream`.
-- **Funciones principales:** `filtrar-por-rango`.
+- **Invariantes:** `min <= max`; límites inclusivos; el filtro genérico no conoce `combinacion`.
+- **Dependencias:** `racket/stream`, `types.rkt`.
+- **Funciones principales:** `en-rango`, `filtrar-por-rango`, `filtrar-por-creditos`.
 - **Errores:** `raise-arguments-error` si `min > max`.
-- **Pruebas:** 7 tests de `test-filtros.rkt`.
+- **Pruebas:** 9 tests de `test-filtros.rkt`, incluida la pereza y el criterio paramétrico.
 - **Cambio en vivo:** filtrar los créditos de las combinaciones con 6–10 y mostrar 26; filtrar enteros con 2–4; filtrar cadenas por longitud.
+
+### 7.9 `exportador.rkt`
+
+- **Responsabilidad:** serializar cada combinación y escribir una línea JSON por elemento del stream.
+- **Entradas:** stream de combinaciones y ruta de salida.
+- **Salidas:** cantidad de combinaciones escritas; archivo JSONL.
+- **Invariantes:** una línea por combinación; `id` consecutivo desde 1; `total_credits` igual a la suma de créditos; `course_count` igual a la cantidad de cursos; si no hay combinaciones, archivo vacío.
+- **Dependencias:** `json`, `racket/stream`, `types.rkt`.
+- **Funciones principales:** `minutos->hora`, `bloque->jsexpr`, `par->jsexpr`, `combinacion->jsexpr`, `escribir-lineas`, `exportar-combinaciones`.
+- **Errores:** los de escritura se propagan como `exn:fail:filesystem` y `main.rkt` los convierte en mensaje y código 1.
+- **Pruebas:** 6 tests de `test-exportador.rkt`; 5 de `test-validar-salida.rkt`.
+- **Cambio en vivo:** cambiar el nombre de un campo en `par->jsexpr` y mostrar cómo la prueba de ida y vuelta o el contrato de `formato_salida.md` lo detectan; revertir.
+
+### 7.10 `main.rkt` y `constantes.rkt`
+
+- **Responsabilidad:** unir lectura, universo, generación, filtro y exportación; resolver las rutas por defecto y manejar los argumentos.
+- **Entradas:** cero argumentos o preferencias, salida y uno o más catálogos.
+- **Salidas:** archivo de salida, avisos por pantalla y código de salida.
+- **Invariantes:** el flujo siempre respeta el orden; las rutas por defecto se resuelven desde el código; los errores de lectura/escritura salen con 1.
+- **Dependencias:** todos los módulos de `racket/src/`.
+- **Funciones principales:** `ejecutar`, `leer-argumentos`, `reportar-error`.
+- **Errores:** uso inválido, archivo inexistente, JSON mal formado y ruta de salida inválida.
+- **Pruebas:** 4 tests de `test-main.rkt`; el flujo real se valida en `test-validar-salida.rkt`.
+- **Cambio en vivo:** ejecutar con `data/preferencias.json` y mostrar 762 combinaciones; ejecutar con una ruta de salida inexistente y mostrar el mensaje controlado.
 
 ## 8. Cambios posibles en vivo
 
@@ -271,11 +321,15 @@ La selección se acumula con `(cons (par-curso-grupo curso grupo) seleccion)` y 
 | `<=` en `bloques-chocan?` | El borde 10:00–10:00 choca. | Volver a `<`. |
 | Agregar un grupo repetido al catálogo | Error “el grupo … aparece mas de una vez”. | Quitar el grupo. |
 | Pedir un grupo inexistente en preferencias | Aviso y exclusión del curso si no queda ninguno. | Corregir el número. |
+| Cambiar `min_credits` y `max_credits` a 12–18 | 762 combinaciones con los datos reales. | Restaurar el rango. |
+| Ejecutar con una ruta de salida inexistente | Mensaje de error por `stderr` y código 1. | Usar una carpeta válida. |
+| Agregar un campo a `par->jsexpr` | La prueba de ida y vuelta y el contrato de `formato_salida.md` detectan el cambio. | Quitar el campo o actualizar el contrato. |
 
 ## 9. Limitaciones que se deben declarar
 
-- No se implementaron Fases 4–7: no hay exportador final, programa principal, interfaz ni Prolog.
-- No se aplica todavía una restricción específica de correquisitos dentro de las combinaciones; el plan de Fases 0–3 solo exige choques y créditos.
-- La revisión final de los datos y de esta guía queda pendiente por parte del equipo.
-- El formato JSONL es una propuesta preliminar para la Fase 4.
-- La instalación de Racket fue local; los comandos de la guía usan esa ruta.
+- La Etapa 2 no incluye interfaz, sugerencias, optimización ni la Etapa 3 en Prolog; esas tareas pertenecen a etapas posteriores.
+- No se aplica una restricción específica de correquisitos dentro de las combinaciones: el enunciado prohíbe restricciones distintas a los créditos. El exportador entrega `corequisites` para que Prolog la aplique (D8).
+- El generador permite omitir cursos (D1); si el profesor exige que estén todos, se cambia `OMITIR-CURSOS?` a `#f` en un solo módulo.
+- El programa no impone una carrera de estudiante; `data/preferencias.json` mezcla Computadores y Física para ejercitar los dos catálogos.
+- La revisión final de los datos y de esta guía es responsabilidad del equipo; la evidencia ejecutada está en `revision_final.md`.
+- La instalación de Racket usada en la revisión fue local; los comandos de la guía usan `racket` y `raco` del entorno del equipo.

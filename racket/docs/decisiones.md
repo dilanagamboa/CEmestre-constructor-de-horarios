@@ -1,6 +1,6 @@
-# Decisiones de diseño de las Fases 0–3
+# Decisiones de diseño de la Etapa 2 (Fases 0–5)
 
-Este documento registra las decisiones D1–D7 que afectan la Etapa 2 en Racket. Se redactó el 2026-10-26 sobre la rama `feature/etapa2-fases-0-3`, tomando como base el commit `32cec486f4f9e21b9fc19bb67866d6cb9ecbc8ea` y el contrato de salida de la Etapa 1 en C.
+Este documento registra las decisiones D1–D8 que afectan la Etapa 2 en Racket. Se redactó el 2026-10-26 sobre la rama `feature/etapa2-fases-0-3` y se actualizó el 2026-10-29 al cerrar las Fases 4 y 5, tomando como base el contrato de salida de la Etapa 1 en C.
 
 La regla general es que el código de `racket/src/` sea funcional: structs inmutables, contratos explícitos, recursión y streams. Las decisiones que siguen no cambian el formato JSON que produce C ni la identificación de un curso como pareja `(carrera, código)`.
 
@@ -126,21 +126,27 @@ La comparación completa está en `racket/docs/formatos_salida.md`.
 
 ### Consecuencias sobre el diseño
 
-- No se implementa todavía un módulo exportador ni se agregan campos al JSON de C.
-- La futura Fase 4 deberá definir el esquema exacto de cada línea (pares, créditos, carrera, código, grupo, bloques).
+- El exportador es `racket/src/exportador.rkt` y escribe `data/combinaciones.jsonl` mientras consume el stream.
+- El esquema exacto de cada línea (pares, créditos, carrera, código, grupo, correquisitos y bloques) está en `racket/docs/formato_salida.md`.
 - El formato de entrada de C permanece JSON con `format_version` y `course_count`.
-- La decisión puede revisarse cuando el profesor indique el formato preferido para la entrega.
+- Si el formato cambia, se actualizan el exportador, el contrato de `formato_salida.md` y las pruebas de ida y vuelta.
 
 ### Archivos afectados
 
-- `racket/docs/formatos_salida.md`
-- Futuro módulo de exportación de la Fase 4 (no creado en esta etapa).
+- `racket/src/exportador.rkt`
+- `racket/src/main.rkt`
+- `racket/docs/formato_salida.md`
+- `racket/tests/test-exportador.rkt`
+- `racket/tests/test-main.rkt`
+- `racket/tests/test-validar-salida.rkt`
 
 ### Cómo se verifica
 
-- La comparación documental cubre escritura incremental, consumo desde Prolog, legibilidad, tamaño y compatibilidad con streams.
-- No hay pruebas de exportación porque la Fase 4 está fuera del alcance de esta entrega.
-- La decisión queda marcada como provisional en este documento y en `progreso_fases_0_3.md`.
+- `test-exportador.rkt` escribe y vuelve a leer las combinaciones, comprueba los campos obligatorios y que el archivo vacío sea válido.
+- `test-main.rkt` ejecuta el flujo completo con el catálogo sintético y comprueba la cantidad y los avisos.
+- `test-validar-salida.rkt` lee la salida real como lo haría la Etapa 3 y verifica créditos, rango, choques, carrera y unicidad.
+- La comparación documental de `formatos_salida.md` cubre escritura incremental, consumo desde Prolog, legibilidad, tamaño y compatibilidad con streams.
+- La decisión D3 queda cerrada para la entrega; el detalle final está en `auditoria_fase_5.md` y `revision_final.md`.
 
 ---
 
@@ -163,15 +169,15 @@ La carrera se obtiene de `(curso-carrera curso)`, el código de `(curso-codigo c
 
 ### Justificación
 
-Guardar los structs completos evita búsquedas repetidas y permite que el futuro exportador tenga toda la información sin depender de un catálogo global. No se guarda una copia plana porque duplicaría datos y podría quedar desincronizada. Los créditos sí se acumulan durante la recursión porque son parte del estado del generador y el filtro los necesita sin recorrer todos los pares.
+Guardar los structs completos evita búsquedas repetidas y permite que el exportador tenga toda la información sin depender de un catálogo global. No se guarda una copia plana porque duplicaría datos y podría quedar desincronizada. Los créditos sí se acumulan durante la recursión porque son parte del estado del generador y el filtro los necesita sin recorrer todos los pares.
 
 ### Consecuencias sobre el diseño
 
 - `par-curso-grupo` es la unidad de una selección.
 - `combinacion` tiene un contrato `non-empty-listof par-curso-grupo?` y créditos no negativos.
 - El generador acumula créditos como parámetro y los guarda al emitir; no los recalcula al final.
-- Un futuro exportador puede derivar la carrera por curso y la cantidad de cursos con `length`.
-- La información de horarios está disponible en `grupo-bloques` si Prolog la necesita.
+- El exportador deriva la carrera por curso y la cantidad de cursos con `length`.
+- La información de horarios está disponible en `grupo-bloques` y el exportador la escribe para que Prolog la use.
 
 ### Archivos afectados
 
@@ -281,12 +287,12 @@ Se mantiene la organización existente:
 | --- | --- |
 | Raíz (`src/`, `include/`, `tests/`) | Etapa 1 en C: carga, choques, validación y exportación JSON. |
 | `data/` | Datos compartidos: catálogos CSV, historiales, fuentes y salidas JSON de C. |
-| `racket/src/` | Módulos funcionales de la Etapa 2: tipos, lectura, catálogo, preferencias, universo, choques, generador y filtros. |
+| `racket/src/` | Módulos funcionales de la Etapa 2: tipos, lectura, catálogo, preferencias, universo, choques, generador, filtros, exportador, constantes y principal. |
 | `racket/tests/` | Suites de Racket y datos sintéticos/oráculos. |
-| `racket/docs/` | Decisiones, contratos, progreso, pruebas, auditoría y guía de defensa. |
-| `plan_Fase0-3.md` | Guía de trabajo de esta entrega (no forma parte del código). |
+| `racket/docs/` | Decisiones, contratos, progreso, pruebas, auditoría, guía de defensa y revisión final. |
+| `planDocTest.md` | Plan de trabajo de la Etapa 2 (no forma parte del código). |
 
-La rama de trabajo es `feature/etapa2-fases-0-3`. Los commits siguen el estilo del historial: prefijos `feat:`, `data:`, `test:` y `docs:` en inglés o español, con un mensaje corto y específico. La revisión se apoya en tres evidencias: pruebas automatizadas, oráculos manuales y comparación con C.
+El trabajo de las Fases 0–5 se desarrolló en las ramas `feature/etapa2-fases-0-3` y `feature/racket-integration`; la documentación final se cierra en `doc_test`. Los commits siguen el estilo del historial: prefijos `feat:`, `data:`, `test:` y `docs:` en inglés o español, con un mensaje corto y específico. La revisión se apoya en tres evidencias: pruebas automatizadas, oráculos manuales y comparación con C.
 
 ### Justificación
 
@@ -296,23 +302,24 @@ La separación permite que C siga siendo un programa independiente y que Racket 
 
 - Racket lee `data/salida_computadores.json` y `data/salida_fisica.json`, no los CSV directamente.
 - Las pruebas sintéticas viven en `racket/tests/data/` para no depender de los datos reales.
-- La Etapa 2 no implementa las Fases 4–7: no hay exportador final, programa principal, interfaz ni Prolog.
-- El README de la raíz sigue describiendo la Etapa 1 y se actualizó para reflejar los seis semestres y los conteos actuales.
+- La Etapa 2 incluye exportador, programa principal y salida JSONL; no incluye interfaz ni Prolog, que pertenecen a etapas posteriores.
+- El README de la raíz documenta la Etapa 1 y agrega la sección completa de la Etapa 2.
 
 ### Cómo se verifica
 
 - `git status` y `git log` muestran la rama y los archivos de cada fase.
-- `raco test racket/tests` ejecuta las suites de Racket.
-- `make test` y `bash tests/regression_etapa1.sh main` verifican C y la compatibilidad con la Etapa 1.
+- `raco test racket/tests` ejecuta las 65 pruebas de Racket.
+- `make test` y `bash tests/regression_etapa1.sh origin/main` verifican C y la compatibilidad con la Etapa 1.
 - La auditoría de `racket/src/` confirma que no se introdujo mutación ni materialización eager.
 
 ---
 
-## Decisiones provisionales y pendientes
+## Decisiones cerradas y pendientes
 
-- **D3** es preliminar: JSON Lines se propone para la Fase 4, pero no se implementa en esta entrega.
+- **D3** queda cerrada: JSON Lines está implementado en `exportador.rkt` y su contrato está en `formato_salida.md`.
 - **D1** queda preparada para cambiar en un solo módulo si el profesor exige que todos los cursos estén presentes.
-- El formato exacto de cada línea JSONL y la conversión a hechos de Prolog se definirán en la Fase 4.
+- **D8** deja la regla de correquisitos en la Etapa 3: el generador no la impone y el exportador entrega la lista `corequisites`.
+- La conversión de cada línea JSONL a hechos de Prolog se hará en la Etapa 3; el formato de la Etapa 2 ya conserva toda la información necesaria.
 - La revisión final de los datos de Física y de los horarios de los semestres 5–6 sigue siendo responsabilidad del equipo; este documento registra lo que se pudo verificar con las pruebas y los archivos disponibles.
 
 ---

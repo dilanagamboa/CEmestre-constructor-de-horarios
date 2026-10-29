@@ -1,6 +1,6 @@
 # Comparación de formatos de salida
 
-La Etapa 1 exporta un JSON con el catálogo procesado. La Etapa 2 todavía **no** implementa la exportación final de combinaciones: esa tarea corresponde a la Fase 4. Este documento compara las alternativas para dejar registrada la decisión preliminar D3.
+La Etapa 1 exporta un JSON con el catálogo procesado. La Etapa 2 ya implementa la exportación final de combinaciones en `racket/src/exportador.rkt`; este documento conserva la comparación que sustentó la decisión D3 y remite al contrato exacto de `formato_salida.md`.
 
 Los criterios que se evaluaron son:
 
@@ -120,29 +120,24 @@ Desventajas:
 | Depuración con texto | Media | Alta | Alta | Media |
 | Riesgo de formato inválido a mitad | Alto | Bajo | Bajo | Bajo |
 
-## 6. Decisión preliminar
+## 6. Decisión final
 
-Se propone **JSON Lines** para la Fase 4:
+Se implementó **JSON Lines** en `racket/src/exportador.rkt`:
 
-- un objeto por línea;
-- cada objeto con `pairs` (lista de pares) y `credits`;
-- cada par con la carrera, el código y el número de grupo; opcionalmente, los bloques para Prolog;
-- una línea final de metadatos si hace falta, por ejemplo `{"format_version":1,"combination_count":N}`, o un encabezado comentado que no se confunda con un objeto.
+- un objeto por línea y una línea por combinación;
+- cada objeto con `id`, `total_credits`, `course_count` y `courses`;
+- cada curso con `career`, `code`, `name`, `group`, `credits`, `corequisites` y `blocks`;
+- sin encabezado, pie ni arreglo global; si no hay combinaciones, el archivo queda vacío.
 
-La decisión es **provisional**. No se implementa en las Fases 0–3 porque el plan prohíbe adelantar la exportación final. Antes de la Fase 4 hay que confirmar:
-
-- el nombre exacto de los campos;
-- si se incluyen los bloques en cada par o solo la referencia al grupo;
-- si se agrega un encabezado o un pie con la cantidad de combinaciones;
-- cómo se convierte cada línea a hechos de Prolog;
-- si el profesor prefiere JSON array, CSV o hechos directamente.
+El esquema exacto, con el tipo y la justificación de cada campo, está en `racket/docs/formato_salida.md`. La decisión se cerró al implementar la Fase 4 y se validó con la salida real de las dos carreras.
 
 ## 7. Relación con el JSON de C
 
-El JSON de C sigue siendo la **entrada** de Racket y no se modifica. La decisión D3 es solo para la **salida de combinaciones** de la Etapa 2. El campo `format_version` del JSON de C protege el contrato de entrada; para JSONL se propone un campo equivalente en el encabezado o en la primera línea.
+El JSON de C sigue siendo la **entrada** de Racket y no se modifica. La decisión D3 es solo para la **salida de combinaciones** de la Etapa 2. El campo `format_version` del JSON de C protege el contrato de entrada; la salida JSONL no usa un encabezado porque cada línea es un objeto autocontenido y el contrato se documenta en `formato_salida.md`.
 
 ## 8. Verificación
 
 - La comparación cubre los cinco criterios del plan (consumo incremental, compatibilidad con streams, lectura desde Prolog, preservación de estructuras y facilidad de depuración) y agrega el tamaño como criterio de desempate.
-- No hay pruebas de exportación porque la Fase 4 está fuera del alcance.
-- La decisión queda registrada en `racket/docs/decisiones.md` (D3) y en `racket/docs/progreso_fases_0_3.md`.
+- `racket/tests/test-exportador.rkt` comprueba la ida y vuelta, los campos obligatorios y el archivo vacío.
+- `racket/tests/test-main.rkt` ejecuta el flujo completo y `racket/tests/test-validar-salida.rkt` valida la salida real contra el catálogo de C.
+- La decisión queda registrada en `racket/docs/decisiones.md` (D3) y en `racket/docs/auditoria_fase_5.md`.

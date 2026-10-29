@@ -55,7 +55,7 @@ Invariantes:
 - El lector de catálogo exige `fin > inicio`; el constructor directo no lo impone, así que las pruebas y el código deben respetarlo.
 - Un bloque no tiene identidad propia: pertenece a un grupo.
 
-El bloque se usa en `choques.rkt` para comparar horarios y en el futuro exportador para describir el horario de una combinación.
+El bloque se usa en `choques.rkt` para comparar horarios y en `exportador.rkt` para describir el horario de una combinación.
 
 ## 3. `grupo`
 
@@ -213,7 +213,7 @@ Invariantes:
 
 - El generador necesita compartir cursos y grupos entre muchas combinaciones; la inmutabilidad evita que una rama altere los datos de otra.
 - Las pruebas pueden comparar structs con `equal?` y reutilizar el mismo catálogo sin miedo a efectos laterales.
-- El filtro y el futuro exportador pueden recorrer un stream varias veces sin que cambie el contenido.
+- El filtro y el exportador pueden recorrer un stream varias veces sin que cambie el contenido.
 - La ausencia de `set!`, campos mutables y variables reasignadas es un requisito explícito del plan y se audita en `racket/docs/auditoria_fases_0_3.md`.
 - La recursión acumula selección y créditos como parámetros; no necesita estado global.
 

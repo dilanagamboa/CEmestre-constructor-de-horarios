@@ -1,5 +1,7 @@
 # Registro de progreso: Fases 0–3
 
+> Documento histórico del cierre de las Fases 0–3. Las limitaciones que mencionan la falta de exportador, programa principal o formato JSONL describen ese momento; el estado final de la Etapa 2 está en `revision_final.md` y en el README.
+
 ## 1. Identificación de la ejecución
 
 | Dato | Valor |

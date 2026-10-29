@@ -1,5 +1,7 @@
 # Auditoría de las Fases 0–3
 
+> Auditoría histórica de las Fases 0–3. La auditoría final de la Etapa 2, con las Fases 4 y 5, está en `auditoria_fase_5.md` y `revision_final.md`.
+
 Fecha: 2026-10-26.
 Alcance: `racket/src/` (código productivo). Las pruebas se revisaron por separado para distinguir mutación permitida de mutación indebida.
 

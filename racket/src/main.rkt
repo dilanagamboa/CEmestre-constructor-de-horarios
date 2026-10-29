@@ -37,15 +37,20 @@
     [(list prefs salida catalogo catalogos ...) (list prefs salida (cons catalogo catalogos))]
     [_ #f]))
 
+;; muestra el mensaje sin la traza interna y termina con codigo distinto de cero
+(define (reportar-error e)
+  (eprintf "error: ~a\n" (exn-message e))
+  (exit 1))
+
 (module+ main
   (define rutas (leer-argumentos (vector->list (current-command-line-arguments))))
   (unless rutas
     (eprintf "uso: racket racket/src/main.rkt [<preferencias> <salida> <catalogo> ...]\n")
     (exit 1))
-  ;; los errores de lectura son exn:fail:user: se muestran y el programa sale con 1
-  (with-handlers ([exn:fail:user? (lambda (e)
-                                    (eprintf "error: ~a\n" (exn-message e))
-                                    (exit 1))])
+  ;; los errores de lectura son exn:fail:user y los de escritura exn:fail:filesystem:
+  ;; ambos se muestran como mensaje y el programa sale con 1
+  (with-handlers ([exn:fail:user? reportar-error]
+                  [exn:fail:filesystem? reportar-error])
     (define-values (cantidad avisos) (apply ejecutar rutas))
     (for-each (lambda (a) (printf "aviso: ~a\n" a)) avisos)
     (printf "~a combinaciones exportadas a ~a\n" cantidad (second rutas))))

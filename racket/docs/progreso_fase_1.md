@@ -1,5 +1,7 @@
 # Progreso de la Fase 1: datos y ampliación de C
 
+> Documento histórico del cierre de la Fase 1. El estado final de la Etapa 2 está en `revision_final.md` y en el README.
+
 Fecha de revisión: 2026-10-26.
 Rama: `feature/etapa2-fases-0-3`.
 Commit revisado: `32cec486f4f9e21b9fc19bb67866d6cb9ecbc8ea`.

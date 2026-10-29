@@ -7,7 +7,7 @@ Comando principal:
 raco test racket/tests
 ```
 
-Resultado observado: **45 tests passed** en la suite completa. Las suites relacionadas con la Fase 3 son:
+Resultado observado al cierre de la Etapa 2: **65 tests passed** en la suite completa. Al cerrar la Fase 3 eran 45; las pruebas de exportación, flujo principal, casos límite y validación de la salida se agregaron en las Fases 4 y 5. Las suites relacionadas con la Fase 3 son:
 
 | Suite | Resultado |
 | --- | ---: |
@@ -74,4 +74,4 @@ raco test racket/tests/test-streams.rkt
 raco test racket/tests
 ```
 
-La suite completa debe reportar 45 tests passed.
+La suite completa debe reportar 65 tests passed; al cierre de la Fase 3 eran 45.
