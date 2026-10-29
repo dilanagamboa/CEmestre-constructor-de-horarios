@@ -226,3 +226,103 @@ Anthropic. (2026). *Claude* (versión Claude Opus 5.5) [Modelo de lenguaje de gr
 DeepSeek. (2026). *DeepSeek* (versión V4.1 Flash) [Modelo de lenguaje de gran escala]. https://www.deepseek.com
 
 Kernighan, B. W., & Ritchie, D. M. (1988). *The C Programming Language* (2.ª ed.). Prentice Hall.
+
+# Etapa 2: generación de combinaciones de horario en Racket
+
+Instituto Tecnológico de Costa Rica, Escuela de Ingeniería en Computadores
+Paradigmas de Programación (CE1106). Proyecto, Etapa 2 (paradigma funcional, lenguaje Racket)
+
+Esta etapa implementa el módulo que recibe el catálogo procesado por la Etapa 1 en C y las preferencias del estudiante, genera las combinaciones de cursos y grupos sin choques de horario, las filtra por el rango de créditos y las exporta en JSON Lines para la Etapa 3 (Prolog). El módulo no arma el horario final, no optimiza, no sugiere combinaciones, no tiene interfaz y no aplica restricciones distintas a los créditos.
+
+> Las secciones 2.1, 2.2.1, 2.2.2, 2.2.3 y 2.3 de este título documentan la Etapa 2. Las secciones 1 a 5 anteriores describen la Etapa 1 y se conservan como contrato de entrada.
+
+## 2.1 Arquitectura del proyecto
+
+El programa ejecuta un flujo de seis pasos, siempre en el mismo orden: leer el catálogo de C, leer las preferencias, cruzar ambas entradas para construir el universo, generar las combinaciones con streams, filtrar por créditos y escribir la salida. La figura siguiente muestra los archivos y los módulos que intervienen.
+
+```
+ data/salida_computadores.json ─┐
+ data/salida_fisica.json ───────┴──► catalogo.rkt ──────► catalogo
+                                                             │
+ data/preferencias.json ───────────► preferencias.rkt ──► preferencias
+                                                             │
+                                                             ▼
+                                                      universo.rkt
+                                                             │
+                                                             ▼
+                                             universo (cursos + avisos)
+                                                             │
+                                                             ▼
+                                                      generador.rkt
+                                                             │
+                                                             ▼
+                                             stream de combinaciones
+                                                             │
+                                                             ▼
+                                                      filtros.rkt
+                                                             │
+                                                             ▼
+                                        stream filtrado por créditos
+                                                             │
+                                                             ▼
+                                                     exportador.rkt
+                                                             │
+                                                             ▼
+                                             data/combinaciones.jsonl
+```
+
+El catálogo y las preferencias se leen una sola vez. `universo.rkt` descarta los cursos aprobados, los que C no marcó como matriculables y los grupos que el estudiante no pidió; los problemas se acumulan como avisos y no detienen el programa. El generador recibe únicamente ese universo ya recortado, de modo que no vuelve a consultar el catálogo ni las preferencias. El filtro de créditos es una instancia del filtro polimórfico y el exportador consume el stream de a un elemento.
+
+| Archivo | Responsabilidad |
+| --- | --- |
+| `racket/src/types.rkt` | Structs inmutables de la etapa: `bloque`, `grupo`, `curso`, `catalogo`, `interes`, `preferencias`, `par-curso-grupo` y `combinacion`, con sus contratos. |
+| `racket/src/lectura.rkt` | Utilidades de lectura de JSON y construcción de errores controlados con el archivo y el campo donde falló. |
+| `racket/src/catalogo.rkt` | Lee y valida las salidas JSON de C, convierte horas y bloques, une varias carreras y ofrece `cursos-habilitados` y `buscar-curso`. |
+| `racket/src/preferencias.rkt` | Lee y valida `min_credits`, `max_credits` y la lista de cursos de interés con sus grupos. |
+| `racket/src/universo.rkt` | Cruza catálogo y preferencias, recorta los grupos de interés y produce el struct `universo` con sus avisos. |
+| `racket/src/choques.rkt` | Decide si dos bloques, dos grupos o un grupo contra una selección acumulada chocan. |
+| `racket/src/generador.rkt` | Genera de forma recursiva y perezosa el stream de combinaciones no vacías, sin choques y con los créditos acumulados. |
+| `racket/src/filtros.rkt` | Implementa el filtro polimórfico por rango inclusivo y su instancia para los créditos de una combinación. |
+| `racket/src/exportador.rkt` | Serializa cada combinación como una línea JSON y la escribe mientras consume el stream. |
+| `racket/src/constantes.rkt` | Centraliza las rutas por defecto de catálogos, preferencias y salida, resueltas desde la ubicación del código. |
+| `racket/src/main.rkt` | Une el flujo, procesa los argumentos de la línea de comandos, muestra los avisos y traduce los errores a un código de salida distinto de cero. |
+
+El flujo no usa estado global ni variables reasignadas. La selección de cursos, los créditos y los avisos viajan como parámetros de la recursión o como campos de structs nuevos. Las únicas operaciones con efectos son la lectura de archivos en `lectura.rkt` y la escritura de la salida en `exportador.rkt`; el resto de los módulos son funciones puras.
+
+## 2.2 Decisiones de diseño
+
+### 2.2.1 Decisiones propias y específicas
+
+#### D1: qué es una combinación
+
+Una combinación es un subconjunto **no vacío** de los cursos habilitados del universo. Para cada curso elegido se toma exactamente un grupo de interés que exista en el catálogo y que no choque con los grupos ya elegidos. Los cursos que no se eligen simplemente se omiten; la combinación vacía se excluye.
+
+La decisión se apoya en el enunciado, que pide “un grupo por cada curso habilitado” y, al mismo tiempo, filtrar por créditos. Si todos los cursos fueran obligatorios, el total de créditos sería fijo y el filtro no tendría sentido. También refleja la matrícula real: el estudiante decide qué cursos llevar y puede comparar escenarios con menos cursos. El comportamiento se controla con la constante `OMITIR-CURSOS?` de `generador.rkt`, hoy en `#t`; si el profesor confirma la otra interpretación, basta cambiarla a `#f` y la rama de omisión devuelve `empty-stream`, sin tocar los demás módulos.
+
+Con los datos reales, `data/preferencias.json` pide ocho cursos de Computadores y Física en un rango de 12 a 18 créditos. El programa produce 762 combinaciones, con 3, 4, 5 o 6 cursos y créditos entre 12 y 18; ninguna incluye los ocho cursos y ninguna está vacía. Esa variedad es precisamente la que permite que el filtro de créditos tenga efecto.
+
+#### D2: contratos en lugar de Typed Racket
+
+Se usan structs inmutables y contratos de Racket (`contract-out`) en las fronteras de cada módulo, no Typed Racket. Los contratos documentan la interfaz y atrapan datos mal formados en la lectura del JSON, en el universo, en el generador y en el filtro, sin obligar a anotar cada función recursiva. También permiten que el filtro acepte cualquier tipo de elemento con `(stream/c any/c)` y que el criterio `en-rango` sea paramétrico con `parametric->/c`, sin introducir `Any` ni `cast` de Typed Racket. La decisión es uniforme en todos los módulos y se verifica con `raco make` y con la auditoría de `racket/src/`.
+
+#### D5: choque en el borde
+
+Dos bloques del mismo día chocan si cada uno empieza **antes** de que termine el otro. La comparación es `<` estricta en ambos sentidos. Si un bloque termina a las 10:00 y otro empieza a las 10:00, no chocan; los días distintos nunca chocan y un grupo sin bloques tampoco. Es exactamente la regla de `src/conflicts.c` de la Etapa 1, de modo que ambas etapas interpretan igual los horarios.
+
+Un caso real de choque es `MA0101` grupo 1, miércoles de 15:00 a 17:50, contra `MA1102` grupo 12, miércoles de 15:00 a 17:50: los bloques son idénticos y el generador no los combina. El borde se prueba con el caso sintético `S1-1` contra `S2-2`, que se tocan a las 10:00 y sí producen una combinación conjunta; la prueba está en `test-choques.rkt` y `test-generador.rkt`. En los catálogos reales no se encontró un par de grupos distintos que termine exactamente cuando empieza otro, por eso el borde se cubre con datos construidos a mano y no con una coincidencia accidental de los datos.
+
+#### D6: fuente de los choques
+
+Racket recalcula los choques a partir de los bloques con `choques.rkt`; la bandera `has_conflict` que escribe C se conserva en el campo `choque` del grupo y se usa solo como referencia de consistencia. Racket necesita comparar un grupo candidato contra una selección parcial, incluso cuando el catálogo completo ya no está disponible en esa rama, y recalcular desde los bloques hace que el generador sea independiente de la implementación de C.
+
+La prueba `test-choques.rkt` lee las salidas reales de las dos carreras y compara, grupo por grupo, el cálculo de Racket con la bandera de C: 221 grupos en Computadores y 308 en Física, sin diferencias. El lector de catálogo también rechaza un archivo en el que `has_conflict` del curso no coincida con la bandera de alguno de sus grupos.
+
+#### Streams y generación recursiva
+
+El generador no construye la lista completa de combinaciones. Para cada curso abre dos ramas: omitirlo o elegir uno de sus grupos compatibles. La rama de omisión se emite primero y cada rama se envuelve en `stream-lazy`, porque `stream-append` evalúa sus argumentos antes de construir el stream; sin esa precaución, el árbol de llamadas se expandía completo antes de devolver el primer resultado. La selección se guarda al revés y se invierte al emitir para conservar el orden del universo; los créditos se acumulan con `(+ creditos (curso-creditos curso))` en la misma llamada recursiva. No hay `set!`, `hash-set!`, `vector-set!`, `set-box!`, `#:mutable` ni `list->stream` en `racket/src/`.
+
+La pereza se demuestra con 60 cursos de un grupo cada uno: hay 2^60 − 1 combinaciones no vacías y pedir solo la primera devuelve `C59-1 | 1` de inmediato. En el universo real de las dos carreras, con todos los cursos habilitados y todos sus grupos, el número de combinaciones posibles es del orden de 3.5 × 10^14; `test-casos-limite.rkt` pide las primeras 100 y termina sin materializar el resto. El flujo principal aprovecha la misma propiedad: el filtro y el exportador consumen el stream de a un elemento.
+
+#### Correquisitos y alcance de la etapa
+
+C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D8 de `racket/docs/decisiones.md`.
