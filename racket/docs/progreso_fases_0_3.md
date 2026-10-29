@@ -61,7 +61,7 @@ grep -RIn --fixed-strings -- 'cast' racket/src
 
 **Archivos revisados:**
 
-- `plan_Fase0-3.md`
+- `plan_Fase0-3.md` (reemplazado después por `planDocTest.md`)
 - `README.md`
 - `racket/src/types.rkt`
 - `racket/src/catalogo.rkt`
