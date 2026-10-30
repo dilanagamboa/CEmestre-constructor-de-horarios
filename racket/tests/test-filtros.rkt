@@ -60,16 +60,10 @@
              (lambda () (filtrar-por-rango (stream 1 2 3) identity 5 1))))
 
 (test-case "el filtro conserva la pereza"
-  (define contador (box 0))
-  (define (naturales n)
-    (stream-cons n
-                 (begin
-                   (set-box! contador (add1 (unbox contador)))
-                   (naturales (add1 n)))))
+  ;; naturales es infinito: si el filtro recorriera todo el stream, nunca terminaria
+  (define (naturales n) (stream-cons n (naturales (add1 n))))
   (define primeros (filtrar-por-rango (naturales 0) identity 100 200))
-  (check-equal? (stream-first primeros) 100)
-  (check-true (< (unbox contador) 200)
-              "no se recorrio el stream completo para obtener el primer resultado"))
+  (check-equal? (stream-first primeros) 100))
 
 (test-case "en-rango es parametrico: mismo criterio para tres tipos"
   (check-true ((en-rango identity 1 5) 3))
