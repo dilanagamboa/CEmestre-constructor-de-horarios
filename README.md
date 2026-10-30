@@ -120,7 +120,7 @@ El caso límite más importante apareció al correr el programa con los datos re
 
 La solución fue cambiar la política, tal que un correquisito se considera cumplido si el curso ya está aprobado o si el estudiante podría matricularlo en el mismo periodo, es decir, si cumple sus propios prerrequisitos y, recursivamente, sus propios correquisitos. Para que la recursión termine con correquisitos mutuos, se marcan los cursos de la cadena actual y, al volver a uno ya visitado, se asume que se matriculan juntos (`validation_corequisites_ok`, en `src/validation.c`).
 
-Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. La Etapa 2 conserva esa lista y la incluye en su salida para que la Etapa 3 (Prolog) aplique la restricción; el generador no la impone porque el enunciado prohíbe restricciones distintas a los créditos. El caso real y su resolución se explican en 2.2.2 y en la decisión D8. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
+Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. La Etapa 2 conserva esa lista y la incluye en su salida para que la Etapa 3 (Prolog) aplique la restricción; el generador no la impone porque el enunciado prohíbe restricciones distintas a los créditos. El caso real y su resolución se explican en 2.2.2 y en la decisión D6. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
 
 #### 2.2.3 Formato de salida
 
@@ -307,27 +307,27 @@ Con los datos reales, `data/preferencias.json` pide ocho cursos de Computadores 
 
 Se usan structs inmutables y contratos de Racket (`contract-out`) en las fronteras de cada módulo, no Typed Racket. Los contratos documentan la interfaz y atrapan datos mal formados en la lectura del JSON, en el universo, en el generador y en el filtro, sin obligar a anotar cada función recursiva. También permiten que el filtro acepte cualquier tipo de elemento con `(stream/c any/c)` y que el criterio `en-rango` sea paramétrico con `parametric->/c`, sin introducir `Any` ni `cast` de Typed Racket. La decisión es uniforme en todos los módulos y se verifica con `raco make` y con la auditoría de `racket/src/`.
 
-#### D5: choque en el borde
+#### D3: choque en el borde
 
 Dos bloques del mismo día chocan si cada uno empieza **antes** de que termine el otro. La comparación es `<` estricta en ambos sentidos. Si un bloque termina a las 10:00 y otro empieza a las 10:00, no chocan; los días distintos nunca chocan y un grupo sin bloques tampoco. Es exactamente la regla de `src/conflicts.c` de la Etapa 1, de modo que ambas etapas interpretan igual los horarios.
 
 Un caso real de choque es `MA0101` grupo 1, miércoles de 15:00 a 17:50, contra `MA1102` grupo 12, miércoles de 15:00 a 17:50: los bloques son idénticos y el generador no los combina. El borde se prueba con el caso sintético `S1-1` contra `S2-2`, que se tocan a las 10:00 y sí producen una combinación conjunta; la prueba está en `test-choques.rkt` y `test-generador.rkt`. En los catálogos reales no se encontró un par de grupos distintos que termine exactamente cuando empieza otro, por eso el borde se cubre con datos construidos a mano y no con una coincidencia accidental de los datos.
 
-#### D6: fuente de los choques
+#### D4: fuente de los choques
 
 Racket recalcula los choques a partir de los bloques con `choques.rkt`; la bandera `has_conflict` que escribe C se conserva en el campo `choque` del grupo y se usa solo como referencia de consistencia. Racket necesita comparar un grupo candidato contra una selección parcial, incluso cuando el catálogo completo ya no está disponible en esa rama, y recalcular desde los bloques hace que el generador sea independiente de la implementación de C.
 
 La prueba `test-choques.rkt` lee las salidas reales de las dos carreras y compara, grupo por grupo, el cálculo de Racket con la bandera de C: 221 grupos en Computadores y 308 en Física, sin diferencias. El lector de catálogo también rechaza un archivo en el que `has_conflict` del curso no coincida con la bandera de alguno de sus grupos.
 
-#### Streams y generación recursiva
+#### D5: streams y generación recursiva
 
 El generador no construye la lista completa de combinaciones. Para cada curso abre dos ramas: omitirlo o elegir uno de sus grupos compatibles. La rama de omisión se emite primero y cada rama se envuelve en `stream-lazy`, porque `stream-append` evalúa sus argumentos antes de construir el stream; sin esa precaución, el árbol de llamadas se expandía completo antes de devolver el primer resultado. La selección se guarda al revés y se invierte al emitir para conservar el orden del universo; los créditos se acumulan con `(+ creditos (curso-creditos curso))` en la misma llamada recursiva. No hay `set!`, `hash-set!`, `vector-set!`, `set-box!`, `#:mutable` ni `list->stream` en `racket/src/`.
 
 La pereza se demuestra con 60 cursos de un grupo cada uno: hay 2^60 − 1 combinaciones no vacías y pedir solo la primera devuelve `C59-1 | 1` de inmediato. En el universo real de las dos carreras, con todos los cursos habilitados y todos sus grupos, el número de combinaciones posibles es del orden de 3.5 × 10^14; `test-casos-limite.rkt` pide las primeras 100 y termina sin materializar el resto. El flujo principal aprovecha la misma propiedad: el filtro y el exportador consumen el stream de a un elemento.
 
-#### Correquisitos y alcance de la etapa
+#### D6: correquisitos y alcance de la etapa
 
-C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D8 de `racket/docs/decisiones.md`.
+C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D6 (D8 en `racket/docs/decisiones.md`).
 
 ### 2.2.2 Un caso límite real y cómo se resolvió
 
@@ -337,7 +337,7 @@ El caso más delicado apareció con los correquisitos reales de Computadores. `F
 
 El caso se observa en la salida real. La combinación con `id = 13` contiene `FI1202` grupo 2, `MA2104` grupo 1, `MA1103` grupo 1 y `FI2103` grupo 1, pero no contiene `FI1102`; la línea incluye `"corequisites":["FI1102"]` dentro del curso. La combinación con `id = 52` sí contiene `FI1102` grupo 1 y `FI1202` grupo 2, además de otros tres cursos. Ambas son válidas para esta etapa porque no tienen choques y suman créditos dentro del rango; la diferencia es que la primera no cumple la regla de correquisitos que le corresponde a Prolog.
 
-La solución no fue agregar una restricción al generador, sino dejar el dato disponible y documentar la frontera entre etapas (decisión D8). El exportador incluye `corequisites` en cada curso, de modo que la Etapa 3 puede exigir que los correquisitos se elijan juntos sin volver a abrir el catálogo de C. El mismo criterio cubre el caso de `QU1102` y `QU1106` en Física, que se exigen mutuamente como correquisito, y el de `FI1102` en Computadores, que exige `MA1102` como correquisito. Si el profesor pidiera que la restricción se aplicara ya en esta etapa, el cambio quedaría localizado en el generador y en el universo, no en el formato de salida.
+La solución no fue agregar una restricción al generador, sino dejar el dato disponible y documentar la frontera entre etapas (decisión D6). El exportador incluye `corequisites` en cada curso, de modo que la Etapa 3 puede exigir que los correquisitos se elijan juntos sin volver a abrir el catálogo de C. El mismo criterio cubre el caso de `QU1102` y `QU1106` en Física, que se exigen mutuamente como correquisito, y el de `FI1102` en Computadores, que exige `MA1102` como correquisito. Si el profesor pidiera que la restricción se aplicara ya en esta etapa, el cambio quedaría localizado en el generador y en el universo, no en el formato de salida.
 
 #### El mismo código en dos carreras
 
@@ -364,7 +364,7 @@ Un ejemplo real es la combinación `id = 13`, que también sirve para ilustrar e
 | `group` | entero positivo | sí | Número del grupo elegido. |
 | `name` | texto | extra | La Etapa 4 lo muestra al usuario sin volver al catálogo. |
 | `credits` | entero no negativo | extra | Prolog puede recalcular o comparar créditos por curso. |
-| `corequisites` | lista de códigos | extra | Es la información que Prolog necesita para aplicar la regla de correquisitos (D8). |
+| `corequisites` | lista de códigos | extra | Es la información que Prolog necesita para aplicar la regla de correquisitos (D6). |
 | `blocks` | lista de bloques | extra | Prolog revisa compatibilidades de horario sin abrir el catálogo; cada bloque trae `day`, `start` y `end` en `HH:MM`. |
 
 La elección de JSON Lines responde a una decisión de diseño concreta, no solo estética. El exportador consume el stream de combinaciones de a un elemento y escribe cada línea en el momento en que la recibe; no necesita saber cuál es la última combinación, no acumula comas y no tiene que materializar la lista completa para cerrar un arreglo. Si el proceso se interrumpe, las líneas anteriores siguen siendo objetos JSON válidos. Cada línea es autocontenida, de modo que Prolog puede leerla y convertirla en un hecho sin conservar el estado de un documento mayor. Las estructuras anidadas (varios cursos, varios bloques por grupo y listas de correquisitos) se conservan; un CSV plano habría exigido inventar separadores dentro de las celdas y convertir el orden de las columnas en parte del contrato.
