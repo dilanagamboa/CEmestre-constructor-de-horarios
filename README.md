@@ -25,12 +25,14 @@ El proyecto se compila y se prueba en Linux (en Windows, con WSL y Ubuntu) y req
 | `make valgrind` | Corre el programa y las pruebas bajo Valgrind                                      |
 | `make clean`    | Borra lo generado                                                                  |
 
-El ejecutable recibe tres rutas opcionales, a saber, el catálogo, el historial y la salida, tal que para las dos carreras se ejecuta de la siguiente manera.
+El ejecutable recibe cuatro argumentos opcionales, a saber, el catálogo, el historial, la salida y la carrera (`computadores` o `fisica`), tal que para las dos carreras se ejecuta de la siguiente manera.
 
 ```bash
-./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json
-./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json
+./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json computadores
+./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json       fisica
 ```
+
+Si se omite algún argumento, se usa el valor por defecto de `include/constants.h`; en particular, la carrera por defecto es `computadores`.
 
 Si algo falla, el programa explica el error por `stderr`, indica la línea y el curso cuando puede, y termina con un código de salida que corresponde al `ErrorCode` de `include/constants.h`.
 
