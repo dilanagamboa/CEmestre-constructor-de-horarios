@@ -28,6 +28,11 @@ data/salida.json
 *.gcno
 *.gcov
 
+# bytecode compilado de Racket
+compiled/
+*.zo
+*.dep
+
 # backups
 *~
 *.bak

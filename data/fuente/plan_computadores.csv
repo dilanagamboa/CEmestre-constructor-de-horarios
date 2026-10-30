@@ -1,4 +1,4 @@
-# Plan de Computadores, primeros 4 semestres (mas nivelacion: MA0101). Fuente: capturas de la Guia (TEC-Digital).
+# Plan de Computadores, primeros 6 semestres (mas nivelacion: MA0101). Fuente: capturas de la Guia (TEC-Digital).
 # Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
 # Fuera de alcance: CI0205 (prueba de ingles sin grupos) y FH1000 (bimestral).
 # SE1100, SE1200 y SE1400 (actividades de 0 creditos) van segun el plan, pero sin grupos: la Guia ofrece las
@@ -32,3 +32,13 @@ EL2114;Circuitos electricos en corriente alterna;4;EL2113;EL2207
 EL2207;Elementos activos;4;EL2113;
 PI2609;Probabilidad y estadistica;2;MA2104;
 SO4604;Seguridad y salud ocupacional;3;FI1102;
+CE1107;Fundamentos de arquitectura de computadores;4;EL2207;
+CE3101;Bases de datos;4;CE1106;
+CE3201;Taller de diseno digital;2;CE2201;CE1107
+MA2105;Ecuaciones diferenciales;4;MA1103;
+PI5516;Ingenieria economica;3;PI2609;
+CE1108;Compiladores e interpretes;4;CE1107;CE4301
+CE1109;Circuitos analogicos;4;EL2207/SO4604;
+CE1110;Analisis de senales mixtas;4;EL2114/MA2105;
+CE4301;Arquitectura de computadores I;4;CE1107/CE3201;
+CI3203;Ingles especializado para ingenierias en computadores;2;;

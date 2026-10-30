@@ -25,4 +25,10 @@ int catalog_find_course_index(const Catalog *catalog, const char *code);
 // libera la memoria del catálogo y lo deja en un estado seguro para reusar o descartar
 void catalog_free(Catalog *catalog);
 
+// 1 si career es una de las carreras validas de constants.h, 0 si no
+int catalog_is_valid_career(const char *career);
+
+// asigna career a todos los cursos del catalogo, ERROR_INVALID_FORMAT si no es valida
+ErrorCode catalog_set_career(Catalog *catalog, const char *career);
+
 #endif

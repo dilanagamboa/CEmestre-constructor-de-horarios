@@ -1,0 +1,37 @@
+{
+  "min_credits": 10,
+  "max_credits": 6,
+  "courses": [
+    {
+      "career": "computadores",
+      "code": "S1",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "career": "computadores",
+      "code": "S2",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "career": "fisica",
+      "code": "S3",
+      "groups": [
+        1,
+        2
+      ]
+    },
+    {
+      "career": "computadores",
+      "code": "S4",
+      "groups": [
+        1
+      ]
+    }
+  ]
+}

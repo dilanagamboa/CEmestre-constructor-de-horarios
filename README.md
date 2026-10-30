@@ -11,7 +11,7 @@ Paradigmas de Programación (CE1106). Proyecto, Etapa 1 (paradigma imperativo, l
 
 CEmestre es una herramienta de apoyo a la matrícula universitaria, pues a partir del plan de estudios de una carrera y de los cursos que un estudiante ya aprobó determina qué cursos puede matricular y cuáles presentan choques de horario, como base para construir un horario de matrícula válido. El sistema completo se desarrolla en cuatro etapas, una por paradigma (C, Racket, Prolog y Java), y cada etapa corresponde a un programa independiente que lee y escribe archivos.
 
-Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial y limitadas a los cuatro primeros semestres de su plan.
+Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial; los catálogos cubren los seis primeros semestres de su plan y los historiales representan a estudiantes que aprobaron los dos primeros.
 
 ## 1. Uso
 
@@ -25,12 +25,14 @@ El proyecto se compila y se prueba en Linux (en Windows, con WSL y Ubuntu) y req
 | `make valgrind` | Corre el programa y las pruebas bajo Valgrind                                      |
 | `make clean`    | Borra lo generado                                                                  |
 
-El ejecutable recibe tres rutas opcionales, a saber, el catálogo, el historial y la salida, tal que para las dos carreras se ejecuta de la siguiente manera.
+El ejecutable recibe cuatro argumentos opcionales, a saber, el catálogo, el historial, la salida y la carrera (`computadores` o `fisica`), tal que para las dos carreras se ejecuta de la siguiente manera.
 
 ```bash
-./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json
-./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json
+./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json computadores
+./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json       fisica
 ```
+
+Si se omite algún argumento, se usa el valor por defecto de `include/constants.h`; en particular, la carrera por defecto es `computadores`.
 
 Si algo falla, el programa explica el error por `stderr`, indica la línea y el curso cuando puede, y termina con un código de salida que corresponde al `ErrorCode` de `include/constants.h`.
 
@@ -110,7 +112,7 @@ Los datos reales obligaron a ajustar los límites iniciales. `CI0200` demostró 
 
 La Guía escribe los días en español (`LUN`, `MAR`, `MIE`...), pero el formato usa `MON`, `TUE`, `WED`, `THU`, `FRI` y `SAT`, los mismos del JSON, para que la Etapa 2 no dependa del idioma de la fuente. Los nombres de curso se escribieron sin tildes, así como los profesores se conservaron tal como los da la Guía, en mayúsculas.
 
-Cada historial representa a un estudiante que aprobó los dos primeros semestres de su plan, así como los cursos previos que estos requieren (`MA0101` en Computadores, y `CI0200`, `CI0202` y `MA1102` en Física), lo que da 17 cursos en Computadores y 14 en Física. Con ellos quedan 6 cursos matriculables en Computadores (`CE2103`, `CS2101`, `EL2113`, `FI1102`, `FI1202` y `MA2104`) y 8 en Física.
+Cada historial representa a un estudiante que aprobó los dos primeros semestres de su plan, así como los cursos previos que estos requieren (`MA0101` en Computadores, y `CI0200`, `CI0202` y `MA1102` en Física), lo que da 17 cursos en Computadores y 14 en Física. Con ellos quedan 8 cursos matriculables en Computadores (`CE2103`, `CS2101`, `EL2113`, `FI1102`, `FI1202`, `MA2104`, `MA2105` y `CI3203`) y 8 en Física.
 
 #### 2.2.2 Un caso límite real, los correquisitos mutuos
 
@@ -118,7 +120,7 @@ El caso límite más importante apareció al correr el programa con los datos re
 
 La solución fue cambiar la política, tal que un correquisito se considera cumplido si el curso ya está aprobado o si el estudiante podría matricularlo en el mismo periodo, es decir, si cumple sus propios prerrequisitos y, recursivamente, sus propios correquisitos. Para que la recursión termine con correquisitos mutuos, se marcan los cursos de la cadena actual y, al volver a uno ya visitado, se asume que se matriculan juntos (`validation_corequisites_ok`, en `src/validation.c`).
 
-Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
+Esto tiene una consecuencia para la Etapa 2, pues `can_enroll = true` no garantiza que los correquisitos estén aprobados, sino que pueden llevarse juntos, de modo que al armar combinaciones se debe exigir que se elijan en el mismo horario, para lo cual el JSON incluye la lista `corequisites`. La Etapa 2 conserva esa lista y la incluye en su salida para que la Etapa 3 (Prolog) aplique la restricción; el generador no la impone porque el enunciado prohíbe restricciones distintas a los créditos. El caso real y su resolución se explican en 2.2.2 y en la decisión D6. El caso está cubierto en `tests/test_phase4.c` con cursos sintéticos, así como en `tests/test_export.c` con los datos reales, donde con historial vacío `QU1102` y `QU1106` son matriculables juntos, pero `FI1101` no, pues su correquisito `MA1102` necesita `MA0101`.
 
 #### 2.2.3 Formato de salida
 
@@ -152,7 +154,7 @@ El archivo completo incluye además `format_version` y `course_count`. Los ocho 
 | Campo                  | Justificación                                                                                                                                                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `has_conflict` (grupo) | Los grupos de un mismo curso son alternativas y no se comparan entre sí. Un bloque que termina a las 10:00 no choca con otro que empieza a las 10:00.                                                                               |
-| `has_conflict` (curso) | Es verdadero si algún grupo choca, como pide el enunciado. Casi siempre lo es (196 de 197 grupos en Computadores y 285 de 285 en Física), por lo que la Etapa 2 usa el indicador por grupo y los bloques para recalcular los pares. |
+| `has_conflict` (curso) | Es verdadero si algún grupo choca, como pide el enunciado. En los datos actuales lo tienen los 36 cursos con grupos (los otros 3 no tienen grupos); a nivel de grupo chocan 220 de 221 en Computadores y 308 de 308 en Física, por lo que la Etapa 2 usa el indicador por grupo y los bloques para recalcular los pares. |
 | `approved`             | Distingue un curso ya aprobado de uno con requisitos faltantes, pues ambos dejan `can_enroll` en falso.                                                                                                                             |
 | `can_enroll`           | Mide la elegibilidad curricular, independiente de los choques (los correquisitos se explican en 2.2.2).                                                                                                                             |
 | `format_version`       | Protege el contrato con la Etapa 2, pues se sube `OUTPUT_FORMAT_VERSION` si el formato cambia de forma incompatible.                                                                                                                |
@@ -221,8 +223,293 @@ Los archivos incorrectos a propósito están en `tests/data_invalid/` y los caso
 
 ## 5. Referencias
 
-Durante el desarrollo se utilizó Claude como apoyo para revisar el código, depurar errores y redactar la documentación. Todo el contenido fue revisado y comprendido por los integrantes del grupo.
-
 Anthropic. (2026). *Claude* (versión Claude Opus 5.5) [Modelo de lenguaje de gran escala]. https://claude.ai
 
+DeepSeek. (2026). *DeepSeek* (versión V4.1 Flash) [Modelo de lenguaje de gran escala]. https://www.deepseek.com
+
 Kernighan, B. W., & Ritchie, D. M. (1988). *The C Programming Language* (2.ª ed.). Prentice Hall.
+
+# Etapa 2: generación de combinaciones de horario en Racket
+
+Instituto Tecnológico de Costa Rica, Escuela de Ingeniería en Computadores
+Paradigmas de Programación (CE1106). Proyecto, Etapa 2 (paradigma funcional, lenguaje Racket)
+
+Esta etapa implementa el módulo que recibe el catálogo procesado por la Etapa 1 en C y las preferencias del estudiante, genera las combinaciones de cursos y grupos sin choques de horario, las filtra por el rango de créditos y las exporta en JSON Lines para la Etapa 3 (Prolog). El módulo no arma el horario final, no optimiza, no sugiere combinaciones, no tiene interfaz y no aplica restricciones distintas a los créditos.
+
+> Las secciones 2.1, 2.2.1, 2.2.2, 2.2.3 y 2.3 de este título documentan la Etapa 2. Las secciones 1 a 5 anteriores describen la Etapa 1 y se conservan como contrato de entrada.
+
+## 2.1 Arquitectura del proyecto
+
+El programa ejecuta un flujo de seis pasos, siempre en el mismo orden: leer el catálogo de C, leer las preferencias, cruzar ambas entradas para construir el universo, generar las combinaciones con streams, filtrar por créditos y escribir la salida. La figura siguiente muestra los archivos y los módulos que intervienen.
+
+```
+ data/salida_computadores.json ─┐
+ data/salida_fisica.json ───────┴──► catalogo.rkt ──────► catalogo
+                                                             │
+ data/preferencias.json ───────────► preferencias.rkt ──► preferencias
+                                                             │
+                                                             ▼
+                                                      universo.rkt
+                                                             │
+                                                             ▼
+                                             universo (cursos + avisos)
+                                                             │
+                                                             ▼
+                                                      generador.rkt
+                                                             │
+                                                             ▼
+                                             stream de combinaciones
+                                                             │
+                                                             ▼
+                                                      filtros.rkt
+                                                             │
+                                                             ▼
+                                        stream filtrado por créditos
+                                                             │
+                                                             ▼
+                                                     exportador.rkt
+                                                             │
+                                                             ▼
+                                             data/combinaciones.jsonl
+```
+
+El catálogo y las preferencias se leen una sola vez. `universo.rkt` descarta los cursos aprobados, los que C no marcó como matriculables y los grupos que el estudiante no pidió; los problemas se acumulan como avisos y no detienen el programa. El generador recibe únicamente ese universo ya recortado, de modo que no vuelve a consultar el catálogo ni las preferencias. El filtro de créditos es una instancia del filtro polimórfico y el exportador consume el stream de a un elemento.
+
+| Archivo | Responsabilidad |
+| --- | --- |
+| `racket/src/types.rkt` | Structs inmutables de la etapa: `bloque`, `grupo`, `curso`, `catalogo`, `interes`, `preferencias`, `par-curso-grupo` y `combinacion`, con sus contratos. |
+| `racket/src/lectura.rkt` | Utilidades de lectura de JSON y construcción de errores controlados con el archivo y el campo donde falló. |
+| `racket/src/catalogo.rkt` | Lee y valida las salidas JSON de C, convierte horas y bloques, une varias carreras y ofrece `cursos-habilitados` y `buscar-curso`. |
+| `racket/src/preferencias.rkt` | Lee y valida `min_credits`, `max_credits` y la lista de cursos de interés con sus grupos. |
+| `racket/src/universo.rkt` | Cruza catálogo y preferencias, recorta los grupos de interés y produce el struct `universo` con sus avisos. |
+| `racket/src/choques.rkt` | Decide si dos bloques, dos grupos o un grupo contra una selección acumulada chocan. |
+| `racket/src/generador.rkt` | Genera de forma recursiva y perezosa el stream de combinaciones no vacías, sin choques y con los créditos acumulados. |
+| `racket/src/filtros.rkt` | Implementa el filtro polimórfico por rango inclusivo y su instancia para los créditos de una combinación. |
+| `racket/src/exportador.rkt` | Serializa cada combinación como una línea JSON y la escribe mientras consume el stream. |
+| `racket/src/constantes.rkt` | Centraliza las rutas por defecto de catálogos, preferencias y salida, resueltas desde la ubicación del código. |
+| `racket/src/main.rkt` | Une el flujo, procesa los argumentos de la línea de comandos, muestra los avisos y traduce los errores a un código de salida distinto de cero. |
+
+El flujo no usa estado global ni variables reasignadas. La selección de cursos, los créditos y los avisos viajan como parámetros de la recursión o como campos de structs nuevos. Las únicas operaciones con efectos son la lectura de archivos en `lectura.rkt` y la escritura de la salida en `exportador.rkt`; el resto de los módulos son funciones puras.
+
+## 2.2 Decisiones de diseño
+
+### 2.2.1 Decisiones propias y específicas
+
+#### D1: qué es una combinación
+
+Una combinación es un subconjunto **no vacío** de los cursos habilitados del universo. Para cada curso elegido se toma exactamente un grupo de interés que exista en el catálogo y que no choque con los grupos ya elegidos. Los cursos que no se eligen simplemente se omiten; la combinación vacía se excluye.
+
+La decisión se apoya en el enunciado, que pide “un grupo por cada curso habilitado” y, al mismo tiempo, filtrar por créditos. Si todos los cursos fueran obligatorios, el total de créditos sería fijo y el filtro no tendría sentido. También refleja la matrícula real: el estudiante decide qué cursos llevar y puede comparar escenarios con menos cursos. El comportamiento se controla con la constante `OMITIR-CURSOS?` de `generador.rkt`, hoy en `#t`; si el profesor confirma la otra interpretación, basta cambiarla a `#f` y la rama de omisión devuelve `empty-stream`, sin tocar los demás módulos.
+
+Con los datos reales, `data/preferencias.json` pide ocho cursos de Computadores y Física en un rango de 12 a 18 créditos. El programa produce 762 combinaciones, con 3, 4, 5 o 6 cursos y créditos entre 12 y 18; ninguna incluye los ocho cursos y ninguna está vacía. Esa variedad es precisamente la que permite que el filtro de créditos tenga efecto.
+
+#### D2: contratos en lugar de Typed Racket
+
+Se usan structs inmutables y contratos de Racket (`contract-out`) en las fronteras de cada módulo, no Typed Racket. Los contratos documentan la interfaz y atrapan datos mal formados en la lectura del JSON, en el universo, en el generador y en el filtro, sin obligar a anotar cada función recursiva. También permiten que el filtro acepte cualquier tipo de elemento con `(stream/c any/c)` y que el criterio `en-rango` sea paramétrico con `parametric->/c`, sin introducir `Any` ni `cast` de Typed Racket. La decisión es uniforme en todos los módulos y se verifica con `raco make` y con la auditoría de `racket/src/`.
+
+#### D3: choque en el borde
+
+Dos bloques del mismo día chocan si cada uno empieza **antes** de que termine el otro. La comparación es `<` estricta en ambos sentidos. Si un bloque termina a las 10:00 y otro empieza a las 10:00, no chocan; los días distintos nunca chocan y un grupo sin bloques tampoco. Es exactamente la regla de `src/conflicts.c` de la Etapa 1, de modo que ambas etapas interpretan igual los horarios.
+
+Un caso real de choque es `MA0101` grupo 1, miércoles de 15:00 a 17:50, contra `MA1102` grupo 12, miércoles de 15:00 a 17:50: los bloques son idénticos y el generador no los combina. El borde se prueba con el caso sintético `S1-1` contra `S2-2`, que se tocan a las 10:00 y sí producen una combinación conjunta; la prueba está en `test-choques.rkt` y `test-generador.rkt`. En los catálogos reales no se encontró un par de grupos distintos que termine exactamente cuando empieza otro, por eso el borde se cubre con datos construidos a mano y no con una coincidencia accidental de los datos.
+
+#### D4: fuente de los choques
+
+Racket recalcula los choques a partir de los bloques con `choques.rkt`; la bandera `has_conflict` que escribe C se conserva en el campo `choque` del grupo y se usa solo como referencia de consistencia. Racket necesita comparar un grupo candidato contra una selección parcial, incluso cuando el catálogo completo ya no está disponible en esa rama, y recalcular desde los bloques hace que el generador sea independiente de la implementación de C.
+
+La prueba `test-choques.rkt` lee las salidas reales de las dos carreras y compara, grupo por grupo, el cálculo de Racket con la bandera de C: 221 grupos en Computadores y 308 en Física, sin diferencias. El lector de catálogo también rechaza un archivo en el que `has_conflict` del curso no coincida con la bandera de alguno de sus grupos.
+
+#### D5: streams y generación recursiva
+
+El generador no construye la lista completa de combinaciones. Para cada curso abre dos ramas: omitirlo o elegir uno de sus grupos compatibles. La rama de omisión se emite primero y cada rama se envuelve en `stream-lazy`, porque `stream-append` evalúa sus argumentos antes de construir el stream; sin esa precaución, el árbol de llamadas se expandía completo antes de devolver el primer resultado. La selección se guarda al revés y se invierte al emitir para conservar el orden del universo; los créditos se acumulan con `(+ creditos (curso-creditos curso))` en la misma llamada recursiva. No hay `set!`, `hash-set!`, `vector-set!`, `set-box!`, `#:mutable` ni `list->stream` en `racket/src/`.
+
+La pereza se demuestra con 60 cursos de un grupo cada uno: hay 2^60 − 1 combinaciones no vacías y pedir solo la primera devuelve `C59-1 | 1` de inmediato. En el universo real de las dos carreras, con todos los cursos habilitados y todos sus grupos, el número de combinaciones posibles es del orden de 3.5 × 10^14; `test-casos-limite.rkt` pide las primeras 100 y termina sin materializar el resto. El flujo principal aprovecha la misma propiedad: el filtro y el exportador consumen el stream de a un elemento.
+
+#### D6: correquisitos y alcance de la etapa
+
+C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D6 (D8 en `racket/docs/decisiones.md`).
+
+### 2.2.2 Un caso límite real y cómo se resolvió
+
+#### Correquisitos que no se imponen en esta etapa
+
+El caso más delicado apareció con los correquisitos reales de Computadores. `FI1202` (Laboratorio de Física General II) tiene como correquisito `FI1102` (Física General II), y `FI1102` tiene a su vez como correquisito `MA1102`. C marca `FI1202` como matriculable porque `FI1102` se puede llevar en el mismo periodo, no porque ya esté aprobado. La Etapa 2, por diseño, no impone esa relación: el enunciado pide generar combinaciones sin choques y filtrar por créditos, y prohíbe aplicar restricciones distintas a los créditos. Por eso el generador puede producir una combinación con `FI1202` sin `FI1102`.
+
+El caso se observa en la salida real. La combinación con `id = 13` contiene `FI1202` grupo 2, `MA2104` grupo 1, `MA1103` grupo 1 y `FI2103` grupo 1, pero no contiene `FI1102`; la línea incluye `"corequisites":["FI1102"]` dentro del curso. La combinación con `id = 52` sí contiene `FI1102` grupo 1 y `FI1202` grupo 2, además de otros tres cursos. Ambas son válidas para esta etapa porque no tienen choques y suman créditos dentro del rango; la diferencia es que la primera no cumple la regla de correquisitos que le corresponde a Prolog.
+
+La solución no fue agregar una restricción al generador, sino dejar el dato disponible y documentar la frontera entre etapas (decisión D6). El exportador incluye `corequisites` en cada curso, de modo que la Etapa 3 puede exigir que los correquisitos se elijan juntos sin volver a abrir el catálogo de C. El mismo criterio cubre el caso de `QU1102` y `QU1106` en Física, que se exigen mutuamente como correquisito, y el de `FI1102` en Computadores, que exige `MA1102` como correquisito. Si el profesor pidiera que la restricción se aplicara ya en esta etapa, el cambio quedaría localizado en el generador y en el universo, no en el formato de salida.
+
+#### El mismo código en dos carreras
+
+Otro caso real es la identidad de un curso. Doce códigos aparecen en las dos carreras, pero no siempre significan lo mismo: `FI1102` exige `FI1101` en Computadores y `FI1101` más `MA1102` en Física; `CS2101` no tiene requisitos en Computadores y exige `CI1106` e `IF1101` en Física. Por eso un curso se identifica con la pareja `(carrera, código)` y no solo con el código. `leer-catalogo` acepta el mismo código en carreras distintas, pero rechaza la pareja repetida; `buscar-curso` recibe carrera y código; y el archivo de preferencias también incluye `career`. Sin esta decisión, mezclar las dos carreras habría obligado a elegir una versión de los requisitos y a equivocarse en la otra.
+
+### 2.2.3 Formato de salida
+
+La salida es `data/combinaciones.jsonl`, en formato JSON Lines: un objeto JSON independiente por línea y una línea por combinación. No hay encabezado, pie ni arreglo global; si ninguna combinación cumple el rango de créditos, el archivo queda vacío. El contrato completo, con el tipo de cada campo, está en `racket/docs/formato_salida.md`.
+
+Un ejemplo real es la combinación `id = 13`, que también sirve para ilustrar el caso de los correquisitos.
+
+```json
+{"course_count":4,"courses":[{"blocks":[{"day":"TUE","end":"14:50","start":"13:00"}],"career":"computadores","code":"FI1202","corequisites":["FI1102"],"credits":1,"group":2,"name":"Laboratorio fisica general II"},{"blocks":[{"day":"TUE","end":"19:50","start":"18:00"},{"day":"THU","end":"19:50","start":"18:00"}],"career":"computadores","code":"MA2104","corequisites":[],"credits":4,"group":1,"name":"Calculo superior"},{"blocks":[{"day":"WED","end":"09:20","start":"07:30"},{"day":"FRI","end":"09:20","start":"07:30"}],"career":"fisica","code":"MA1103","corequisites":[],"credits":4,"group":1,"name":"Calculo y algebra lineal"},{"blocks":[{"day":"TUE","end":"16:50","start":"15:00"},{"day":"THU","end":"16:50","start":"15:00"}],"career":"fisica","code":"FI2103","corequisites":[],"credits":3,"group":1,"name":"Fisica general III"}],"id":13,"total_credits":12}
+```
+
+| Campo | Tipo | Obligatorio | Justificación |
+| --- | --- | --- | --- |
+| `id` | entero positivo | extra | Permite que Prolog y la Etapa 4 se refieran a una combinación concreta sin depender de su posición en el archivo. |
+| `total_credits` | entero no negativo | sí | Es la suma de los créditos de los cursos elegidos; el filtro de la Etapa 2 ya la usó para aceptar la combinación. |
+| `course_count` | entero positivo | extra | Permite aplicar restricciones por cantidad de cursos sin recorrer la lista. |
+| `courses` | lista no vacía | sí | Contiene los pares curso-grupo seleccionados. |
+| `career` | `"computadores"` o `"fisica"` | sí | Identifica la carrera de origen del curso y evita confundir códigos repetidos entre carreras. |
+| `code` | texto | sí | Código del curso. |
+| `group` | entero positivo | sí | Número del grupo elegido. |
+| `name` | texto | extra | La Etapa 4 lo muestra al usuario sin volver al catálogo. |
+| `credits` | entero no negativo | extra | Prolog puede recalcular o comparar créditos por curso. |
+| `corequisites` | lista de códigos | extra | Es la información que Prolog necesita para aplicar la regla de correquisitos (D6). |
+| `blocks` | lista de bloques | extra | Prolog revisa compatibilidades de horario sin abrir el catálogo; cada bloque trae `day`, `start` y `end` en `HH:MM`. |
+
+La elección de JSON Lines responde a una decisión de diseño concreta, no solo estética. El exportador consume el stream de combinaciones de a un elemento y escribe cada línea en el momento en que la recibe; no necesita saber cuál es la última combinación, no acumula comas y no tiene que materializar la lista completa para cerrar un arreglo. Si el proceso se interrumpe, las líneas anteriores siguen siendo objetos JSON válidos. Cada línea es autocontenida, de modo que Prolog puede leerla y convertirla en un hecho sin conservar el estado de un documento mayor. Las estructuras anidadas (varios cursos, varios bloques por grupo y listas de correquisitos) se conservan; un CSV plano habría exigido inventar separadores dentro de las celdas y convertir el orden de las columnas en parte del contrato.
+
+La salida garantiza que ninguna combinación tiene choques entre sus grupos, que `total_credits` está en el rango inclusivo de las preferencias, que un curso `(career, code)` aparece una sola vez por combinación y que todos los cursos estaban marcados como matriculables por C. El archivo de la Etapa 1 sigue siendo un JSON normal con `format_version` y `course_count`; la salida de la Etapa 2 no modifica ese contrato de entrada.
+
+## 2.3 Estructuras de datos desarrolladas
+
+Los tipos están en `racket/src/types.rkt` y el struct `universo` en `racket/src/universo.rkt`. Todos son structs de Racket sin campos mutables, con `#:transparent` para poder compararlos con `equal?` e imprimirlos en las pruebas. Las funciones públicas se exportan con `contract-out`.
+
+```
+catalogo
+  └── cursos: (listof curso)
+        ├── carrera, codigo, nombre, creditos
+        ├── prerrequisitos, correquisitos
+        ├── aprobado, matriculable
+        └── grupos: (listof grupo)
+              ├── numero, profesor, choque
+              └── bloques: (listof bloque)
+                    ├── dia
+                    ├── inicio
+                    └── fin
+
+preferencias
+  ├── creditos-min, creditos-max
+  └── intereses: (listof interes)
+        ├── carrera, codigo
+        └── grupos: (non-empty-listof exact-positive-integer)
+
+universo
+  ├── cursos: (listof curso)   ; copias recortadas del catálogo
+  └── avisos: (listof string)
+
+combinacion
+  ├── pares: (non-empty-listof par-curso-grupo)
+  │     ├── curso
+  │     └── grupo
+  └── creditos
+```
+
+| Estructura | Campos principales | Propósito e invariantes |
+| --- | --- | --- |
+| `bloque` | `dia`, `inicio`, `fin` | Día de la clase y minutos desde las 00:00. El día es `MON` a `SAT`; las horas están entre 0 y 1439 y el lector exige `fin > inicio`. |
+| `grupo` | `numero`, `profesor`, `bloques`, `choque` | Oferta de un curso. `numero` es positivo y no se repite dentro del curso; `bloques` puede ser vacío y entonces el grupo nunca choca; `choque` es la bandera de C y se usa solo para la prueba de consistencia. |
+| `curso` | `carrera`, `codigo`, `nombre`, `creditos`, `prerrequisitos`, `correquisitos`, `grupos`, `aprobado`, `matriculable` | Curso del catálogo. La pareja `(carrera, codigo)` es su identidad; `creditos` puede ser 0; `grupos` puede ser vacío; `aprobado` y `matriculable` son banderas independientes. |
+| `catalogo` | `cursos` | Agrupa los cursos de una o varias carreras ya leídos. El lector exige al menos un archivo y no permite repetir la pareja `(carrera, codigo)`. |
+| `interes` | `carrera`, `codigo`, `grupos` | Curso que el estudiante quiere llevar y los números de grupo que acepta. La lista de grupos no está vacía y sus elementos son positivos; el lector exige que no se repitan. |
+| `preferencias` | `intereses`, `creditos-min`, `creditos-max` | Entrada del estudiante. Los créditos no son negativos y el lector exige `creditos-min <= creditos-max`; `intereses` puede estar vacío. |
+| `par-curso-grupo` | `curso`, `grupo` | Un curso con el grupo elegido. Es la unidad de una combinación y guarda los structs completos para que el exportador no dependa de un catálogo global. |
+| `combinacion` | `pares`, `creditos` | Matrícula candidata. `pares` nunca está vacío, los grupos son compatibles entre sí y `creditos` es la suma de los créditos de los cursos elegidos. |
+| `universo` | `cursos`, `avisos` | Resultado del cruce entre catálogo y preferencias. Solo contiene cursos no aprobados, matriculables y con al menos un grupo solicitado que existe; los avisos son textos legibles para el usuario. |
+
+Tres invariantes sostienen el resto del diseño. Primero, la identidad `(carrera, código)` permite que el mismo código exista en dos carreras con requisitos distintos sin mezclarse. Segundo, el universo se construye con `struct-copy` sobre el curso original, así que recortar los grupos no modifica el catálogo y una misma combinación puede compartir cursos y grupos sin efectos laterales. Tercero, la combinación guarda los pares completos y no índices, de modo que el exportador conoce carrera, nombre, créditos, correquisitos y bloques sin volver a buscar en el catálogo.
+
+La generación acumula estado como parámetros de la recursión: `pendientes` es la lista de cursos que faltan, `seleccion` es la lista inversa de pares ya elegidos y `creditos` es la suma acumulada. Al llegar al final se invierte la selección, se construye la combinación y se emite en el stream. Ningún paso modifica un struct ya construido: se crean valores nuevos con los constructores o con `struct-copy`.
+
+## 2.4 Uso, pruebas y estructura del repositorio
+
+El proyecto completo se compila y se prueba en Linux. La Etapa 2 requiere Racket 9.3 o una versión compatible con `racket/stream`, `json` y `rackunit`; no necesita paquetes externos. La Etapa 1 requiere `gcc`, `make` y, para la revisión de memoria, `valgrind`.
+
+### 2.4.1 Ejecución
+
+Desde la raíz del repositorio, el programa usa por defecto `data/preferencias.json`, `data/salida_computadores.json`, `data/salida_fisica.json` y escribe `data/combinaciones.jsonl`:
+
+```bash
+racket racket/src/main.rkt
+```
+
+También se pueden indicar las rutas en el orden preferencias, salida y uno o más catálogos:
+
+```bash
+racket racket/src/main.rkt data/preferencias.json data/combinaciones.jsonl \
+    data/salida_computadores.json data/salida_fisica.json
+```
+
+Las rutas por defecto se resuelven desde la ubicación de `constantes.rkt`, así que el programa funciona aunque se ejecute desde otra carpeta. Si faltan argumentos o el número no es válido, muestra el uso y termina con código 1. Los errores de lectura y de escritura se informan por `stderr` con un mensaje que incluye el archivo o el campo problemático, y el programa termina con código 1; un error de datos nunca se convierte en una traza interna sin explicación.
+
+La salida del ejemplo real tiene 762 líneas. Para inspeccionarla:
+
+```bash
+wc -l data/combinaciones.jsonl
+head -1 data/combinaciones.jsonl
+```
+
+### 2.4.2 Pruebas de Racket
+
+```bash
+raco test racket/tests
+raco make racket/src/*.rkt
+```
+
+La suite completa tiene 65 pruebas y todas pasan. Las suites se reparten así.
+
+| Suite | Pruebas | Qué cubre |
+| --- | ---: | --- |
+| `test-catalogo.rkt` | 6 | Catálogo válido, archivo vacío e inexistente, carrera inválida, conteo, código repetido, mismo código en dos carreras, grupo repetido, campo faltante, auto-requisito, choque incoherente, versión y JSON malformado. |
+| `test-preferencias.rkt` | 4 | Preferencias válidas, archivo vacío e inexistente, JSON malformado, créditos negativos, rango imposible, carrera inválida, código vacío, grupos vacíos, no positivos y repetidos, `courses` que no es lista y campo faltante. |
+| `test-universo.rkt` | 6 | Universo vacío, orden de preferencias, avisos de cursos no habilitados, aprobados, inexistentes, repetidos y grupos inexistentes; no modificación del catálogo. |
+| `test-choques.rkt` | 5 | Horario idéntico, traslape parcial, bloque contenido, borde, días distintos, grupos con varios bloques, grupos vacíos y consistencia con las banderas de C. |
+| `test-generador.rkt` | 14 | Oráculos manuales, combinación vacía, omisión de cursos, un curso con uno o varios grupos, choques, borde, créditos acumulados y pereza con 60 cursos. |
+| `test-filtros.rkt` | 9 | Límites inclusivos con enteros, cadenas y combinaciones, segundo extractor, rango sin resultados, mínimo mayor que máximo, pereza y el criterio paramétrico. |
+| `test-streams.rkt` | 3 | `stream-cons` y `stream-append` difieren la cola, y el generador no usa `list->stream` ni `stream->list`. |
+| `test-exportador.rkt` | 6 | Formato `HH:MM`, campos obligatorios, ida y vuelta, coherencia de créditos y cantidad, primera línea y archivo vacío. |
+| `test-main.rkt` | 4 | Flujo completo con el catálogo sintético, avisos, rango sin resultados y archivo de entrada inexistente. |
+| `test-casos-limite.rkt` | 3 | Mínimo igual a máximo, un solo curso y universo grande con las primeras 100 combinaciones. |
+| `test-validar-salida.rkt` | 5 | Validación de la salida real contra el catálogo de C: campos, créditos, rango, choques, cursos matriculables y unicidad. |
+
+### 2.4.3 Pruebas de la Etapa 1 y regresión
+
+```bash
+make clean
+make
+make test
+bash tests/regression_etapa1.sh origin/main
+```
+
+Las tres suites de C pasan con 48/48, 35/35 y 73/73 pruebas. La regresión confirma que la salida de C es idéntica a la de `origin/main` salvo por el campo `career`, que es el cambio propio de la Etapa 2. El detalle de la validación final está en `racket/docs/revision_final.md` y la auditoría de mutación y tipos en `racket/docs/auditoria_fase_5.md`.
+
+### 2.4.4 Estructura del repositorio
+
+```
+.
+├── data/                     datos compartidos, fuentes, salidas de C y combinaciones.jsonl
+├── include/                  cabeceras de la Etapa 1 en C
+├── src/                      código de la Etapa 1 en C
+├── tests/                    pruebas y datos de la Etapa 1
+├── racket/
+│   ├── src/                  módulos funcionales de la Etapa 2
+│   ├── tests/                suites de Racket, fixtures y oráculos manuales
+│   └── docs/                 decisiones, contratos, auditorías, guía de defensa y revisión final
+├── Makefile                  compilación y pruebas de C
+├── README.md                 documentación de las dos etapas
+└── planDocTest.md            plan de trabajo de la Etapa 2
+```
+
+El archivo `data/preferencias.json` mezcla cursos de Computadores y Física para ejercitar los dos catálogos. El programa no impone una carrera de estudiante porque el enunciado no la pide; la carrera se conserva por curso para que la salida siga siendo inequívoca.
+
+## Referencias de la Etapa 2
+
+Racket. (2026). *The Racket Reference* (versión 9.3). https://docs.racket-lang.org/reference/
+
+Racket. (2026). *Streams*. https://docs.racket-lang.org/reference/streams.html
+
+Racket. (2026). *Contracts*. https://docs.racket-lang.org/reference/contracts.html
+
+Racket. (2026). *JSON*. https://docs.racket-lang.org/reference/json.html
+
+Racket. (2026). *RackUnit*. https://docs.racket-lang.org/rackunit/

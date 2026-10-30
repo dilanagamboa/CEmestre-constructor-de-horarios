@@ -1,4 +1,4 @@
-# Plan de Fisica, primeros 4 semestres. Fuente: capturas de la Guia (TEC-Digital).
+# Plan de Fisica, primeros 6 semestres. Fuente: capturas de la Guia (TEC-Digital).
 # Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
 # Los grupos y horarios NO van aqui: se toman de horarios_guia.csv por codigo.
 CI0200;Examen diagnostico;0;;
@@ -27,6 +27,18 @@ MI3117;Dinamica;3;MI2106;
 MT2001;Circuitos electricos en CC y CA;3;FI1102;
 MT2002;Laboratorio de circuitos de corriente continua y corriente alterna;1;MA1102;MT2001
 PI2610;Probabilidad y estadistica I;3;MA1102;CA2125
+FI2104;Fisica general IV;3;FI1102;MA2104
+IF3501;Termodinamica I;3;FI2103;
+IF3503;Instrumentacion II;1;IF3502;
+MA2104;Calculo superior;4;MA1103;
+MA3106;Metodos numericos;4;MA2105;
+PI3612;Probabilidad y estadistica II;3;MA1103/PI2610;
+IF3601;Metodologia de la investigacion;3;PI3612;
+IF3602;Metodos matematicos de fisica e ingenieria I;3;MA2105;IF3603
+IF3603;Optica;3;FI2104;IF3604
+IF3604;Laboratorio de optica;1;;IF3603
+MI3108;Mecanica de fluidos;4;MA2105/MI3117;
+PI5302;Diseno de experimentos;4;PI3612;
 # MA1102 no aparece en las capturas pero lo piden FI1101, FI1102, FI2103, MT2002 y PI2610.
-# Sus requisitos se copiaron del catalogo de computadores: VERIFICAR contra el plan de Fisica.
+# Sus requisitos (MA0101) coinciden con el plan de Fisica publicado por el TEC (verificado).
 MA1102;Calculo diferencial e integral;4;MA0101;

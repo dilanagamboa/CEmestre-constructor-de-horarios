@@ -1,0 +1,18 @@
+{
+  "format_version": 1,
+  "course_count": 1,
+  "courses": [
+    {
+      "code": "X1",
+      "name": "Curso X1",
+      "career": "quimica",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    }
+  ]
+}

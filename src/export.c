@@ -125,6 +125,10 @@ static void write_course(FILE *out,
     write_json_string(out, c->name);
     fputs(",\n", out);
 
+        fputs("      \"career\": ", out);
+    write_json_string(out, c->career);
+    fputs(",\n", out);
+
     fprintf(out, "      \"credits\": %d,\n", c->credits);
 
     fputs("      \"prerequisites\": ", out);

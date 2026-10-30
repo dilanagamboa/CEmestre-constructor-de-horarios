@@ -55,10 +55,10 @@ static void print_load_detail(const LoadErrorInfo *info) {
  * demasiados argumentos. */
 static void print_usage(const char *program) {
     fprintf(stderr,
-            "Uso: %s [catalogo.csv [historial.csv [salida.json]]]\n"
-            "  Valores por defecto: %s, %s, %s\n",
+            "Uso: %s [catalogo.csv [historial.csv [salida.json [carrera]]]]\n"
+            "  Valores por defecto: %s, %s, %s, %s\n",
             program, DEFAULT_CATALOG_PATH, DEFAULT_HISTORY_PATH,
-            DEFAULT_OUTPUT_PATH);
+            DEFAULT_OUTPUT_PATH, DEFAULT_CAREER);
 }
 
 int main(int argc, char *argv[]) {
@@ -66,12 +66,13 @@ int main(int argc, char *argv[]) {
     const char *catalog_path = DEFAULT_CATALOG_PATH;
     const char *history_path = DEFAULT_HISTORY_PATH;
     const char *output_path  = DEFAULT_OUTPUT_PATH;
+    const char *career       = DEFAULT_CAREER;
 
     if (argc > 1 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)) {
         print_usage(argv[0]);
         return SUCCESS;
     }
-    if (argc > 4) {
+    if (argc > 5) {
         print_usage(argv[0]);
         return ERROR_INVALID_FORMAT;
     }
@@ -82,7 +83,8 @@ int main(int argc, char *argv[]) {
     if (argc > 1) catalog_path = argv[1];
     if (argc > 2) history_path = argv[2];
     if (argc > 3) output_path  = argv[3];
-
+    if (argc > 4) career = argv[4];
+    
     Catalog catalog;
     StudentHistory history;
 
@@ -95,6 +97,15 @@ int main(int argc, char *argv[]) {
                 catalog_path, error_message(err), (int)err);
         print_load_detail(&load_info);
         return (int)err;   /* el ErrorCode se usa como codigo de salida del proceso */
+    }
+
+        /* 1b. carrera: un catalogo es de una sola carrera, se copia a cada curso */
+    err = catalog_set_career(&catalog, career);
+    if (err != SUCCESS) {
+        fprintf(stderr, "Carrera invalida '%s': use %s o %s\n",
+                career, CAREER_COMPUTADORES, CAREER_FISICA);
+        catalog_free(&catalog);
+        return (int)err;
     }
 
     /* 2. historial. Va despues del catalogo porque se valida contra el.
@@ -131,6 +142,7 @@ int main(int argc, char *argv[]) {
         if (catalog.courses[i].can_enroll) enrollable++;
     }
 
+    printf("Carrera:    %s\n", career);
     printf("Catalogo:   %s (%d cursos, %d grupos)\n",
            catalog_path, catalog.course_count, total_groups);
     printf("Historial:  %s (%d cursos aprobados)\n",
@@ -138,6 +150,7 @@ int main(int argc, char *argv[]) {
     printf("Choques:    %d grupos con choque de horario\n", conflict_groups);
     printf("Matricula:  %d cursos matriculables\n", enrollable);
     printf("Salida:     %s\n", output_path);
+    
 
     /* el historial no se libera porque no usa memoria dinamica */
     catalog_free(&catalog);
