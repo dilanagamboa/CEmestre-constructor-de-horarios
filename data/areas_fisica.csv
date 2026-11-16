@@ -1,0 +1,57 @@
+# Area de cada curso del plan de Licenciatura en Ingenieria Fisica (Etapa 3, regla de limite por area).
+# Formato: codigo;area. Cada curso del catalogo aparece una sola vez.
+# Criterio: el area es la del contenido principal del curso. Como referencia se usa la
+# unidad que lo imparte (MA, FI, QU, EL, CI, CS, SE...), y en las escuelas que imparten
+# varias areas (CE, IF, MI, MT, PI) decide el contenido. Areas validas en include/constants.h.
+CI0200;humanidades
+CI0202;humanidades
+CI1106;humanidades
+CI1230;humanidades
+IF1101;ingenieria
+MA0101;matematica
+QU1102;quimica
+QU1106;quimica
+CI1107;humanidades
+CI1231;humanidades
+CS2101;humanidades
+FI1101;fisica
+FI1201;fisica
+CA2125;programacion
+FI1102;fisica
+FI1202;fisica
+MA1103;matematica
+MI2101;ingenieria
+MI2106;fisica
+FI2103;fisica
+IF3502;electronica
+MA2105;matematica
+MI3117;fisica
+MT2001;electronica
+MT2002;electronica
+PI2610;matematica
+FI2104;fisica
+IF3501;fisica
+IF3503;electronica
+MA2104;matematica
+MA3106;matematica
+PI3612;matematica
+IF3601;ingenieria
+IF3602;matematica
+IF3603;fisica
+IF3604;fisica
+MI3108;fisica
+PI5302;matematica
+CS3404;humanidades
+EL4513;fisica
+IF4701;matematica
+IF4702;programacion
+IF4703;matematica
+IF4704;electiva
+CS4402;humanidades
+IF4801;fisica
+IF4802;ingenieria
+IF4803;ingenieria
+IF4804;programacion
+MT7001;ingenieria
+FI4304;fisica
+MA1102;matematica

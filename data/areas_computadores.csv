@@ -1,0 +1,58 @@
+# Area de cada curso del plan de Ingenieria en Computadores (Etapa 3, regla de limite por area).
+# Formato: codigo;area. Cada curso del catalogo aparece una sola vez.
+# Criterio: el area es la del contenido principal del curso. Como referencia se usa la
+# unidad que lo imparte (MA, FI, QU, EL, CI, CS, SE...), y en las escuelas que imparten
+# varias areas (CE, IF, MI, MT, PI) decide el contenido. Areas validas en include/constants.h.
+MA0101;matematica
+CE1101;programacion
+CE1104;sistemas
+MA1102;matematica
+MA1403;matematica
+QU1102;quimica
+QU1106;quimica
+SE1100;humanidades
+SE1200;humanidades
+CE1103;programacion
+CE1105;ingenieria
+CI1407;humanidades
+CS1502;humanidades
+FI1101;fisica
+FI1201;fisica
+MA1103;matematica
+SE1400;humanidades
+CE2103;programacion
+CS2101;humanidades
+EL2113;electronica
+FI1102;fisica
+FI1202;fisica
+MA2104;matematica
+CE1106;programacion
+CE2201;electronica
+EL2114;electronica
+EL2207;electronica
+PI2609;matematica
+SO4604;ingenieria
+CE1107;sistemas
+CE3101;programacion
+CE3201;sistemas
+MA2105;matematica
+PI5516;ingenieria
+CE1108;programacion
+CE1109;electronica
+CE1110;electronica
+CE4301;sistemas
+CI3203;humanidades
+CE1111;matematica
+CE1112;electronica
+CE1116;ingenieria
+CE4302;sistemas
+CE4303;sistemas
+AE4208;ingenieria
+CE1113;sistemas
+CE5301;sistemas
+CE5701;electiva
+CS3404;humanidades
+CE5508;programacion
+IC6200;programacion
+FI2103;fisica
+QU1107;quimica
