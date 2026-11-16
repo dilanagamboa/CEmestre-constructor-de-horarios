@@ -1,4 +1,4 @@
-# Plan de Computadores, primeros 6 semestres (mas nivelacion: MA0101). Fuente: capturas de la Guia (TEC-Digital).
+# Plan de Computadores, primeros 8 semestres (mas nivelacion: MA0101). Fuente: capturas de la Guia (TEC-Digital).
 # Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
 # Fuera de alcance: CI0205 (prueba de ingles sin grupos) y FH1000 (bimestral).
 # SE1100, SE1200 y SE1400 (actividades de 0 creditos) van segun el plan, pero sin grupos: la Guia ofrece las
@@ -42,3 +42,18 @@ CE1109;Circuitos analogicos;4;EL2207/SO4604;
 CE1110;Analisis de senales mixtas;4;EL2114/MA2105;
 CE4301;Arquitectura de computadores I;4;CE1107/CE3201;
 CI3203;Ingles especializado para ingenierias en computadores;2;;
+CE1111;Analisis numerico para la ingenieria;3;MA2105;
+CE1112;Taller de senales mixtas;3;CE1109/CE1110;
+CE1116;Diseno y calidad en productos tecnologicos;4;CE3101/CE4301/PI5516;
+CE4302;Arquitectura de computadores II;4;CE4301;CE4303
+CE4303;Principios de sistemas operativos;4;CE1108;
+AE4208;Desarrollo de emprendedores;4;CS2101;
+CE1113;Sistemas empotrados;3;CE4303;
+CE5301;Redes de computadores;4;CE1116/CE4303;
+CE5701;Electiva I;3;CE4302/CI3203;
+CS3404;Seminario de etica para la ingenieria;2;CS2101;
+# Electivas de Computadores (llenan CE5701): se modelan con los 3 creditos y los requisitos de CE5701.
+CE5508;Soa41d: arquitectura orientada a servicios aplicada a sistemas emergentes;3;CE4302/CI3203;
+IC6200;Inteligencia artificial;3;CE4302/CI3203;
+FI2103;Fisica general III;3;CE4302/CI3203;
+QU1107;Quimica basica II;3;CE4302/CI3203;

@@ -1,4 +1,4 @@
-# Plan de Fisica, primeros 6 semestres. Fuente: capturas de la Guia (TEC-Digital).
+# Plan de Fisica, primeros 8 semestres. Fuente: capturas de la Guia (TEC-Digital).
 # Formato: codigo;nombre;creditos;prerrequisitos;correquisitos   (varios codigos separados por '/')
 # Los grupos y horarios NO van aqui: se toman de horarios_guia.csv por codigo.
 CI0200;Examen diagnostico;0;;
@@ -39,6 +39,20 @@ IF3603;Optica;3;FI2104;IF3604
 IF3604;Laboratorio de optica;1;;IF3603
 MI3108;Mecanica de fluidos;4;MA2105/MI3117;
 PI5302;Diseno de experimentos;4;PI3612;
+CS3404;Seminario de etica para la ingenieria;2;IF1101;
+EL4513;Teoria electromagnetica I;4;FI1102/MA2105;
+IF4701;Metodos matematicos de fisica e ingenieria II;3;IF3602;
+IF4702;Fisica computacional I;3;MA3106/MI2101;
+IF4703;Analisis de incertidumbres;3;PI5302;
+IF4704;Electiva I;3;;
+CS4402;Seminario de estudios costarricenses;2;CS3404;
+IF4801;Mecanica cuantica para ingenieria;3;IF3603/IF4701;
+IF4802;Laboratorio metrologia I;2;;IF4803
+IF4803;Metrologia industrial y legal;3;IF4703;
+IF4804;Fisica computacional II;3;IF4702;
+MT7001;Analisis y simulacion de sistemas;3;IF4701/MA2105;
+# Electiva de Fisica (llena IF4704): se modela con los 3 creditos y los requisitos de IF4704.
+FI4304;Fisica de plasmas y sus aplicaciones I;3;;
 # MA1102 no aparece en las capturas pero lo piden FI1101, FI1102, FI2103, MT2002 y PI2610.
 # Sus requisitos (MA0101) coinciden con el plan de Fisica publicado por el TEC (verificado).
 MA1102;Calculo diferencial e integral;4;MA0101;
