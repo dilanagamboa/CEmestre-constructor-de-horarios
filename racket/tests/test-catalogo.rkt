@@ -22,6 +22,8 @@
 (define-runtime-path formato-version "data/catalogo_formato_version.json")
 (define-runtime-path json-malformado "data/catalogo_json_malformado.json")
 (define-runtime-path no-objeto "data/catalogo_no_objeto.json")
+(define-runtime-path sin-area "data/catalogo_sin_area.json")
+(define-runtime-path area-vacia "data/catalogo_area_vacia.json")
 (define-runtime-path real-computadores "../../data/salida_computadores.json")
 (define-runtime-path real-fisica "../../data/salida_fisica.json")
 
@@ -36,6 +38,8 @@
   (check-equal? (length (catalogo-cursos cat)) 7)
   (check-equal? (map curso-codigo (cursos-habilitados cat)) '("S1" "S2" "S3" "S4" "S7"))
   (check-equal? (curso-carrera (buscar-curso cat 'fisica "S3")) 'fisica)
+  (check-equal? (curso-area (buscar-curso cat 'fisica "S3")) 'fisica)
+  (check-equal? (curso-area (buscar-curso cat 'computadores "S2")) 'matematica)
   (check-false (buscar-curso cat 'computadores "S3") "S3 es de fisica")
   (check-equal? (bloque (quote MON) 480 600)
                 (first (grupo-bloques (first (curso-grupos (buscar-curso cat 'computadores "S1")))))))
@@ -56,7 +60,9 @@
   (check-exn exn:fail:user? (lambda () (leer-catalogo (list choque-incoherente))) "has_conflict incoherente")
   (check-exn exn:fail:user? (lambda () (leer-catalogo (list formato-version))) "format_version distinto")
   (check-exn exn:fail:user? (lambda () (leer-catalogo (list json-malformado))) "JSON malformado")
-  (check-exn exn:fail:user? (lambda () (leer-catalogo (list no-objeto))) "JSON que no es objeto"))
+  (check-exn exn:fail:user? (lambda () (leer-catalogo (list no-objeto))) "JSON que no es objeto")
+  (check-exn exn:fail:user? (lambda () (leer-catalogo (list sin-area))) "curso sin area")
+  (check-exn exn:fail:user? (lambda () (leer-catalogo (list area-vacia))) "area vacia"))
 
 (test-case "mismo codigo en carreras diferentes"
   (define cat (leer-catalogo (list mismo-codigo)))
@@ -71,4 +77,7 @@
                    (buscar-curso cat 'fisica "FI1102")
                    #t)
               "FI1102 esta en las dos carreras como cursos distintos")
-  (check-true (andmap curso-matriculable (cursos-habilitados cat))))
+  (check-true (andmap curso-matriculable (cursos-habilitados cat)))
+  (check-equal? (curso-area (buscar-curso cat 'fisica "EL4513")) 'fisica)
+  (check-false (memq 'sin_area (map curso-area (catalogo-cursos cat)))
+               "las salidas reales se generan con el archivo de areas"))

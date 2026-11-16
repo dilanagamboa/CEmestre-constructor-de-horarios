@@ -11,7 +11,7 @@
 ;; atajos para armar datos de prueba (horas en minutos: 480 = 08:00)
 (define (b dia inicio fin) (bloque dia inicio fin))
 (define (g . bloques) (grupo 1 "P" bloques #f))
-(define (par gr) (par-curso-grupo (curso 'computadores "X1" "X" 3 '() '() (list gr) #f #t) gr))
+(define (par gr) (par-curso-grupo (curso 'computadores "X1" "X" 3 'programacion '() '() (list gr) #f #t) gr))
 
 (test-case "bloques"
   (check-true  (bloques-chocan? (b 'MON 480 600) (b 'MON 480 600)) "horario identico")
@@ -57,6 +57,7 @@
 
 (define (json->curso carrera j)
   (curso carrera (hash-ref j 'code) (hash-ref j 'name) (hash-ref j 'credits)
+         (string->symbol (hash-ref j 'area))
          (hash-ref j 'prerequisites) (hash-ref j 'corequisites)
          (map json->grupo (hash-ref j 'groups))
          (hash-ref j 'approved) (hash-ref j 'can_enroll)))

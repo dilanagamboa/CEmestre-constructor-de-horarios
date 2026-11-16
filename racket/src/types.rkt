@@ -8,6 +8,7 @@
  dia/c
  minuto/c
  carrera/c
+ area/c
  (contract-out
   (struct bloque ([dia dia/c] [inicio minuto/c] [fin minuto/c]))
   (struct grupo ([numero exact-positive-integer?]
@@ -18,6 +19,7 @@
                  [codigo non-empty-string?]
                  [nombre non-empty-string?]
                  [creditos exact-nonnegative-integer?]
+                 [area area/c]
                  [prerrequisitos (listof non-empty-string?)]
                  [correquisitos (listof non-empty-string?)]
                  [grupos (listof grupo?)]
@@ -49,9 +51,13 @@
 ;; carrera que aporta el curso, mismo valor que escribe el modulo de C
 (define carrera/c (or/c 'computadores 'fisica))
 
+;; area del curso que asigna el modulo de C (campo area, formato 2)
+;; la lista de areas validas vive en C, aqui solo se exige un simbolo
+(define area/c symbol?)
+
 ;; un curso se identifica por carrera y codigo, porque un mismo codigo puede
 ;; tener requisitos distintos en cada carrera
-(struct curso (carrera codigo nombre creditos prerrequisitos correquisitos
+(struct curso (carrera codigo nombre creditos area prerrequisitos correquisitos
                        grupos aprobado matriculable)
   #:transparent)
 

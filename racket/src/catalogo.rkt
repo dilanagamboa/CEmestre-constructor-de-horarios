@@ -13,7 +13,8 @@
   [buscar-curso (-> catalogo? carrera/c string? (or/c curso? #f))]))
 
 ;; version del formato de C que sabe leer este modulo (OUTPUT_FORMAT_VERSION)
-(define VERSION-FORMATO 1)
+;; la version 2 agrega el campo area de cada curso (Etapa 3)
+(define VERSION-FORMATO 2)
 
 (define DIAS '(MON TUE WED THU FRI SAT))
 (define CARRERAS '(computadores fisica))
@@ -59,6 +60,7 @@
   (define carrera (string->symbol (campo donde j 'career string? "un texto")))
   (unless (memq carrera CARRERAS)
     (error-lectura donde "carrera invalida ~a" carrera))
+  (define area (string->symbol (campo donde j 'area non-empty-string? "un texto no vacio")))
   (define prerrequisitos
     (campo donde j 'prerequisites (lista-de non-empty-string?) "una lista de codigos"))
   (define correquisitos
@@ -80,6 +82,7 @@
          codigo
          (campo donde j 'name non-empty-string? "un texto no vacio")
          (campo donde j 'credits exact-nonnegative-integer? "un entero no negativo")
+         area
          prerrequisitos
          correquisitos
          grupos

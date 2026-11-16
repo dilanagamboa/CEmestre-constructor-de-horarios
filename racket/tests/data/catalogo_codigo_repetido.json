@@ -1,11 +1,12 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "course_count": 2,
   "courses": [
     {
       "code": "X1",
       "name": "Curso X1 primera version",
       "career": "computadores",
+      "area": "programacion",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -18,6 +19,7 @@
       "code": "X1",
       "name": "Curso X1 segunda version",
       "career": "computadores",
+      "area": "programacion",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],

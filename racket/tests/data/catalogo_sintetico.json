@@ -1,11 +1,12 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "course_count": 7,
   "courses": [
     {
       "code": "S1",
       "name": "Curso sintetico 1",
       "career": "computadores",
+      "area": "programacion",
       "credits": 4,
       "prerequisites": [],
       "corequisites": [],
@@ -43,6 +44,7 @@
       "code": "S2",
       "name": "Curso sintetico 2",
       "career": "computadores",
+      "area": "matematica",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],
@@ -80,6 +82,7 @@
       "code": "S3",
       "name": "Curso sintetico 3",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],
@@ -122,6 +125,7 @@
       "code": "S4",
       "name": "Curso sintetico 4",
       "career": "computadores",
+      "area": "programacion",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -147,6 +151,7 @@
       "code": "S5",
       "name": "Curso sintetico 5",
       "career": "computadores",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": [
         "S6"
@@ -174,6 +179,7 @@
       "code": "S6",
       "name": "Curso sintetico 6",
       "career": "computadores",
+      "area": "electronica",
       "credits": 0,
       "prerequisites": [],
       "corequisites": [],
@@ -186,6 +192,7 @@
       "code": "S7",
       "name": "Curso sintetico 7",
       "career": "fisica",
+      "area": "fisica",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],

@@ -1,11 +1,12 @@
 {
-  "format_version": 1,
-  "course_count": 39,
+  "format_version": 2,
+  "course_count": 52,
   "courses": [
     {
       "code": "CI0200",
       "name": "Examen diagnostico",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 0,
       "prerequisites": [],
       "corequisites": [],
@@ -18,6 +19,7 @@
       "code": "CI0202",
       "name": "Ingles basico",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -91,6 +93,7 @@
       "code": "CI1106",
       "name": "Comunicacion escrita",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -134,6 +137,7 @@
       "code": "CI1230",
       "name": "Ingles I",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 2,
       "prerequisites": ["CI0200", "CI0202"],
       "corequisites": [],
@@ -213,6 +217,7 @@
       "code": "IF1101",
       "name": "Introduccion a la ingenieria fisica",
       "career": "fisica",
+      "area": "ingenieria",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],
@@ -250,6 +255,7 @@
       "code": "MA0101",
       "name": "Matematica general",
       "career": "fisica",
+      "area": "matematica",
       "credits": 2,
       "prerequisites": [],
       "corequisites": [],
@@ -335,6 +341,7 @@
       "code": "QU1102",
       "name": "Laboratorio de quimica basica I",
       "career": "fisica",
+      "area": "quimica",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["QU1106"],
@@ -426,6 +433,7 @@
       "code": "QU1106",
       "name": "Quimica basica I",
       "career": "fisica",
+      "area": "quimica",
       "credits": 3,
       "prerequisites": [],
       "corequisites": ["QU1102"],
@@ -481,6 +489,7 @@
       "code": "CI1107",
       "name": "Comunicacion oral",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 1,
       "prerequisites": ["CI1106"],
       "corequisites": [],
@@ -686,6 +695,7 @@
       "code": "CI1231",
       "name": "Ingles II",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 2,
       "prerequisites": ["CI1230"],
       "corequisites": [],
@@ -765,6 +775,7 @@
       "code": "CS2101",
       "name": "Ambiente humano",
       "career": "fisica",
+      "area": "humanidades",
       "credits": 2,
       "prerequisites": ["CI1106", "IF1101"],
       "corequisites": [],
@@ -826,6 +837,7 @@
       "code": "FI1101",
       "name": "Fisica general I",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": [],
       "corequisites": ["MA1102"],
@@ -941,6 +953,7 @@
       "code": "FI1201",
       "name": "Laboratorio fisica general I",
       "career": "fisica",
+      "area": "fisica",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["FI1101"],
@@ -1104,6 +1117,7 @@
       "code": "CA2125",
       "name": "Elementos de computacion",
       "career": "fisica",
+      "area": "programacion",
       "credits": 3,
       "prerequisites": [],
       "corequisites": [],
@@ -1195,6 +1209,7 @@
       "code": "FI1102",
       "name": "Fisica general II",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI1101", "MA1102"],
       "corequisites": [],
@@ -1274,6 +1289,7 @@
       "code": "FI1202",
       "name": "Laboratorio fisica general II",
       "career": "fisica",
+      "area": "fisica",
       "credits": 1,
       "prerequisites": ["FI1201"],
       "corequisites": ["FI1102"],
@@ -1341,6 +1357,7 @@
       "code": "MA1103",
       "name": "Calculo y algebra lineal",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["MA1102"],
       "corequisites": [],
@@ -1468,6 +1485,7 @@
       "code": "MI2101",
       "name": "Dibujo tecnico",
       "career": "fisica",
+      "area": "ingenieria",
       "credits": 3,
       "prerequisites": ["MA0101"],
       "corequisites": [],
@@ -1559,6 +1577,7 @@
       "code": "MI2106",
       "name": "Estatica",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI1101"],
       "corequisites": [],
@@ -1620,6 +1639,7 @@
       "code": "FI2103",
       "name": "Fisica general III",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI1101", "MA1102"],
       "corequisites": [],
@@ -1693,6 +1713,7 @@
       "code": "IF3502",
       "name": "Instrumentacion I",
       "career": "fisica",
+      "area": "electronica",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["MT2001", "MT2002"],
@@ -1718,6 +1739,7 @@
       "code": "MA2105",
       "name": "Ecuaciones diferenciales",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["MA1103"],
       "corequisites": [],
@@ -1791,6 +1813,7 @@
       "code": "MI3117",
       "name": "Dinamica",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["MI2106"],
       "corequisites": [],
@@ -1822,6 +1845,7 @@
       "code": "MT2001",
       "name": "Circuitos electricos en CC y CA",
       "career": "fisica",
+      "area": "electronica",
       "credits": 3,
       "prerequisites": ["FI1102"],
       "corequisites": [],
@@ -1853,6 +1877,7 @@
       "code": "MT2002",
       "name": "Laboratorio de circuitos de corriente continua y corriente alterna",
       "career": "fisica",
+      "area": "electronica",
       "credits": 1,
       "prerequisites": ["MA1102"],
       "corequisites": ["MT2001"],
@@ -1890,6 +1915,7 @@
       "code": "PI2610",
       "name": "Probabilidad y estadistica I",
       "career": "fisica",
+      "area": "matematica",
       "credits": 3,
       "prerequisites": ["MA1102"],
       "corequisites": ["CA2125"],
@@ -1921,6 +1947,7 @@
       "code": "FI2104",
       "name": "Fisica general IV",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI1102"],
       "corequisites": ["MA2104"],
@@ -1933,6 +1960,7 @@
       "code": "IF3501",
       "name": "Termodinamica I",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI2103"],
       "corequisites": [],
@@ -1945,6 +1973,7 @@
       "code": "IF3503",
       "name": "Instrumentacion II",
       "career": "fisica",
+      "area": "electronica",
       "credits": 1,
       "prerequisites": ["IF3502"],
       "corequisites": [],
@@ -1964,6 +1993,7 @@
       "code": "MA2104",
       "name": "Calculo superior",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["MA1103"],
       "corequisites": [],
@@ -2019,6 +2049,7 @@
       "code": "MA3106",
       "name": "Metodos numericos",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["MA2105"],
       "corequisites": [],
@@ -2044,6 +2075,7 @@
       "code": "PI3612",
       "name": "Probabilidad y estadistica II",
       "career": "fisica",
+      "area": "matematica",
       "credits": 3,
       "prerequisites": ["MA1103", "PI2610"],
       "corequisites": [],
@@ -2069,6 +2101,7 @@
       "code": "IF3601",
       "name": "Metodologia de la investigacion",
       "career": "fisica",
+      "area": "ingenieria",
       "credits": 3,
       "prerequisites": ["PI3612"],
       "corequisites": [],
@@ -2094,6 +2127,7 @@
       "code": "IF3602",
       "name": "Metodos matematicos de fisica e ingenieria I",
       "career": "fisica",
+      "area": "matematica",
       "credits": 3,
       "prerequisites": ["MA2105"],
       "corequisites": ["IF3603"],
@@ -2113,6 +2147,7 @@
       "code": "IF3603",
       "name": "Optica",
       "career": "fisica",
+      "area": "fisica",
       "credits": 3,
       "prerequisites": ["FI2104"],
       "corequisites": ["IF3604"],
@@ -2132,6 +2167,7 @@
       "code": "IF3604",
       "name": "Laboratorio de optica",
       "career": "fisica",
+      "area": "fisica",
       "credits": 1,
       "prerequisites": [],
       "corequisites": ["IF3603"],
@@ -2157,6 +2193,7 @@
       "code": "MI3108",
       "name": "Mecanica de fluidos",
       "career": "fisica",
+      "area": "fisica",
       "credits": 4,
       "prerequisites": ["MA2105", "MI3117"],
       "corequisites": [],
@@ -2176,6 +2213,7 @@
       "code": "PI5302",
       "name": "Diseno de experimentos",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["PI3612"],
       "corequisites": [],
@@ -2210,9 +2248,453 @@
       "can_enroll": false
     },
     {
+      "code": "CS3404",
+      "name": "Seminario de etica para la ingenieria",
+      "career": "fisica",
+      "area": "humanidades",
+      "credits": 2,
+      "prerequisites": ["IF1101"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "BOJORGE MURILLO ALEXANDER",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CASASOLA RIVERA WILMER",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "CASASOLA RIVERA WILMER",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "CASASOLA RIVERA WILMER",
+          "blocks": [{"day": "MON", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "CEDEÑO CAMACHO MAURICIO",
+          "blocks": [{"day": "WED", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "GARRO REYES MAURICIO",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "GARRO REYES MAURICIO",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "GARRO REYES MAURICIO",
+          "blocks": [{"day": "FRI", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "PRENDAS SOLANO JORGE",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "PRENDAS SOLANO JORGE",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "VARGAS ELIZONDO CELSO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "EL4513",
+      "name": "Teoria electromagnetica I",
+      "career": "fisica",
+      "area": "fisica",
+      "credits": 4,
+      "prerequisites": ["FI1102", "MA2105"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "QUIROS SOLANO WILLIAM",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "16:50"}, {"day": "FRI", "start": "15:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "SANCHEZ MASIS ALLAN ROBERTO",
+          "blocks": [{"day": "MON", "start": "07:30", "end": "09:20"}, {"day": "WED", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4701",
+      "name": "Metodos matematicos de fisica e ingenieria II",
+      "career": "fisica",
+      "area": "matematica",
+      "credits": 3,
+      "prerequisites": ["IF3602"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "LACY MORA GERARDO",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4702",
+      "name": "Fisica computacional I",
+      "career": "fisica",
+      "area": "programacion",
+      "credits": 3,
+      "prerequisites": ["MA3106", "MI2101"],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4703",
+      "name": "Analisis de incertidumbres",
+      "career": "fisica",
+      "area": "matematica",
+      "credits": 3,
+      "prerequisites": ["PI5302"],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4704",
+      "name": "Electiva I",
+      "career": "fisica",
+      "area": "electiva",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [],
+      "has_conflict": false,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
+      "code": "CS4402",
+      "name": "Seminario de estudios costarricenses",
+      "career": "fisica",
+      "area": "humanidades",
+      "credits": 2,
+      "prerequisites": ["CS3404"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "CARMONA PINEDA MAIRIM",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "CARMONA PINEDA MAIRIM",
+          "blocks": [{"day": "THU", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "EDUARTE RODRIGUEZ DAVID",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "EDUARTE RODRIGUEZ DAVID",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 5,
+          "professor": "EDUARTE RODRIGUEZ DAVID",
+          "blocks": [{"day": "THU", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 6,
+          "professor": "EDUARTE RODRIGUEZ DAVID",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 7,
+          "professor": "FRANCESCHI SOJO KATTIA",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 8,
+          "professor": "FRANCESCHI SOJO KATTIA",
+          "blocks": [{"day": "THU", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 9,
+          "professor": "FRANCESCHI SOJO KATTIA",
+          "blocks": [{"day": "WED", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 10,
+          "professor": "MENESES MARIN GUILLERMO",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 11,
+          "professor": "MENESES MARIN GUILLERMO",
+          "blocks": [{"day": "THU", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 12,
+          "professor": "MESEN MONTENEGRO VLADIMIR",
+          "blocks": [{"day": "TUE", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 13,
+          "professor": "MESEN MONTENEGRO VLADIMIR",
+          "blocks": [{"day": "THU", "start": "18:00", "end": "20:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 14,
+          "professor": "MOJICA MENDIETA FRANCISCO JAVIER",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 15,
+          "professor": "MOJICA MENDIETA FRANCISCO JAVIER",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 16,
+          "professor": "MORA SANCHEZ AMILKAR",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 17,
+          "professor": "MORA SANCHEZ AMILKAR",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 18,
+          "professor": "MORA SANCHEZ AMILKAR",
+          "blocks": [{"day": "WED", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 19,
+          "professor": "ROJAS MOLINA BETSY",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        },
+        {
+          "number": 20,
+          "professor": "ROJAS MOLINA BETSY",
+          "blocks": [{"day": "WED", "start": "09:30", "end": "12:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4801",
+      "name": "Mecanica cuantica para ingenieria",
+      "career": "fisica",
+      "area": "fisica",
+      "credits": 3,
+      "prerequisites": ["IF3603", "IF4701"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "MAYORGA ESPINOZA CARLOS",
+          "blocks": [{"day": "TUE", "start": "07:30", "end": "09:20"}, {"day": "THU", "start": "07:30", "end": "09:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4802",
+      "name": "Laboratorio metrologia I",
+      "career": "fisica",
+      "area": "ingenieria",
+      "credits": 2,
+      "prerequisites": [],
+      "corequisites": ["IF4803"],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ALFARO ALVARADO JOSE ABRAHAN",
+          "blocks": [{"day": "FRI", "start": "13:00", "end": "15:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ALFARO ALVARADO JOSE ABRAHAN",
+          "blocks": [{"day": "WED", "start": "14:00", "end": "16:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 3,
+          "professor": "MORA VINDAS ALAN GERARDO",
+          "blocks": [{"day": "TUE", "start": "15:00", "end": "17:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 4,
+          "professor": "SANABRIA SANDI RAZIEL FARID",
+          "blocks": [{"day": "MON", "start": "17:00", "end": "19:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4803",
+      "name": "Metrologia industrial y legal",
+      "career": "fisica",
+      "area": "ingenieria",
+      "credits": 3,
+      "prerequisites": ["IF4703"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "SANABRIA SANDI RAZIEL FARID",
+          "blocks": [{"day": "TUE", "start": "09:30", "end": "11:20"}, {"day": "THU", "start": "09:30", "end": "11:20"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "IF4804",
+      "name": "Fisica computacional II",
+      "career": "fisica",
+      "area": "programacion",
+      "credits": 3,
+      "prerequisites": ["IF4702"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "MAYORGA ESPINOZA CARLOS",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        },
+        {
+          "number": 2,
+          "professor": "ROJAS PEREZ FRANCISCO",
+          "blocks": [{"day": "TUE", "start": "13:00", "end": "14:50"}, {"day": "THU", "start": "13:00", "end": "14:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "MT7001",
+      "name": "Analisis y simulacion de sistemas",
+      "career": "fisica",
+      "area": "ingenieria",
+      "credits": 3,
+      "prerequisites": ["IF4701", "MA2105"],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "ORTIZ LEON GABRIELA",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": false
+    },
+    {
+      "code": "FI4304",
+      "name": "Fisica de plasmas y sus aplicaciones I",
+      "career": "fisica",
+      "area": "fisica",
+      "credits": 3,
+      "prerequisites": [],
+      "corequisites": [],
+      "groups": [
+        {
+          "number": 1,
+          "professor": "VARGAS BLANCO IVAN",
+          "blocks": [{"day": "TUE", "start": "17:00", "end": "18:50"}, {"day": "THU", "start": "17:00", "end": "18:50"}],
+          "has_conflict": true
+        }
+      ],
+      "has_conflict": true,
+      "approved": false,
+      "can_enroll": true
+    },
+    {
       "code": "MA1102",
       "name": "Calculo diferencial e integral",
       "career": "fisica",
+      "area": "matematica",
       "credits": 4,
       "prerequisites": ["MA0101"],
       "corequisites": [],

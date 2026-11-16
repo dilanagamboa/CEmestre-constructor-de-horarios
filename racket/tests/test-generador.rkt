@@ -23,7 +23,7 @@
 (define (b dia inicio fin) (bloque dia inicio fin))
 (define (g numero . bloques) (grupo numero "P" bloques #f))
 (define (c codigo creditos grupos)
-  (curso 'computadores codigo codigo creditos '() '() grupos #f #t))
+  (curso 'computadores codigo codigo creditos 'programacion '() '() grupos #f #t))
 
 (define (par->texto p)
   (format "~a-~a"
