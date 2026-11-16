@@ -1,6 +1,6 @@
 #lang racket
 
-;; validacion de la salida con los datos reales de las dos carreras (6 semestres)
+;; validacion de la salida con los datos reales de las dos carreras (8 semestres)
 ;; lee el archivo JSON Lines como lo haria la Etapa 3, sin usar los structs de
 ;; Racket, y revisa cada combinacion contra el catalogo de C
 
@@ -67,6 +67,7 @@
       (check-not-false original)
       (check-true (hash-ref original 'can_enroll))
       (check-equal? (hash-ref c 'credits) (hash-ref original 'credits))
+      (check-equal? (hash-ref c 'area) (hash-ref original 'area))
       (check-not-false (findf (lambda (g) (= (hash-ref g 'number) (hash-ref c 'group)))
                               (hash-ref original 'groups))))))
 

@@ -35,7 +35,9 @@
   (check-equal? (hash-ref j 'course_count) (length (hash-ref j 'courses)))
   (check-equal? (hash-ref j 'total_credits)
                 (apply + (map (lambda (c) (hash-ref c 'credits)) (hash-ref j 'courses))))
-  (check-true (andmap (lambda (c) (hash-has-key? c 'career)) (hash-ref j 'courses))))
+  (check-true (andmap (lambda (c) (hash-has-key? c 'career)) (hash-ref j 'courses)))
+  (check-true (andmap (lambda (c) (non-empty-string? (hash-ref c 'area #f))) (hash-ref j 'courses))
+              "cada curso trae su area para la Etapa 3"))
 
 
 ;; exporta a un archivo temporal y devuelve cuantas escribio y las lineas leidas
@@ -64,6 +66,7 @@
      (for-each
       (lambda (c)
         (check-not-false (member (hash-ref c 'career) '("computadores" "fisica")))
+        (check-not-false (member (hash-ref c 'area) '("programacion" "matematica" "fisica" "electronica")))
         (check-true (exact-positive-integer? (hash-ref c 'group))))
       cursos))
    lineas))

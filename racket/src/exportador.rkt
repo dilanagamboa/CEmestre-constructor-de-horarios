@@ -26,7 +26,8 @@
           'start (minutos->hora (bloque-inicio b))
           'end (minutos->hora (bloque-fin b))))
 
-;; un par curso-grupo con lo que Prolog necesita sin volver a abrir el catalogo
+;; un par curso-grupo con lo que Prolog necesita sin volver a abrir el catalogo:
+;; codigo, grupo, creditos, carrera y area (el area se agrego para la Etapa 3)
 (define (par->jsexpr p)
   (define c (par-curso-grupo-curso p))
   (define g (par-curso-grupo-grupo p))
@@ -35,6 +36,7 @@
           'name (curso-nombre c)
           'group (grupo-numero g)
           'credits (curso-creditos c)
+          'area (symbol->string (curso-area c))
           'corequisites (curso-correquisitos c)
           'blocks (map bloque->jsexpr (grupo-bloques g))))
 
