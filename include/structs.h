@@ -37,6 +37,7 @@ typedef struct {
     char code[MAX_CODE_LENGTH];
     char name[MAX_NAME_LENGTH];
     char career[MAX_CAREER_LENGTH]; // carrera que aporta el curso, se asigna con catalog_set_career
+    char area[MAX_AREA_LENGTH];     // area del curso, se asigna con area_load o area_set_unassigned
     int credits;
 
     char prerequisites[MAX_PREREQUISITES][MAX_CODE_LENGTH];

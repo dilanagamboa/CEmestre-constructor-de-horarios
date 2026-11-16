@@ -8,6 +8,7 @@
 #define MAX_NAME_LENGTH        80
 #define MAX_PROFESSOR_LENGTH   60
 #define MAX_CAREER_LENGTH      16
+#define MAX_AREA_LENGTH        16
 
 // límites de cantidad
 #define MAX_COURSES            200
@@ -31,6 +32,15 @@
 #define CAREER_FISICA          "fisica"
 #define DEFAULT_CAREER         CAREER_COMPUTADORES
 
+// areas validas de un curso (campo "area" del JSON, lo usa la regla de limite por area de la Etapa 3)
+// cada curso pertenece a una sola; agregar un area nueva solo requiere sumarla a esta lista
+#define AREA_LIST              "matematica", "fisica", "quimica", "electronica", \
+                               "programacion", "sistemas", "ingenieria", \
+                               "humanidades", "electiva"
+
+// area de los cursos cuando el programa se ejecuta sin archivo de areas (uso de las Etapas 1 y 2)
+#define AREA_UNASSIGNED        "sin_area"
+
 // códigos de error que se usan como valor de retorno en las funciones de carga
 typedef enum {
     SUCCESS = 0,
@@ -43,7 +53,8 @@ typedef enum {
     ERROR_FILE_WRITE = 7
 } ErrorCode;
 
-#define OUTPUT_FORMAT_VERSION  1
+// version 2: cada curso trae el campo "area" (Etapa 3)
+#define OUTPUT_FORMAT_VERSION  2
 
 // codigos de dia que se escriben en el archivo de salida (mismos que usa catalogo.csv)
 #define DAY_CODE_MONDAY        "MON"
