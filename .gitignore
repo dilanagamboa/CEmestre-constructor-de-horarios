@@ -5,6 +5,7 @@ cemestre
 tests/run_tests
 tests/run_phase4
 tests/run_export
+tests/run_area
 tests/out_test.json
 build/
 
