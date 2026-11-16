@@ -107,8 +107,8 @@ static int course_has_conflict(const Course *course) {
 }
 
 /* Escribe un curso completo con todos los campos que pide el enunciado:
- * codigo, nombre, creditos, grupos/horarios, requisitos, correquisitos,
- * si choca y si se puede matricular. Ademas se agrega "approved" para
+ * codigo, nombre, carrera, area, creditos, grupos/horarios, requisitos,
+ * correquisitos, si choca y si se puede matricular. Ademas se agrega "approved" para
  * que la Etapa 2 sepa que cursos ya aprobo el estudiante sin tener que
  * leer el historial por aparte. */
 static void write_course(FILE *out,
@@ -125,8 +125,13 @@ static void write_course(FILE *out,
     write_json_string(out, c->name);
     fputs(",\n", out);
 
-        fputs("      \"career\": ", out);
+    fputs("      \"career\": ", out);
     write_json_string(out, c->career);
+    fputs(",\n", out);
+
+    /* area del curso para la regla de limite por area de la Etapa 3 */
+    fputs("      \"area\": ", out);
+    write_json_string(out, c->area);
     fputs(",\n", out);
 
     fprintf(out, "      \"credits\": %d,\n", c->credits);

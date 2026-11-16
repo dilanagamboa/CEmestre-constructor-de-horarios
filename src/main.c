@@ -4,6 +4,7 @@
 #include "../include/constants.h"
 #include "../include/structs.h"
 #include "../include/catalog.h"
+#include "../include/area.h"
 #include "../include/history.h"
 #include "../include/conflicts.h"
 #include "../include/validation.h"
@@ -51,14 +52,24 @@ static void print_load_detail(const LoadErrorInfo *info) {
     }
 }
 
+/* dice donde esta el problema cuando la carga de areas fallo */
+static void print_area_detail(const LoadErrorInfo *info) {
+    if (info->line > 0) {
+        fprintf(stderr, "  en la linea %d (curso: %s)\n", info->line, info->course);
+    } else if (info->course[0] != '\0') {
+        fprintf(stderr, "  el curso %s no tiene area asignada\n", info->course);
+    }
+}
+
 /* Muestra como usar el programa. Se imprime con -h/--help o si vienen
  * demasiados argumentos. */
 static void print_usage(const char *program) {
     fprintf(stderr,
-            "Uso: %s [catalogo.csv [historial.csv [salida.json [carrera]]]]\n"
-            "  Valores por defecto: %s, %s, %s, %s\n",
+            "Uso: %s [catalogo.csv [historial.csv [salida.json [carrera [areas.csv]]]]]\n"
+            "  Valores por defecto: %s, %s, %s, %s\n"
+            "  Sin areas.csv cada curso queda con el area '%s'\n",
             program, DEFAULT_CATALOG_PATH, DEFAULT_HISTORY_PATH,
-            DEFAULT_OUTPUT_PATH, DEFAULT_CAREER);
+            DEFAULT_OUTPUT_PATH, DEFAULT_CAREER, AREA_UNASSIGNED);
 }
 
 int main(int argc, char *argv[]) {
@@ -67,12 +78,13 @@ int main(int argc, char *argv[]) {
     const char *history_path = DEFAULT_HISTORY_PATH;
     const char *output_path  = DEFAULT_OUTPUT_PATH;
     const char *career       = DEFAULT_CAREER;
+    const char *areas_path   = NULL;   /* opcional: sin el, las Etapas 1 y 2 corren igual que antes */
 
     if (argc > 1 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)) {
         print_usage(argv[0]);
         return SUCCESS;
     }
-    if (argc > 5) {
+    if (argc > 6) {
         print_usage(argv[0]);
         return ERROR_INVALID_FORMAT;
     }
@@ -84,6 +96,7 @@ int main(int argc, char *argv[]) {
     if (argc > 2) history_path = argv[2];
     if (argc > 3) output_path  = argv[3];
     if (argc > 4) career = argv[4];
+    if (argc > 5) areas_path = argv[5];
     
     Catalog catalog;
     StudentHistory history;
@@ -106,6 +119,24 @@ int main(int argc, char *argv[]) {
                 career, CAREER_COMPUTADORES, CAREER_FISICA);
         catalog_free(&catalog);
         return (int)err;
+    }
+
+    /* 1c. area de cada curso, desde el archivo de mapeo si se recibio */
+    if (areas_path == NULL) {
+        area_set_unassigned(&catalog);
+    } else {
+        err = area_load(areas_path, &catalog, &load_info);
+        if (err != SUCCESS) {
+            /* el mensaje generico del codigo 5 habla del historial, aqui se aclara */
+            const char *detail = (err == ERROR_COURSE_NOT_FOUND)
+                ? "el archivo de areas menciona un curso que no esta en el catalogo"
+                : error_message(err);
+            fprintf(stderr, "Error al cargar las areas '%s': %s (codigo %d)\n",
+                    areas_path, detail, (int)err);
+            print_area_detail(&load_info);
+            catalog_free(&catalog);
+            return (int)err;
+        }
     }
 
     /* 2. historial. Va despues del catalogo porque se valida contra el.
@@ -145,6 +176,7 @@ int main(int argc, char *argv[]) {
     printf("Carrera:    %s\n", career);
     printf("Catalogo:   %s (%d cursos, %d grupos)\n",
            catalog_path, catalog.course_count, total_groups);
+    printf("Areas:      %s\n", areas_path != NULL ? areas_path : AREA_UNASSIGNED);
     printf("Historial:  %s (%d cursos aprobados)\n",
            history_path, history.approved_count);
     printf("Choques:    %d grupos con choque de horario\n", conflict_groups);

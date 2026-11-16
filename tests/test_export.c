@@ -103,13 +103,14 @@ static void test_pipeline_real(void) {
     CHECK(read_output(TEST_OUTPUT_PATH), "el archivo de salida existe y se puede leer");
 
     CHECK(buffer[0] == '{', "el JSON empieza con '{'");
-    CHECK(strstr(buffer, "\"format_version\": 1") != NULL, "incluye format_version 1");
+    CHECK(strstr(buffer, "\"format_version\": 2") != NULL, "incluye format_version 2");
     CHECK(strstr(buffer, "\"course_count\": 5") != NULL, "course_count es 5");
     CHECK(count_occurrences(buffer, "\"code\": ") == cat.course_count,
           "hay un objeto por cada curso del catalogo");
 
     CHECK(count_occurrences(buffer, "\"name\": ") == 5, "campo name en cada curso");
     CHECK(count_occurrences(buffer, "\"credits\": ") == 5, "campo credits en cada curso");
+    CHECK(count_occurrences(buffer, "\"area\": ") == 5, "campo area en cada curso");
     CHECK(count_occurrences(buffer, "\"groups\": ") == 5, "campo groups en cada curso");
     CHECK(count_occurrences(buffer, "\"prerequisites\": ") == 5, "campo prerequisites en cada curso");
     CHECK(count_occurrences(buffer, "\"corequisites\": ") == 5, "campo corequisites en cada curso");
@@ -263,9 +264,9 @@ static void test_real_computadores(void) {
     CHECK(ok, "catalogo e historial de Computadores cargan");
     if (!ok) return;
 
-        CHECK(cat.course_count == 39 && hist.approved_count == 17, "39 cursos y 17 aprobados");
-    CHECK(count_without_groups(&cat) == 3 && can_enroll_of(&cat, "SE1100") == 0,
-          "solo las 3 actividades SE del plan quedan sin grupos (SE1100 aprobada, no matriculable)");
+    CHECK(cat.course_count == 53 && hist.approved_count == 17, "53 cursos y 17 aprobados");
+    CHECK(count_without_groups(&cat) == 4 && can_enroll_of(&cat, "SE1100") == 0,
+          "las 3 actividades SE y la plaza de electiva CE5701 quedan sin grupos (SE1100 aprobada)");
     CHECK(count_enrollable(&cat) == 8, "8 cursos matriculables");
     CHECK(can_enroll_of(&cat, "CE2103") == 1, "CE2103 matriculable (CE1103 y CE1105 aprobados)");
     CHECK(can_enroll_of(&cat, "CE1106") == 0, "CE1106 (Paradigmas) no matriculable: falta CE2103");
@@ -288,10 +289,13 @@ static void test_real_fisica(void) {
     if (!ok) return;
 
     int examen = catalog_find_course_index(&cat, "CI0200");
-    CHECK(cat.course_count == 39 && hist.approved_count == 14, "39 cursos y 14 aprobados");
-    CHECK(examen >= 0 && cat.courses[examen].group_count == 0 && count_without_groups(&cat) == 3,
-          "CI0200, FI2104 e IF3501 quedan sin grupos");
-    CHECK(count_enrollable(&cat) == 8, "8 cursos matriculables");
+    CHECK(cat.course_count == 52 && hist.approved_count == 14, "52 cursos y 14 aprobados");
+    CHECK(examen >= 0 && cat.courses[examen].group_count == 0 && count_without_groups(&cat) == 6,
+          "CI0200, FI2104, IF3501, IF4702, IF4703 e IF4704 quedan sin grupos");
+    CHECK(count_enrollable(&cat) == 11, "11 cursos matriculables");
+    CHECK(can_enroll_of(&cat, "CS3404") == 1 && can_enroll_of(&cat, "FI4304") == 1,
+          "CS3404 y FI4304 (semestres 7 y 8) matriculables: sus requisitos ya estan aprobados");
+    CHECK(can_enroll_of(&cat, "IF4801") == 0, "IF4801 no matriculable: faltan IF3603 e IF4701");
     CHECK(can_enroll_of(&cat, "PI2610") == 1, "PI2610 matriculable: su correquisito CA2125 se lleva junto");
     CHECK(can_enroll_of(&cat, "MT2002") == 0, "MT2002 no matriculable: su correquisito MT2001 necesita FI1102");
     CHECK(can_enroll_of(&cat, "QU1106") == 0, "QU1106 ya aprobado no es matriculable");
