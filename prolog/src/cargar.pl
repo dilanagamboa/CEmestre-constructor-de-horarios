@@ -22,8 +22,14 @@
     hecho_politica/2
 ]).
 
-:- use_module(library(http/json)).
 :- use_module(library(lists)).
+% desde SWI-Prolog 9.3 la biblioteca de JSON esta en library(json); en las
+% versiones anteriores sigue en library(http/json)
+:- if(exists_source(library(json))).
+:- use_module(library(json)).
+:- else.
+:- use_module(library(http/json)).
+:- endif.
 :- use_module(constantes).
 
 % ------------------------------------------------------------------------
