@@ -37,3 +37,5 @@ compiled/
 # backups
 *~
 *.bak
+# salida generada por la Etapa 3
+data/resultados.jsonl
