@@ -1,0 +1,110 @@
+% main.pl
+% Programa principal de la etapa 3.
+% Lee combinaciones de un archivo JSONL, las evalúa contra la política,
+% y escribe los resultados en otro archivo JSONL, uno por línea.
+
+:- use_module(library(lists)).
+:- use_module(cargar, [
+    abrir_combinaciones/2,
+    combinacion_leida/2,
+    cargar_politica/2
+]).
+:- use_module(razon, [evaluar_combinacion/3]).
+:- use_module(exportar, [escribir_resultado/3]).
+:- use_module(constantes).
+
+% ------------------------------------------------------------------------
+% flujo principal: evalua combinaciones y escribe resultados
+% ------------------------------------------------------------------------
+% Código de salida 0 con éxito; distinto de cero ante cualquier error,
+% capturado aquí para que swipl -g main -t halt informe el fallo.
+main :-
+    (   catch(flujo_principal, Error, imprimir_error(Error))
+    ->  true
+    ;   halt(1)
+    ).
+
+% flujo_principal/0
+% Flujo completo: parsea argumentos, carga la política, recorre las
+% combinaciones por backtracking y escribe cada resultado al evaluarlo.
+% Errores controlados se lanzan como cemestre_error/2.
+
+flujo_principal :-
+    (   current_prolog_flag(argv, Args),
+        Args \= []
+    ->  parse_args(Args, CombinacionesFile, PoliticaFile, SalidaFile)
+    ;   ruta_combinaciones_defecto(CombinacionesFile),
+        ruta_politica_defecto(PoliticaFile),
+        ruta_salida_defecto(SalidaFile)
+    ),
+    (   cargar_politica(PoliticaFile, politica)
+    ->  true
+    ;   throw(cemestre_error("no se pudo cargar la política desde ~w", [PoliticaFile]))
+    ),
+    abrir_combinaciones(CombinacionesFile, Entrada),
+    (   open(SalidaFile, write, Salida)
+    ->  call_cleanup(
+            forall(combinacion_leida(Entrada, Combinacion),
+                   evaluar_y_escribir(politica, Combinacion, Salida)),
+            (   close(Entrada),
+                close(Salida)
+            )
+        ),
+        format("Evaluación completada. Resultados en ~w~n", [SalidaFile])
+    ;   close(Entrada),
+        throw(cemestre_error("no se pudo abrir el archivo de salida ~w", [SalidaFile]))
+    ).
+
+% ------------------------------------------------------------------------
+% errores: mensaje claro y código de salida distinto de cero
+% ------------------------------------------------------------------------
+
+% imprimir_error(+Error)
+% Informa el error y para con código distinto de cero.
+imprimir_error(Error) :-
+    (   Error = cemestre_error(Formato, Argumentos)
+    ->  format(user_error, "error: ", []),
+        format(user_error, Formato, Argumentos),
+        nl(user_error)
+    ;   format(user_error, "error inesperado: ~p~n", [Error])
+    ),
+    halt(1).
+
+% ------------------------------------------------------------------------
+% entrada: rutas por argumento o por defecto
+% ------------------------------------------------------------------------
+
+% parse_args/4 extrae las rutas de los argumentos o usa los valores por defecto
+parse_args([CombFile, PolFile, SalFile | _], CombFile, PolFile, SalFile) :- !.
+parse_args([CombFile, PolFile], CombFile, PolFile, SalidaFile) :-
+    ruta_salida_defecto(SalidaFile).
+parse_args([CombFile], CombFile, PoliticaFile, SalidaFile) :-
+    ruta_politica_defecto(PoliticaFile),
+    ruta_salida_defecto(SalidaFile).
+parse_args([], CombFile, PoliticaFile, SalidaFile) :-
+    ruta_combinaciones_defecto(CombFile),
+    ruta_politica_defecto(PoliticaFile),
+    ruta_salida_defecto(SalidaFile).
+
+% ------------------------------------------------------------------------
+% salida: un registro por combinación, escrito al evaluarla
+% ------------------------------------------------------------------------
+
+% evaluar_y_escribir/3 evalúa una combinación y escribe el resultado;
+% la política se carga siempre en el módulo 'politica', ver flujo_principal/0.
+evaluar_y_escribir(politica, Combinacion, Salida) :-
+    evaluar_combinacion(politica, Combinacion, Veredicto),
+    escribir_resultado(Combinacion, Veredicto, Salida).
+
+% uso desde la raiz del repositorio:
+%   swipl -g main -t halt prolog/src/main.pl
+%   swipl -g main -t halt prolog/src/main.pl data/combinaciones.jsonl data/politica.pl data/resultados.jsonl
+% sin argumentos usa las rutas por defecto de constantes.pl
+%
+% errores: imprime el mensaje de cemestre_error/2 en stderr y termina con
+% codigo de salida 1, distinto de cero, como exige el enunciado
+%
+% Nota de uso: no hay initialization(main, main) a propósito; el predicado se
+% invoca desde la línea de comandos con -g main -t halt para que corra una
+% sola vez por ejecución.
+
