@@ -1,4 +1,4 @@
-% pruebas de la carga de combinaciones
+% pruebas de la carga de combinaciones y de la politica
 % uso desde la raiz del repositorio:
 %   swipl -g run_tests -t halt prolog/tests/test_cargar.pl
 
@@ -8,11 +8,13 @@
 :- use_module('../src/cargar').
 
 % ruta de un archivo de prueba, relativa a esta carpeta, para que las
-% pruebas corran desde cualquier directorio
+% pruebas corran desde cualquier directorio; si el fixture no existe la
+% prueba falla, asi una prueba de error no pasa solo porque falta el archivo
 fixture(Nombre, Ruta) :-
     module_property(test_cargar, file(Archivo)),
     file_directory_name(Archivo, Carpeta),
-    atomic_list_concat([Carpeta, '/fixtures/', Nombre], Ruta).
+    atomic_list_concat([Carpeta, '/fixtures/', Nombre], Ruta),
+    exists_file(Ruta).
 
 datos(Nombre, Ruta) :-
     module_property(test_cargar, file(Archivo)),
@@ -76,3 +78,48 @@ test(datos_reales) :-
            forall(member(curso(_, _, _, _, Area), Cursos), atom(Area))).
 
 :- end_tests(cargar_combinaciones).
+
+:- begin_tests(cargar_politica).
+
+test(politica_real) :-
+    datos('politica.pl', Ruta),
+    cargar_politica(Ruta, prueba_politica_real),
+    hecho_politica(prueba_politica_real, max_cursos_por_area(N)),
+    integer(N).
+
+% sin porcentajes ni pares la politica es valida y esos hechos no tienen
+% soluciones, en lugar de dar un error de predicado inexistente
+test(politica_minima) :-
+    fixture('politica_solo_area.pl', Ruta),
+    cargar_politica(Ruta, prueba_politica_minima),
+    \+ hecho_politica(prueba_politica_minima, max_porcentaje_carrera(_, _)),
+    \+ hecho_politica(prueba_politica_minima, par_incompatible(_, _)).
+
+test(politica_inexistente, throws(cemestre_error(_, _))) :-
+    cargar_politica('no_existe.pl', prueba_politica_inexistente).
+
+test(porcentaje_invalido, throws(cemestre_error(_, _))) :-
+    fixture('politica_porcentaje_invalido.pl', Ruta),
+    cargar_politica(Ruta, prueba_porcentaje_invalido).
+
+test(sin_maximo_por_area, throws(cemestre_error(_, _))) :-
+    fixture('politica_sin_max_area.pl', Ruta),
+    cargar_politica(Ruta, prueba_sin_max_area).
+
+test(maximo_por_area_cero, throws(cemestre_error(_, _))) :-
+    fixture('politica_max_area_cero.pl', Ruta),
+    cargar_politica(Ruta, prueba_max_area_cero).
+
+test(carrera_desconocida, throws(cemestre_error(_, _))) :-
+    fixture('politica_carrera_desconocida.pl', Ruta),
+    cargar_politica(Ruta, prueba_carrera_desconocida).
+
+test(par_repetido, throws(cemestre_error(_, _))) :-
+    fixture('politica_par_repetido.pl', Ruta),
+    cargar_politica(Ruta, prueba_par_repetido).
+
+test(par_mismo_curso, throws(cemestre_error(_, _))) :-
+    fixture('politica_par_mismo_curso.pl', Ruta),
+    cargar_politica(Ruta, prueba_par_mismo_curso).
+
+:- end_tests(cargar_politica).
