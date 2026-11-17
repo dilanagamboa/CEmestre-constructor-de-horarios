@@ -17,7 +17,8 @@ El equipo menciona que está completado hasta la fase 3. Tras revisar la estruct
 
 ## Pendientes (Implementación de fases superiores)
 
-- [ ] **Fase 4 (Razón de rechazo, multimodo, exportación, integración):** Pendiente de completar y verificar la integración.
+- [x] **Fase 4 (Razón de rechazo, multimodo, exportación, integración):** Lógica de razón implementada y documentada.
+- [ ] **Fase 4 (continuación):** Predicado multimodo, exportación, integración (main.pl).
 - [ ] **Fase 5 (Pruebas integrales, auditoría, README):** Pendiente.
 - [ ] **Fase 6 (Repaso, defensa, cierre):** Pendiente.
 
