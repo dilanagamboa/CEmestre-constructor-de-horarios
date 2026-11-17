@@ -16,7 +16,8 @@
     regla_violada/4,
     creditos_totales/2,
     creditos_de_carrera/3,
-    cursos_de_area/3
+    cursos_de_area/3,
+    incompatibles/3
 ]).
 
 :- use_module(library(lists)).
@@ -50,6 +51,19 @@ regla_violada(limite_por_area, Politica, combinacion(_, Cursos),
     Cantidad > Maximo.
 
 % ------------------------------------------------------------------------
+% regla 3: incompatibilidad
+% la combinacion no puede tener los dos cursos de un par incompatible;
+% append toma cada curso y member busca solo entre los que le siguen, de
+% modo que cada par de cursos se revisa una vez
+% ------------------------------------------------------------------------
+regla_violada(incompatibilidad, Politica, combinacion(_, Cursos), par(A, B)) :-
+    append(_, [curso(CodigoA, _, _, CarreraA, _) | Resto], Cursos),
+    member(curso(CodigoB, _, _, CarreraB, _), Resto),
+    A = CarreraA-CodigoA,
+    B = CarreraB-CodigoB,
+    incompatibles(Politica, A, B).
+
+% ------------------------------------------------------------------------
 % predicados auxiliares
 % ------------------------------------------------------------------------
 
@@ -70,3 +84,12 @@ cursos_de_area(Cursos, Area, Codigos) :-
     setof(A, Co^G^Cr^K^member(curso(Co, G, Cr, K, A), Cursos), Areas),
     member(Area, Areas),
     findall(Codigo, member(curso(Codigo, _, _, _, Area), Cursos), Codigos).
+
+% relacion simetrica: el par se declara una sola vez en la politica y se
+% reconoce en los dos ordenes
+% sirve para verificar un par (los dos lados dados) o para encontrar con
+% que cursos es incompatible uno (un lado libre)
+incompatibles(Politica, A, B) :-
+    hecho_politica(Politica, par_incompatible(A, B)).
+incompatibles(Politica, A, B) :-
+    hecho_politica(Politica, par_incompatible(B, A)).
