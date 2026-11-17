@@ -15,7 +15,8 @@
 :- module(reglas, [
     regla_violada/4,
     creditos_totales/2,
-    creditos_de_carrera/3
+    creditos_de_carrera/3,
+    cursos_de_area/3
 ]).
 
 :- use_module(library(lists)).
@@ -38,6 +39,17 @@ regla_violada(balance_carreras, Politica, combinacion(_, Cursos),
     100 * Creditos > Maximo * Total.
 
 % ------------------------------------------------------------------------
+% regla 2: limite por area
+% ninguna area puede tener mas de N cursos en la combinacion
+% ------------------------------------------------------------------------
+regla_violada(limite_por_area, Politica, combinacion(_, Cursos),
+              area(Area, Cantidad, Maximo)) :-
+    hecho_politica(Politica, max_cursos_por_area(Maximo)),
+    cursos_de_area(Cursos, Area, Codigos),
+    length(Codigos, Cantidad),
+    Cantidad > Maximo.
+
+% ------------------------------------------------------------------------
 % predicados auxiliares
 % ------------------------------------------------------------------------
 
@@ -51,3 +63,10 @@ creditos_de_carrera(Cursos, Carrera, Creditos) :-
     setof(K, Co^G^Cr^Ar^member(curso(Co, G, Cr, K, Ar), Cursos), Carreras),
     member(Carrera, Carreras),
     aggregate_all(sum(C), member(curso(_, _, C, Carrera, _), Cursos), Creditos).
+
+% codigos de los cursos de cada area presente en la combinacion
+% con Area libre enumera las areas, con Area dada da sus cursos
+cursos_de_area(Cursos, Area, Codigos) :-
+    setof(A, Co^G^Cr^K^member(curso(Co, G, Cr, K, A), Cursos), Areas),
+    member(Area, Areas),
+    findall(Codigo, member(curso(Codigo, _, _, _, Area), Cursos), Codigos).
