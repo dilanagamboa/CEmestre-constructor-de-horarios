@@ -37,7 +37,8 @@ flujo_principal :-
         ruta_politica_defecto(PoliticaFile),
         ruta_salida_defecto(SalidaFile)
     ),
-    (   cargar_politica(PoliticaFile, politica)
+    (   modulo_politica(Modulo),
+        cargar_politica(PoliticaFile, Modulo)
     ->  true
     ;   throw(cemestre_error("no se pudo cargar la política desde ~w", [PoliticaFile]))
     ),
@@ -45,7 +46,7 @@ flujo_principal :-
     (   open(SalidaFile, write, Salida)
     ->  call_cleanup(
             forall(combinacion_leida(Entrada, Combinacion),
-                   evaluar_y_escribir(politica, Combinacion, Salida)),
+                   evaluar_y_escribir(Modulo, Combinacion, Salida)),
             (   close(Entrada),
                 close(Salida)
             )
@@ -91,9 +92,9 @@ parse_args([], CombFile, PoliticaFile, SalidaFile) :-
 % ------------------------------------------------------------------------
 
 % evaluar_y_escribir/3 evalúa una combinación y escribe el resultado;
-% la política se carga siempre en el módulo 'politica', ver flujo_principal/0.
-evaluar_y_escribir(politica, Combinacion, Salida) :-
-    evaluar_combinacion(politica, Combinacion, Veredicto),
+% la política se carga siempre en el módulo declarado en constantes:modulo_politica/1.
+evaluar_y_escribir(Modulo, Combinacion, Salida) :-
+    evaluar_combinacion(Modulo, Combinacion, Veredicto),
     escribir_resultado(Combinacion, Veredicto, Salida).
 
 % uso desde la raiz del repositorio:
