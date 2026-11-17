@@ -7,7 +7,7 @@ HEADERS = $(wildcard include/*.h)
 VG      = valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1
 TESTS   = tests/run_tests tests/run_phase4 tests/run_export tests/run_area
 
-.PHONY: all run test valgrind clean
+.PHONY: all run test valgrind clean prolog-test
 
 all: cemestre
 
@@ -50,3 +50,6 @@ run: cemestre
 
 clean:
 	rm -rf build cemestre $(TESTS) data/salida.json tests/out_test.json
+
+prolog-test:
+	swipl -g run_tests -t halt prolog/tests/todas.pl

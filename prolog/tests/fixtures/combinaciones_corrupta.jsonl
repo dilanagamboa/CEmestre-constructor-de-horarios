@@ -1,0 +1,2 @@
+{"id":1,"total_credits":10,"course_count":3,"courses":[{"career":"computadores","code":"CE2103","name":"Algoritmos y estructuras de datos II","group":1,"credits":4,"area":"programacion","corequisites":[],"blocks":[]},{"career":"fisica","code":"MA1103","name":"Calculo y algebra lineal","group":1,"credits":4,"area":"matematica","corequisites":[],"blocks":[]},{"career":"fisica","code":"CS3404","name":"Seminario de etica para la ingenieria","group":1,"credits":2,"area":"humanidades","corequisites":[],"blocks":[]}]}
+{"id":2,"courses":[{"career":"fisica"
