@@ -513,3 +513,196 @@ Racket. (2026). *Contracts*. https://docs.racket-lang.org/reference/contracts.ht
 Racket. (2026). *JSON*. https://docs.racket-lang.org/reference/json.html
 
 Racket. (2026). *RackUnit*. https://docs.racket-lang.org/rackunit/
+
+# Etapa 3: validación de combinaciones en Prolog
+
+Instituto Tecnológico de Costa Rica, Escuela de Ingeniería en Computadores
+Paradigmas de Programación (CE1106). Proyecto, Etapa 3 (paradigma lógico, lenguaje Prolog)
+
+Esta etapa recibe las 2255 combinaciones que genera la Etapa 2 (`data/combinaciones.jsonl`, una por línea en JSON Lines), valida cada una contra una política académica declarada en `data/politica.pl` y decide si cumple o qué regla viola. El módulo no genera combinaciones nuevas, no vuelve a filtrar por créditos, no optimiza y no tiene interfaz: solo evalúa y escribe una línea JSON por combinación para que la Etapa 4 (Java) la lea. Se programaron dos políticas reales: Ingeniería en Computadores e Ingeniería en Física, y ambas carreras aparecen en los datos de entrada.
+
+> Las secciones 2.1, 2.2.1, 2.2.2 y 2.3 de este título documentan la Etapa 3. Las secciones 1 a 5 describen la Etapa 1 y la sección `Referencias de la Etapa 2` documenta la Etapa 2.
+
+## 2.1 Arquitectura del proyecto
+
+El programa ejecuta un flujo fijo: abrir el archivo de combinaciones y la política, recorrer las combinaciones por backtracking, evaluar las tres reglas en el orden de diseño y escribir el resultado en cuanto se evalúa cada combinación. La figura muestra los archivos y los módulos que intervienen.
+
+```
+data/combinaciones.jsonl ──┐
+                          ├──► cargar.pl ──► combinacion(Id, Cursos)
+data/politica.pl ──────────┘    (sin assert; errores cemestre_error/2)
+                                     │
+                                     ▼
+                              reglas.pl (regla_violada/4)
+                                     │
+                                     ▼
+                              razon.pl (orden D5)
+                                     │
+                                     ▼
+                             exportar.pl ──► data/resultados.jsonl (JSON Lines)
+```
+
+La política se carga una vez en un módulo `politica` y las reglas la reciben como primer argumento; no se usa `assert`, `retract` ni variables globales. La salida es JSON Lines con un registro por combinación y se escribe al evaluarla, sin acumularla en memoria.
+
+| Archivo | Responsabilidad |
+| --- | --- |
+| `prolog/src/cargar.pl` | Abre y lee `data/combinaciones.jsonl` por backtracking (`combinacion_leida/2`), valida el JSON Lines (campos obligatorios, tipos, rango) y traduce errores a `cemestre_error/2`; carga y valida los hechos de `data/politica.pl` en un módulo dedicado (`cargar_politica/2`, `hecho_politica/2`). |
+| `prolog/src/constantes.pl` | Rutas por defecto (`ruta_combinaciones_defecto/1`, `ruta_politica_defecto/1`, `ruta_salida_defecto/1`), `modulo_politica/1`, `carrera_valida/1`, `orden_reglas/1` (D5) y `regla/2` (código y descripción de cada regla). |
+| `prolog/src/reglas.pl` | Las tres reglas como `regla_violada/4`, parametrizadas por los hechos de la política, y los predicados auxiliares multimodo. |
+| `prolog/src/razon.pl` | Orden de evaluación (D5) y primera regla violada; veredicto `cumple` o `viola(Regla, Detalle)`. |
+| `prolog/src/exportar.pl` | Escribe cada registro con `format/3`; un objeto JSON autocontenido por combinación. |
+| `prolog/src/main.pl` | Une el flujo: parsea argumentos (con valores por defecto), carga la política, recorre las combinaciones y traduce errores a mensaje + código de salida distinto de cero. |
+
+## 2.2 Decisiones de diseño
+
+### 2.2.1 Decisiones propias y específicas
+
+#### D5: orden único de las reglas
+
+El enunciado exige que el orden de evaluación sea parte del diseño y que exista un caso donde cambiarlo cambie la razón reportada. El orden vive en un único lugar, `constantes:orden_reglas/1`, con valor `[balance_carreras, limite_por_area, incompatibilidad]`; ningún otro módulo escribe este orden. `razon:evaluar_combinacion/3` recorre esa lista y corta en la primera regla que falla (corte justificado). `razon:evaluar_con_orden/4` recibe el orden explícito para poder probar que cambiarlo cambia la razón sin tocar los módulos. El caso donde el orden cambia la razón está cubierto en `prolog/tests/test_parametros.pl` (`cambio_de_orden_cambia_la_razon`) y en `prolog/tests/test_razon.pl`:
+
+- combinación 11 (viola balance, límite e incompatibilidad): con el orden `[limite_por_area, balance_carreras]` reporta `limite_por_area`; con el orden `[incompatibilidad, balance_carreras, limite_por_area]` reporta `incompatibilidad`. La validez no cambia, solo la razón reportada.
+
+#### D6: detalles de la política
+
+La base del porcentaje son los créditos totales de la combinación y la comparación es con enteros para evitar el redondeo (ver 2.2.2). Hay un único `max_cursos_por_area/1` (no uno por área) y una carrera sin `max_porcentaje_carrera/2` se trata como sin límite, siguiendo el ejemplo sintético de las pruebas. Todos los valores salen de los hechos de `data/politica.pl`: ninguno está escrito en las reglas.
+
+#### D7: estado sin assert ni variables globales
+
+Como exige el enunciado, no hay `assert`, `retract` ni variables globales. La política se carga desde su archivo como hechos en el módulo `politica`; el veredicto viaja como argumento (`Veredicto = cumple` o `viola(Regla, Detalle)`) y los resultados se escriben al evaluarse cada combinación. La búsqueda de texto sobre `prolog/src/` está en `prolog/docs/auditoria.md`: 0 ocurrencias de `assert`, `retract`, `nb_setval`, `flag` o `abolish`; los cortes y las negaciones por falla están justificados en comentario.
+
+#### D8: organización del repositorio
+
+Repositorio único: C en `src/`, Racket en `racket/`, Prolog en `prolog/{src,tests,docs}`, datos compartidos en `data/` sin copias duplicadas.
+
+#### Combinaciones, área y pares incompatibles
+
+Una combinación se modela como `combinacion(Id, Cursos)`, `Id` entero positivo igual al `id` de la salida de Racket (1..2255). Cada curso es `curso(Codigo, Grupo, Creditos, Carrera, Area)`; el área ya viene en la salida de la Etapa 2, con valores como `programacion`, `matematica`, `fisica`, `electronica` y `humanidades`. Ejemplos reales de los datos: `CE2103 → programacion`, `MA1103 → matematica`, `FI1102 → fisica`, `MT2001 → electronica`, `CS3404 → humanidades`.
+
+Los pares incompatibles declarados en `data/politica.pl` (6 pares, la relación es simétrica y cada par se declara una sola vez):
+
+| Par | Motivo |
+| --- | --- |
+| `computadores-'FI1102' — fisica-'FI1102'` | Mismo curso (Física II) con el mismo contenido central en ambos planes. |
+| `computadores-'FI1202' — fisica-'FI1202'` | Mismo curso (Laboratorio Física II) en ambos planes. |
+| `computadores-'MA2104' — fisica-'MA2104'` | Mismo curso (Cálculo Superior) en ambos planes. |
+| `computadores-'EL2113' — fisica-'MT2001'` | Códigos distintos, mismo contenido central: circuitos eléctricos de corriente continua. |
+| `computadores-'PI2609' — fisica-'PI2610'` | Probabilidad y estadística. |
+| `computadores-'CE1111' — fisica-'MA3106'` | Métodos numéricos. |
+
+### 2.2.2 Un caso límite real y cómo se resolvió
+
+El caso límite decisivo fue el porcentaje exacto. Con la política de prueba (`computadores` 60 %), la combinación 8 suma 10 créditos, 6 de ellos de `computadores`, es decir el 60 % exacto. Comparar con `<` o `>` mal ubicado rechazaría una combinación legal por culpa del redondeo de enteros. La regla 1 compara en aritmética entera `100 * Creditos > Maximo * Total` (en `reglas.pl`), así que 60 % de 10 con `Maximo = 60` no supera el umbral y `cumple`; un punto por debajo, `Maximo = 59`, sí lo supera y viola. Ambos casos están cubiertos en `prolog/tests/test_parametros.pl` (`porcentaje_exacto_no_viola`, `porcentaje_un_punto_por_debajo_viola`).
+
+Otros casos límite reales cubiertos: una sola carrera sin porcentaje declarado no viola (D6); una sola carrera por encima de su máximo sí viola (`una_sola_carrera_computadores_viola`); un solo curso por encima del máximo de su carrera (`un_solo_curso_viola_por_su_carrera`); un archivo de política sin pares incompatibles — la regla simplemente no tiene soluciones y no viola —; subir o bajar N afecta solo al límite por área (`subir_n_levanta_el_limite`, `bajar_n_activa_el_limite`); y el orden de las reglas cambia la razón sin cambiar la validez (`cambio_de_orden_cambia_la_razon`).
+
+## 2.3 Estructuras de datos desarrolladas
+
+Los términos viven en `prolog/src/cargar.pl` y `prolog/src/reglas.pl`. El veredicto y el detalle son los únicos tipos de la etapa; la política no introduce `:- dynamic` ni hechos globales.
+
+```
+combinacion(Id, Cursos)
+  Id      entero positivo (el "id" de la salida de Racket, 1..2255)
+  Cursos  lista no vacía de
+    curso(Codigo, Grupo, Creditos, Carrera, Area)
+      Codigo   texto (FI1102, CE2103, …)
+      Grupo    entero positivo
+      Creditos entero no negativo
+      Carrera  computadores | fisica
+      Area     texto (programacion, matematica, fisica, …)
+
+Veredicto = cumple
+          | viola(Regla, Detalle)
+            Regla   balance_carreras | limite_por_area | incompatibilidad
+            Detalle carrera(Carrera, Creditos, Total, Maximo)
+                  | area(Area, Cantidad, Maximo)
+                  | par(A, B)                  ; A y B = Carrera-Codigo
+```
+
+`combinacion/2` viaja por backtracking; `Veredicto` se devuelve por unificación. Los detalles son los mismos que exporta la salida JSON.
+
+Predicados principales, usables en más de un modo (se muestran consultas en los dos modos):
+
+```prolog
+% crédito y carrera de una combinación: modo cálculo
+?- creditos_de_carrera(Cursos, computadores, C).
+Cursos = [curso(a, 1, 4, computadores, programacion),
+          curso(b, 1, 2, computadores, humanidades),
+          curso(c, 1, 4, fisica, matematica)],
+C = 6.
+
+% modo enumeración: carreras presentes y sus créditos
+?- creditos_de_carrera(Cursos, Carrera, C).
+Carrera = computadores, C = 6 ;
+Carrera = fisica,       C = 4.
+
+% cursos de un área, modo cálculo
+?- cursos_de_area(Cursos, fisica, Codigos).
+Codigos = [FI1102, FI1202].
+
+% modo enumeración: áreas presentes y sus cursos
+?- cursos_de_area(Cursos, Area, Codigos).
+Area = fisica,       Codigos = [FI1102, FI1202] ;
+Area = matematica,   Codigos = [MA1103] ;
+Area = programacion, Codigos = [CE2103].
+
+% par incompatible: modo verificación
+?- incompatibles(Politica, computadores-'EL2113', fisica-'MT2001').
+true.
+
+% modo enumeración: con qué es incompatible un curso
+?- incompatibles(Politica, computadores-'FI1102', Otro).
+Otro = fisica-'FI1102'.
+```
+
+### Ejecución y pruebas
+
+Desde la raíz del repositorio (SWI-Prolog 10.0.2; en esta máquina vive en `.dsh-work/swipl` porque no está en el `PATH`, en otra basta `swipl`):
+
+```bash
+# suite plunit completa: 47 pruebas (+25 sub-tests)
+./.dsh-work/swipl -g run_tests -t halt prolog/tests/todas.pl
+
+# experimento real con los 2255 combinaciones y la política del repositorio
+./.dsh-work/swipl -q -g "main" -t halt prolog/src/main.pl \
+    data/combinaciones.jsonl data/politica.pl data/resultados.jsonl
+
+# validación independiente de la salida (como la etapa de Java la leería)
+python3 scripts/validar_resultados.py data/combinaciones.jsonl data/resultados.jsonl
+```
+
+Al validar con los datos reales se obtienen 2255 registros, con los ids 1..2255 en orden; la distribución es `cumple` 1149, `balance_carreras` 682, `limite_por_area` 271, `incompatibilidad` 153, y la salida es byte-idéntica entre corridas repetidas.
+
+Los 47 tests pasan más 25 sub-tests; los errores de datos (archivo inexistente, JSON inválido, campo faltante, línea corrupta) producen mensaje por stderr y código de salida distinto de cero.
+
+## 2.4 Uso y estructura de la etapa
+
+```bash
+./cemestre data/...           # Etapa 1 (C): salida_computadores/fisica.json
+racket racket/src/main.rkt   # Etapa 2 (Racket): combinaciones.jsonl
+./.dsh-work/swipl -q -g main -t halt prolog/src/main.pl   # Etapa 3 (Prolog): resultados.jsonl
+```
+
+```
+prolog/
+├── src/
+│   ├── cargar.pl       lectura de combinaciones y política
+│   ├── constantes.pl   rutas, carreras, orden_reglas (D5) y regla/2
+│   ├── reglas.pl       tres reglas + predicados auxiliares multimodo
+│   ├── razon.pl        veredicto: primera regla violada según el orden
+│   ├── exportar.pl     JSON Lines por combinación
+│   └── main.pl         flujo ejecutable
+├── tests/
+│   ├── test_cargar.pl  test_reglas.pl  test_razon.pl  test_parametros.pl
+│   ├── fixtures/       combinaciones_prueba.jsonl, esperados.pl, políticas variantes
+│   └── todas.pl        ensure_loaded de todas las suites
+└── docs/
+    ├── auditoria.md    búsqueda de assert/retract/nb_setval/flag (0 ocurrencias)
+    └── formato_salida.md  contrato de salida para Java
+```
+
+## Referencias de la Etapa 3
+
+SWI-Prolog. (2026). *SWI-Prolog reference documentation* (versión 10.0.2). https://www.swi-prolog.org/pldoc/man
+
+ISO/IEC. (2001). *Information technology — Programming languages — Prolog — Part 1: General core* (ISO/IEC 13211-1:2001).
