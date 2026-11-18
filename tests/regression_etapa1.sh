@@ -33,10 +33,11 @@ for carrera in computadores fisica; do
     "$TMP/base/cemestre" "$catalogo" "$historial" "$TMP/antes.json" > /dev/null
     ./cemestre "$catalogo" "$historial" "$TMP/despues.json" "$carrera" > /dev/null
 
-    # sin la linea career, la salida nueva debe ser identica a la anterior
-    # (area y format_version son cambios de la Etapa 3, los revisa regression_etapa2.sh)
+    # sin career, area ni format_version, la salida nueva debe ser identica a la anterior
+    # (area y format_version son cambios de la Etapa 3, los revisa regression_etapa2.sh;
+    # career es el cambio propio de la Etapa 2, lo verifica abajo con con_carrera)
     grep -v -e '"career": ' -e '"area": ' -e '"format_version": ' "$TMP/despues.json" > "$TMP/sin_carrera.json"
-    grep -v '"format_version": ' "$TMP/antes.json" > "$TMP/antes_sin_version.json"
+    grep -v -e '"career": ' -e '"area": ' -e '"format_version": ' "$TMP/antes.json" > "$TMP/antes_sin_version.json"
     if diff -q "$TMP/antes_sin_version.json" "$TMP/sin_carrera.json" > /dev/null; then
         echo "OK   - $carrera: misma salida que $BASE salvo career"
     else
