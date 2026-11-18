@@ -66,7 +66,7 @@ Ejemplo: para la combinación 1 (Fisica general II + Matemática + Electrónica 
 
 ### Combinación válida
 ```json
-{"id":21,"cursos":[{"carrera":"computadores","codigo":"MA2104","grupo":1},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"FI1102","grupo":4},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":true,"razon":"ninguna","razon_descripción":"","creditos_totales":12,"detalle":{},"cursos_areas":[]}
+{"id":21,"cursos":[{"carrera":"computadores","codigo":"MA2104","grupo":1},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"FI1102","grupo":4},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":true,"razon":"ninguna","razon_desinxion":"","creditos_totales":12,"detalle":{},"cursos_areas":[]}
 ```
 
 ### Combinación que viola `balance_carreras`
