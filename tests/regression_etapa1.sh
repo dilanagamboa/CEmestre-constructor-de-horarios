@@ -5,10 +5,12 @@
 # uso: bash tests/regression_etapa1.sh [rama_o_commit_base]
 
 set -e
-BASE="${1:-main}"
+BASE="${1:-origin/main}"
 
-# en algunos clones el main local puede estar en un commit inicial sin codigo;
-# en ese caso se usa la rama remota, que contiene la Etapa 1 entregada
+# la Etapa 1 entregada se comparan contra origin/main (la rama principal
+# remota, que contiene el código de la Etapa 1 sin los campos area ni
+# format_version de las etapas posteriores). Usar main local puede fallar
+# porque main puede contener código de etapas superiores.
 if ! git cat-file -e "$BASE:Makefile" > /dev/null 2>&1; then
     echo "AVISO - $BASE no contiene Makefile; se usa origin/main"
     BASE="origin/main"
