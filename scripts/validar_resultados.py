@@ -27,7 +27,7 @@ def main():
         errores.append("ids repetidos en la salida")
 
     por_id = {r['id']: r for r in resultados}
-    EXPECTED_KEYS = {"id", "cumple", "razon", "razon_descripcion", "creditos_totales", "detalle", "cursos_areas"}
+    EXPECTED_KEYS = {"id", "cursos", "cumple", "razon", "razon_descripcion", "creditos_totales", "detalle", "cursos_areas"}
     for combo in combinaciones:
         r = por_id.get(combo['id'])
         if r is None:
@@ -35,6 +35,11 @@ def main():
             continue
         if set(r) != EXPECTED_KEYS:
             errores.append(f"id={combo['id']} claves inesperadas: {sorted(set(r) ^ EXPECTED_KEYS)}")
+        # los pares curso-grupo de la salida deben ser los mismos de la entrada
+        pares_entrada = sorted((c['career'], c['code'], c['group']) for c in combo['courses'])
+        pares_salida = sorted((c['carrera'], c['codigo'], c['grupo']) for c in r['cursos'])
+        if pares_salida != pares_entrada:
+            errores.append(f"id={r['id']} los pares curso-grupo no coinciden con la entrada")
         if r['cumple']:
             if r['razon'] != "ninguna":
                 errores.append(f"id={r['id']} cumple=true con razon={r['razon']}")

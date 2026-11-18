@@ -10,6 +10,9 @@
 %   balance_carreras: carrera(Carrera, Creditos, Total, Maximo)
 %   limite_por_area:  area(Area, Cantidad, Maximo)
 %   incompatibilidad: par(A, B)
+%
+% Todo registro lleva "cursos" con los pares curso-grupo elegidos, que es
+% la salida mínima que pide el enunciado (D4).
 
 :- module(exportar, [escribir_resultado/3]).
 
@@ -22,50 +25,62 @@
 
 escribir_resultado(combinacion(Id, Cursos), cumple, Salida) :-
     creditos_totales(Cursos, CreditosTotales),
+    lista_json_cursos(Cursos, CursosJson),
     format(Salida,
-           '{"id":~w,"cumple":true,"razon":"ninguna","razon_descripcion":"","creditos_totales":~w,"detalle":{},"cursos_areas":[]}~n',
-           [Id, CreditosTotales]).
+           '{"id":~w,"cursos":[~s],"cumple":true,"razon":"ninguna","razon_descripcion":"","creditos_totales":~w,"detalle":{},"cursos_areas":[]}~n',
+           [Id, CursosJson, CreditosTotales]).
 
 escribir_resultado(combinacion(Id, Cursos), viola(Regla, Detalle), Salida) :-
     creditos_totales(Cursos, CreditosTotales),
+    lista_json_cursos(Cursos, CursosJson),
     (   Detalle = carrera(Carrera, Creditos, Total, Maximo)
-    ->  escribir_razon_balance(Id, Regla, Carrera, Creditos, Total, Maximo, CreditosTotales, Salida)
+    ->  escribir_razon_balance(Id, CursosJson, Regla, Carrera, Creditos, Total, Maximo, CreditosTotales, Salida)
     ;   Detalle = area(Area, Cantidad, Maximo)
-    ->  escribir_razon_area(Id, Regla, Area, Cantidad, Maximo, Cursos, CreditosTotales, Salida)
+    ->  escribir_razon_area(Id, CursosJson, Regla, Area, Cantidad, Maximo, Cursos, CreditosTotales, Salida)
     ;   Detalle = par(A, B)
-    ->  escribir_razon_incompatibilidad(Id, Regla, A, B, CreditosTotales, Salida)
-    ;   escribir_razon_generica(Id, Regla, CreditosTotales, Salida)
+    ->  escribir_razon_incompatibilidad(Id, CursosJson, Regla, A, B, CreditosTotales, Salida)
+    ;   escribir_razon_generica(Id, CursosJson, Regla, CreditosTotales, Salida)
     ).
 
 % razon 1: balance entre carreras
-escribir_razon_balance(Id, Regla, Carrera, Creditos, Total, Maximo, CreditosTotales, Salida) :-
+escribir_razon_balance(Id, CursosJson, Regla, Carrera, Creditos, Total, Maximo, CreditosTotales, Salida) :-
     regla(Regla, Desc),
     format(Salida,
-           '{"id":~w,"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"carrera":"~w","creditos_carrera":~w,"creditos_totales":~w,"maximo_porcentaje":~w},"cursos_areas":[]}~n',
-           [Id, Regla, Desc, CreditosTotales, Carrera, Creditos, Total, Maximo]).
+           '{"id":~w,"cursos":[~s],"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"carrera":"~w","creditos_carrera":~w,"creditos_totales":~w,"maximo_porcentaje":~w},"cursos_areas":[]}~n',
+           [Id, CursosJson, Regla, Desc, CreditosTotales, Carrera, Creditos, Total, Maximo]).
 
 % razon 2: limite por area
-escribir_razon_area(Id, Regla, Area, Cantidad, Maximo, Cursos, CreditosTotales, Salida) :-
+escribir_razon_area(Id, CursosJson, Regla, Area, Cantidad, Maximo, Cursos, CreditosTotales, Salida) :-
     regla(Regla, Desc),
     cursos_de_area(Cursos, Area, Codigos),
     lista_json_strings(Codigos, CodigosJson),
     format(Salida,
-           '{"id":~w,"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"area":"~w","cantidad":~w,"maximo":~w,"cursos":[~s]},"cursos_areas":[~s]}~n',
-           [Id, Regla, Desc, CreditosTotales, Area, Cantidad, Maximo, CodigosJson, CodigosJson]).
+           '{"id":~w,"cursos":[~s],"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"area":"~w","cantidad":~w,"maximo":~w,"cursos":[~s]},"cursos_areas":[~s]}~n',
+           [Id, CursosJson, Regla, Desc, CreditosTotales, Area, Cantidad, Maximo, CodigosJson, CodigosJson]).
 
 % razon 3: incompatibilidad
-escribir_razon_incompatibilidad(Id, Regla, A, B, CreditosTotales, Salida) :-
+escribir_razon_incompatibilidad(Id, CursosJson, Regla, A, B, CreditosTotales, Salida) :-
     regla(Regla, Desc),
     format(Salida,
-           '{"id":~w,"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"par":["~w","~w"]},"cursos_areas":[]}~n',
-           [Id, Regla, Desc, CreditosTotales, A, B]).
+           '{"id":~w,"cursos":[~s],"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{"par":["~w","~w"]},"cursos_areas":[]}~n',
+           [Id, CursosJson, Regla, Desc, CreditosTotales, A, B]).
 
 % fallback si el detalle no coincide con lo esperado
-escribir_razon_generica(Id, Regla, CreditosTotales, Salida) :-
+escribir_razon_generica(Id, CursosJson, Regla, CreditosTotales, Salida) :-
     regla(Regla, Desc),
     format(Salida,
-           '{"id":~w,"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{},"cursos_areas":[]}~n',
-           [Id, Regla, Desc, CreditosTotales]).
+           '{"id":~w,"cursos":[~s],"cumple":false,"razon":"~w","razon_descripcion":"~w","creditos_totales":~w,"detalle":{},"cursos_areas":[]}~n',
+           [Id, CursosJson, Regla, Desc, CreditosTotales]).
+
+% lista_json_cursos(+Cursos, -Json)
+% Pares curso-grupo como objetos JSON: {"carrera":..,"codigo":..,"grupo":..}
+lista_json_cursos(Cursos, Json) :-
+    maplist(curso_json, Cursos, Partes),
+    atomic_list_concat(Partes, ',', Json).
+
+curso_json(curso(Codigo, Grupo, _, Carrera, _), Texto) :-
+    format(string(Texto), '{"carrera":"~w","codigo":"~w","grupo":~w}',
+           [Carrera, Codigo, Grupo]).
 
 % lista_json_strings(+Lista, -Json)
 % Convierte una lista de átomos en una cadena JSON: "a","b","c"

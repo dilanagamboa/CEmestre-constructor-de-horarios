@@ -9,7 +9,7 @@ El formato está descrito con el comportamiento **real y verificado** de `prolog
 - **Formato**: Un archivo de texto con una línea por combinación.
 - **Estructura**: Cada línea es un objeto JSON independiente, sin encabezado ni arreglo global.
 - **Escritura**: Cada registro se escribe al evaluar la combinación (no se acumula nada en memoria). Una combinación = una línea.
-- **Orden de claves**: las claves se escriben en el orden `id`, `cumple`, `razon`, `razon_descripcion`, `creditos_totales`, `detalle`, `cursos_areas`.
+- **Orden de claves**: las claves se escriben en el orden `id`, `cursos`, `cumple`, `razon`, `razon_descripcion`, `creditos_totales`, `detalle`, `cursos_areas`.
 
 ## Campos obligatorios
 
@@ -24,6 +24,22 @@ El formato está descrito con el comportamiento **real y verificado** de `prolog
 - `creditos_totales`: entero con la suma total de créditos de todos los cursos de la combinación.
 - `detalle`: objeto cuyo contenido depende de `razon` (ver abajo). `{}` cuando `cumple` es `true`.
 - `cursos_areas`: lista de códigos de curso (strings) en exceso para la regla `limite_por_area`. `[]` en los demás casos.
+
+## Campo `cursos`
+
+Cada registro incluye, además de los campos anteriores, un campo `cursos` que es una lista de objetos JSON con los pares **curso-grupo** elegidos para esa combinación:
+
+```json
+{"carrera":"fisica","codigo":"MA1103","grupo":1}
+```
+
+Este campo es la **salida mínima** que exige el enunciado (D4 / Fase 5): la salida debe traer los pares curso-grupo y no tocar la lógica de generación ni de filtrado. Se genera por `lista_json_cursos/2`, que convierte cada entrada del catálogo `curso(Codigo, Grupo, Creditos, Carrera, Area)` en `{"carrera":"~w","codigo":"~w","grupo":~w}`.
+
+Ejemplo: para la combinación 1 (Fisica general II + Matemática + Electrónica CS3404):
+
+```json
+{"id":1,"cursos":[{"carrera":"fisica","codigo":"MA1103","grupo":1},{"carrera":"fisica","codigo":"MI2106","grupo":2},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":false,"razon":"balance_carreras",...}
+```
 
 ## `detalle` según `razon`
 

@@ -621,6 +621,12 @@ Veredicto = cumple
 
 `combinacion/2` viaja por backtracking; `Veredicto` se devuelve por unificación. Los detalles son los mismos que exporta la salida JSON.
 
+La salida JSON Lines incluye, además de la razón, un campo `cursos` con los pares curso-grupo elegidos, que es la salida mínima que exige el enunciado (ver `prolog/docs/formato_salida.md`):
+
+```json
+{"id":2,"cursos":[{"carrera":"fisica","codigo":"MA1103","grupo":1}],"cumple":false,"razon":"balance_carreras","razon_descripcion":"Balance entre carreras","creditos_totales":12,"detalle":{"carrera":"fisica","creditos_carrera":12,"creditos_totales":12,"maximo_porcentaje":70},"cursos_areas":[]}
+```
+
 Predicados principales, usables en más de un modo (se muestran consultas en los dos modos):
 
 ```prolog
