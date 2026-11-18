@@ -13,6 +13,13 @@
 %
 % Todo registro lleva "cursos" con los pares curso-grupo elegidos, que es
 % la salida mínima que pide el enunciado (D4).
+%
+% Codificación: los datos reales traen tildes y caracteres especiales (los
+% nombres de cursos y las descripciones de las reglas), así que el módulo
+% se declara con encoding(utf8) para evitar warnings de secuencias multibyte
+% ilegales y corrupción de salida.
+
+:- encoding(utf8).
 
 :- module(exportar, [escribir_resultado/3]).
 
@@ -84,10 +91,12 @@ curso_json(curso(Codigo, Grupo, _, Carrera, _), Texto) :-
 
 % lista_json_strings(+Lista, -Json)
 % Convierte una lista de átomos en una cadena JSON: "a","b","c"
-lista_json_strings([], "").
-lista_json_strings([A], String) :-
-    format(string(String), '"~w"', [A]).
-lista_json_strings([A | Resto], String) :-
-    format(string(Prefijo), '"~w",', [A]),
-    lista_json_strings(Resto, RestoString),
-    string_concat(Prefijo, RestoString, String).
+% se usa atomic_list_concat para que un solo elemento (incluso de un solo
+% carácter, como "a") quede entre comillas sin coma suelta; la lista vacía
+% produce la cadena vacía, igual que antes
+lista_json_strings(Lista, Json) :-
+    findall(CodigoJson,
+            (member(X, Lista),
+             format(string(CodigoJson), '"~w"', [X])),
+            Partes),
+    atomic_list_concat(Partes, ',', Json).

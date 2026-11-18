@@ -2,6 +2,11 @@
 % Programa principal de la etapa 3.
 % Lee combinaciones de un archivo JSONL, las evalúa contra la política,
 % y escribe los resultados en otro archivo JSONL, uno por línea.
+% Codificación: todos los archivos se tratan como UTF-8, asi que el archivo
+% se declara con encoding(utf8) para evitar warnings de secuencias multibyte
+% ilegales (los datos reales traen tildes y caracteres especiales).
+
+:- encoding(utf8).
 
 :- use_module(library(lists)).
 :- use_module(cargar, [
@@ -43,7 +48,7 @@ flujo_principal :-
     ;   throw(cemestre_error("no se pudo cargar la política desde ~w", [PoliticaFile]))
     ),
     abrir_combinaciones(CombinacionesFile, Entrada),
-    (   open(SalidaFile, write, Salida)
+    (   catch(open(SalidaFile, write, Salida), Error, manejo_error_apertura(SalidaFile, Error, Entrada))
     ->  call_cleanup(
             forall(combinacion_leida(Entrada, Combinacion),
                    evaluar_y_escribir(Modulo, Combinacion, Salida)),
@@ -54,6 +59,22 @@ flujo_principal :-
         format("Evaluación completada. Resultados en ~w~n", [SalidaFile])
     ;   close(Entrada),
         throw(cemestre_error("no se pudo abrir el archivo de salida ~w", [SalidaFile]))
+    ).
+
+% manejo_error_apertura(+Ruta, +Error, +Entrada)
+% El open/3 puede fallar con existence_error si la carpeta de salida no
+% existe o con permission_error si no se puede escribir; en lugar de
+% dejar que swipl informe una traza interna, se lanza un cemestre_error
+% con un mensaje claro y se cierra la entrada para no dejarla abierta.
+% El error de open/3 llega envuelto en error/2 (existence_error o
+% permission_error como subtérmino, más el contexto de system:open/3).
+manejo_error_apertura(Ruta, Error, Entrada) :-
+    close(Entrada),
+    (   Error = error(existence_error(_, Ruta), _)
+    ->  throw(cemestre_error("no se puede crear el archivo de salida ~w: la carpeta no existe o no es accesible", [Ruta]))
+    ;   Error = error(permission_error(_, _, Ruta), _)
+    ->  throw(cemestre_error("no se puede escribir el archivo de salida ~w: permisos insuficientes", [Ruta]))
+    ;   throw(cemestre_error("no se pudo abrir el archivo de salida ~w: ~w", [Ruta, Error]))
     ).
 
 % ------------------------------------------------------------------------

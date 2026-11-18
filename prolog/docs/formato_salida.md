@@ -27,13 +27,7 @@ El formato está descrito con el comportamiento **real y verificado** de `prolog
 
 ## Campo `cursos`
 
-Cada registro incluye, además de los campos anteriores, un campo `cursos` que es una lista de objetos JSON con los pares **curso-grupo** elegidos para esa combinación:
-
-```json
-{"carrera":"fisica","codigo":"MA1103","grupo":1}
-```
-
-Este campo es la **salida mínima** que exige el enunciado (D4 / Fase 5): la salida debe traer los pares curso-grupo y no tocar la lógica de generación ni de filtrado. Se genera por `lista_json_cursos/2`, que convierte cada entrada del catálogo `curso(Codigo, Grupo, Creditos, Carrera, Area)` en `{"carrera":"~w","codigo":"~w","grupo":~w}`.
+Cada registro incluye, además de los campos anteriores, un campo `cursos` que es una lista de objetos JSON con los pares **curso-grupo** elegidos para esa combinación. Este campo está presente en **todos** los registros, tanto en los que cumplen como en los que violan, y es la **salida mínima** que exige el enunciado (D4 / Fase 5): la salida debe traer los pares curso-grupo y no tocar la lógica de generación ni de filtrado. Se genera por `lista_json_cursos/2`, que convierte cada entrada del catálogo `curso(Codigo, Grupo, Creditos, Carrera, Area)` en `{"carrera":"~w","codigo":"~w","grupo":~w}`.
 
 Ejemplo: para la combinación 1 (Fisica general II + Matemática + Electrónica CS3404):
 
@@ -72,22 +66,22 @@ Ejemplo: para la combinación 1 (Fisica general II + Matemática + Electrónica 
 
 ### Combinación válida
 ```json
-{"id":21,"cumple":true,"razon":"ninguna","razon_descripcion":"","creditos_totales":12,"detalle":{},"cursos_areas":[]}
+{"id":21,"cursos":[{"carrera":"computadores","codigo":"MA2104","grupo":1},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"FI1102","grupo":4},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":true,"razon":"ninguna","razon_descripción":"","creditos_totales":12,"detalle":{},"cursos_areas":[]}
 ```
 
 ### Combinación que viola `balance_carreras`
 ```json
-{"id":1,"cumple":false,"razon":"balance_carreras","razon_descripcion":"Balance entre carreras","creditos_totales":12,"detalle":{"carrera":"fisica","creditos_carrera":12,"creditos_totales":12,"maximo_porcentaje":70},"cursos_areas":[]}
+{"id":1,"cursos":[{"carrera":"fisica","codigo":"MA1103","grupo":1},{"carrera":"fisica","codigo":"MI2106","grupo":2},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":false,"razon":"balance_carreras","razon_descripcion":"Balance entre carreras","creditos_totales":12,"detalle":{"carrera":"fisica","creditos_carrera":12,"creditos_totales":12,"maximo_porcentaje":70},"cursos_areas":[]}
 ```
 
 ### Combinación que viola `limite_por_area`
 ```json
-{"id":130,"cumple":false,"razon":"limite_por_area","razon_descripcion":"Limite de cursos por area","creditos_totales":14,"detalle":{"area":"fisica","cantidad":4,"maximo":3,"cursos":["FI1202","MI2106","FI2103","FI1102"]},"cursos_areas":["FI1202","MI2106","FI2103","FI1102"]}
+{"id":130,"cursos":[{"carrera":"computadores","codigo":"FI1202","grupo":2},{"carrera":"computadores","codigo":"MA2104","grupo":1},{"carrera":"fisica","codigo":"MI2106","grupo":2},{"carrera":"fisica","codigo":"FI2103","grupo":1},{"carrera":"fisica","codigo":"FI1102","grupo":4}],"cumple":false,"razon":"limite_por_area","razon_descripcion":"Limite de cursos por area","creditos_totales":14,"detalle":{"area":"fisica","cantidad":4,"maximo":3,"cursos":["FI1202","MI2106","FI2103","FI1102"]},"cursos_areas":["FI1202","MI2106","FI2103","FI1102"]}
 ```
 
 ### Combinación que viola `incompatibilidad`
 ```json
-{"id":215,"cumple":false,"razon":"incompatibilidad","razon_descripcion":"Cursos incompatibles","creditos_totales":12,"detalle":{"par":["computadores-FI1102","fisica-FI1102"]},"cursos_areas":[]}
+{"id":215,"cursos":[{"carrera":"computadores","codigo":"FI1102","grupo":1},{"carrera":"computadores","codigo":"MA2104","grupo":1},{"carrera":"fisica","codigo":"FI1102","grupo":4},{"carrera":"fisica","codigo":"CS3404","grupo":1}],"cumple":false,"razon":"incompatibilidad","razon_descripcion":"Cursos incompatibles","creditos_totales":12,"detalle":{"par":["computadores-FI1102","fisica-FI1102"]},"cursos_areas":[]}
 ```
 
 ## Notas técnicas
@@ -97,4 +91,5 @@ Ejemplo: para la combinación 1 (Fisica general II + Matemática + Electrónica 
 - Las cadenas JSON van siempre entre comillas; `razon_descripcion` vacío se escribe como `""`.
 - Si no hay cursos en el área correspondiente, `cursos_areas` es `[]`.
 - `detalle` siempre está presente (aunque sea `{}`).
+- La lista `cursos_areas` aparece duplicada para la regla `limite_por_area`: una vez en la raíz del registro y otra dentro de `detalle.cursos`. La razón es de contratos: la raíz es la lista de códigos en exceso, que consume la Etapa 4 como un solo campo, mientras que `detalle.cursos` es el contenido específico del objeto `detalle` y puede tener otro significado en otras reglas (para `balance_carreras` y `incompatibilidad`, `detalle` no lleva `cursos`). Mantener ambas posiciones evita que un consumidor que lea solo `detalle` o solo la raíz se quede sin la información, y no rompe el formato JSON Lines: cada consumers puede usar la que prefiera. Si se prefiera eliminar la duplicación, bastaría cambiar `escribir_razon_area/9` en `prolog/src/exportar.pl` para que `cursos_areas` sea `[]` y dejar `detalle.cursos` como la única fuente.
 - Uno de los consumidores previstos es la Etapa 4 (Java); este formato es el contrato entre Prolog y Java.
