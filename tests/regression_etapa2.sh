@@ -7,7 +7,7 @@
 # uso: bash tests/regression_etapa2.sh [rama_etiqueta_o_commit_base]
 
 set -e
-BASE="${1:-etapa2-entregada}"
+BASE="${1:-origin/main}"
 
 if ! git cat-file -e "$BASE:Makefile" > /dev/null 2>&1; then
     echo "FAIL - $BASE no existe o no contiene Makefile (git fetch --tags)"
