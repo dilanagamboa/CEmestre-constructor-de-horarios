@@ -11,7 +11,7 @@ Paradigmas de Programación (CE1106). Proyecto, Etapa 1 (paradigma imperativo, l
 
 CEmestre es una herramienta de apoyo a la matrícula universitaria, pues a partir del plan de estudios de una carrera y de los cursos que un estudiante ya aprobó determina qué cursos puede matricular y cuáles presentan choques de horario, como base para construir un horario de matrícula válido. El sistema completo se desarrolla en cuatro etapas, una por paradigma (C, Racket, Prolog y Java), y cada etapa corresponde a un programa independiente que lee y escribe archivos.
 
-Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial; los catálogos cubren los seis primeros semestres de su plan y los historiales representan a estudiantes que aprobaron los dos primeros.
+Esta primera etapa, escrita en C bajo el paradigma imperativo, carga el catálogo de cursos y el historial del estudiante, detecta los choques de horario, valida los requisitos y exporta el resultado en un archivo JSON, que sirve de insumo a la Etapa 2 (Racket). El módulo no genera combinaciones de horario ni ofrece interfaz, pues esas tareas corresponden a etapas posteriores. Se trabajó con Ingeniería en Computadores y con Física, cada una con su propio catálogo e historial; los catálogos cubren **ocho semestres** de su plan (decisión D6, se amplió desde los seis iniciales porque la regla de límite por área de la Etapa 3 necesita cursos de todas las áreas, y áreas como química y electiva solo aparecen en semestres superiores) y los historiales representan a estudiantes que aprobaron los dos primeros.
 
 ## 1. Uso
 
@@ -25,11 +25,11 @@ El proyecto se compila y se prueba en Linux (en Windows, con WSL y Ubuntu) y req
 | `make valgrind` | Corre el programa y las pruebas bajo Valgrind                                      |
 | `make clean`    | Borra lo generado                                                                  |
 
-El ejecutable recibe cuatro argumentos opcionales, a saber, el catálogo, el historial, la salida y la carrera (`computadores` o `fisica`), tal que para las dos carreras se ejecuta de la siguiente manera.
+El ejecutable recibe cinco argumentos opcionales, a saber, el catálogo, el historial, la salida, la carrera (`computadores` o `fisica`) y el archivo de areas (`data/areas_computadores.csv` o `data/areas_fisica.csv`) (`computadores` o `fisica`), tal que para las dos carreras se ejecuta de la siguiente manera.
 
 ```bash
-./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json computadores
-./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json       fisica
+./cemestre data/catalogo_computadores.csv data/historial_computadores.csv data/salida_computadores.json computadores data/areas_computadores.csv
+./cemestre data/catalogo_fisica.csv       data/historial_fisica.csv       data/salida_fisica.json       fisica data/areas_fisica.csv
 ```
 
 Si se omite algún argumento, se usa el valor por defecto de `include/constants.h`; en particular, la carrera por defecto es `computadores`.
@@ -157,7 +157,7 @@ El archivo completo incluye además `format_version` y `course_count`. Los ocho 
 | `has_conflict` (curso) | Es verdadero si algún grupo choca, como pide el enunciado. En los datos actuales lo tienen los 36 cursos con grupos (los otros 3 no tienen grupos); a nivel de grupo chocan 220 de 221 en Computadores y 308 de 308 en Física, por lo que la Etapa 2 usa el indicador por grupo y los bloques para recalcular los pares. |
 | `approved`             | Distingue un curso ya aprobado de uno con requisitos faltantes, pues ambos dejan `can_enroll` en falso.                                                                                                                             |
 | `can_enroll`           | Mide la elegibilidad curricular, independiente de los choques (los correquisitos se explican en 2.2.2).                                                                                                                             |
-| `format_version`       | Protege el contrato con la Etapa 2, pues se sube `OUTPUT_FORMAT_VERSION` si el formato cambia de forma incompatible.                                                                                                                |
+| `format_version`       | Protege el contrato con la Etapa 2, pues se sube `OUTPUT_FORMAT_VERSION` si el formato cambia de forma incompatible. Hoy vale **2**: la versión 1 no tenía el campo `area`, que se agregó en la Etapa 3 (D7 de la Etapa 2) cuando se parametrizó el área con el quinto argumento. La subida de 1 a 2 es el cambio de contrato, y la regresión `tests/regression_etapa2.sh` permite verificar que el resto de la salida es idéntica. |
 
 ### 2.3 Estructuras de datos desarrolladas
 
@@ -301,7 +301,7 @@ Una combinación es un subconjunto **no vacío** de los cursos habilitados del u
 
 La decisión se apoya en el enunciado, que pide “un grupo por cada curso habilitado” y, al mismo tiempo, filtrar por créditos. Si todos los cursos fueran obligatorios, el total de créditos sería fijo y el filtro no tendría sentido. También refleja la matrícula real: el estudiante decide qué cursos llevar y puede comparar escenarios con menos cursos. El comportamiento se controla con la constante `OMITIR-CURSOS?` de `generador.rkt`, hoy en `#t`; si el profesor confirma la otra interpretación, basta cambiarla a `#f` y la rama de omisión devuelve `empty-stream`, sin tocar los demás módulos.
 
-Con los datos reales, `data/preferencias.json` pide ocho cursos de Computadores y Física en un rango de 12 a 18 créditos. El programa produce 762 combinaciones, con 3, 4, 5 o 6 cursos y créditos entre 12 y 18; ninguna incluye los ocho cursos y ninguna está vacía. Esa variedad es precisamente la que permite que el filtro de créditos tenga efecto.
+Con los datos reales, `data/preferencias.json` pide ocho cursos de Computadores y Física en un rango de 12 a 18 créditos. El programa produce **2255 combinaciones**, con 3, 4, 5 o 6 cursos y créditos entre 12 y 18; ninguna incluye los ocho cursos y ninguna está vacía. Esa variedad es precisamente la que permite que el filtro de créditos tenga efecto.
 
 #### D2: contratos en lugar de Typed Racket
 
@@ -328,6 +328,10 @@ La pereza se demuestra con 60 cursos de un grupo cada uno: hay 2^60 − 1 combin
 #### D6: correquisitos y alcance de la etapa
 
 C marca un curso como matriculable si su correquisito está aprobado o si también se podría matricular en el mismo periodo. Por eso `can_enroll = true` no garantiza que los correquisitos estén aprobados. La Etapa 2 conserva la lista `corequisites` en el struct del curso y la incluye en la salida, pero no la usa como restricción del generador: el enunciado prohíbe aplicar restricciones distintas a los créditos y esa regla corresponde a Prolog. El caso real y su justificación se explican en 2.2.2 y en la decisión D6 (D8 en `racket/docs/decisiones.md`).
+
+#### D7: el quinto argumento de `./cemestre` y el campo `area`
+
+El ejecutable de la Etapa 1 recibe un quinto argumento opcional: el archivo CSV de áreas (`data/areas_computadores.csv` o `data/areas_fisica.csv`, con el formato `codigo;area`). Si se pasa, cada curso del JSON de salida lleva un campo `area` con el área del curso (programación, matemática, física, química, electrónica, sistemas, ingeniería, humanidades o electiva). La primer versión del README mencionaba solo cinco áreas (programación, matemática, física, electrónica y humanidades), pero los archivos `data/areas_*.csv` contienen nueve: además de esas cinco llevan sistemas, ingeniería, química y electiva. La diferencia es porque la regla de límite por área de la Etapa 3 necesita que todos los cursos del catálogo ampliado (D6, 8 semestres) tengan un área, y cursos de octavo semestre como `CE5701` (electiva) o `QU1102` (química) solo existen en semestres superiores; si no se les asigna área, la regla 2 no los cuenta y el límite se calcula mal. Si no se pasa, el campo es `sin_area` y la Etapa 3 no puede aplicar la regla de límite por área. El quinto argumento es el nuevo contrato de la Etapa 3: la política puede declarar un `max_cursos_por_area/1` y la regla 2 necesita el área de cada curso, que ya no se puede deducir del catálogo de C. El cambio es hacia atrás compatible porque la Etapa 2 ignora el campo `area` si lo recibe y la Etapa 3 lo requiere; la regresión `tests/regression_etapa2.sh` confirma que la salida de C es idéntica a la de la versión previa salvo por el campo `area` y la subida de `format_version` a 2.
 
 ### 2.2.2 Un caso límite real y cómo se resolvió
 
@@ -366,6 +370,7 @@ Un ejemplo real es la combinación `id = 13`, que también sirve para ilustrar e
 | `credits` | entero no negativo | extra | Prolog puede recalcular o comparar créditos por curso. |
 | `corequisites` | lista de códigos | extra | Es la información que Prolog necesita para aplicar la regla de correquisitos (D6). |
 | `blocks` | lista de bloques | extra | Prolog revisa compatibilidades de horario sin abrir el catálogo; cada bloque trae `day`, `start` y `end` en `HH:MM`. |
+| `area` | texto | extra | Área del curso (programación, matemática, física, química, electrónica, sistemas, ingeniería, humanidades o electiva). Viene del quinto argumento de `./cemestre` (`data/areas_computadores.csv` o `data/areas_fisica.csv`) y es la entrada de la regla de límite por área de la Etapa 3. Si no se pasa ese argumento, el programa escribe `sin_area` y la Etapa 3 no puede aplicar la regla 2. |
 
 La elección de JSON Lines responde a una decisión de diseño concreta, no solo estética. El exportador consume el stream de combinaciones de a un elemento y escribe cada línea en el momento en que la recibe; no necesita saber cuál es la última combinación, no acumula comas y no tiene que materializar la lista completa para cerrar un arreglo. Si el proceso se interrumpe, las líneas anteriores siguen siendo objetos JSON válidos. Cada línea es autocontenida, de modo que Prolog puede leerla y convertirla en un hecho sin conservar el estado de un documento mayor. Las estructuras anidadas (varios cursos, varios bloques por grupo y listas de correquisitos) se conservan; un CSV plano habría exigido inventar separadores dentro de las celdas y convertir el orden de las columnas en parte del contrato.
 
@@ -442,7 +447,7 @@ racket racket/src/main.rkt data/preferencias.json data/combinaciones.jsonl \
 
 Las rutas por defecto se resuelven desde la ubicación de `constantes.rkt`, así que el programa funciona aunque se ejecute desde otra carpeta. Si faltan argumentos o el número no es válido, muestra el uso y termina con código 1. Los errores de lectura y de escritura se informan por `stderr` con un mensaje que incluye el archivo o el campo problemático, y el programa termina con código 1; un error de datos nunca se convierte en una traza interna sin explicación.
 
-La salida del ejemplo real tiene 762 líneas. Para inspeccionarla:
+La salida del ejemplo real tiene **2255 líneas**. Para inspeccionarla:
 
 ```bash
 wc -l data/combinaciones.jsonl
@@ -521,6 +526,8 @@ Paradigmas de Programación (CE1106). Proyecto, Etapa 3 (paradigma lógico, leng
 
 Esta etapa recibe las 2255 combinaciones que genera la Etapa 2 (`data/combinaciones.jsonl`, una por línea en JSON Lines), valida cada una contra una política académica declarada en `data/politica.pl` y decide si cumple o qué regla viola. El módulo no genera combinaciones nuevas, no vuelve a filtrar por créditos, no optimiza y no tiene interfaz: solo evalúa y escribe una línea JSON por combinación para que la Etapa 4 (Java) la lea. Se programaron dos políticas reales: Ingeniería en Computadores e Ingeniería en Física, y ambas carreras aparecen en los datos de entrada.
 
+> Las secciones 2.1, 2.2.1, 2.2.2 y 2.3 de este título documentan la Etapa 3. Las secciones 1 a 5 describen la Etapa 1, la sección `Referencias de la Etapa 2` documenta la Etapa 2 y la sección 2.2.1 de la Etapa 2 (D1 a D7) se conserva como contrato de entrada.
+
 > Las secciones 2.1, 2.2.1, 2.2.2 y 2.3 de este título documentan la Etapa 3. Las secciones 1 a 5 describen la Etapa 1 y la sección `Referencias de la Etapa 2` documenta la Etapa 2.
 
 ## 2.1 Arquitectura del proyecto
@@ -557,21 +564,43 @@ La política se carga una vez en un módulo `politica` y las reglas la reciben c
 
 ### 2.2.1 Decisiones propias y específicas
 
+Las decisiones D1 a D4 cubren el modelo de datos, la política, el veredicto y la salida mínima de la Etapa 3; cada una se explica con su justificación debajo. El orden de las reglas (D5) y el caso límite del porcentaje exacto (2.2.2) completan esta sección.
+
+#### D1: combinación como término compuesto, no como lista
+
+Una combinación se modela como `combinacion(Id, Cursos)`, donde `Id` es el entero positivo que trae la salida de la Etapa 2 (1..2255) y `Cursos` es una lista no vacía de términos `curso(Codigo, Grupo, Creditos, Carrera, Area)`. No se usa una lista sin más, porque el `Id` viaja con la combinación por backtracking y se puede referenciar desde la salida sin buscarla en la lista. Tampoco se usan hechos atómicos para los cursos: cada curso es un término compuesto con cinco componentes, de modo que las reglas pueden filtrar por carrera, área, código o créditos sin descomponer nada. El área ya viene en la salida de la Etapa 2, así que `curso/5` la lleva incluida y la regla de límite por área no necesita volver al catálogo.
+
+#### D2: la política como hechos en un módulo propio
+
+Los límites (porcentajes, N, pares incompatibles) se declaran en `data/politica.pl` y se cargan con `consult` en el módulo `politica` ( configurable con `constantes:modulo_politica/1`). Las reglas leen esos hechos con `hecho_politica/2`, que es `current_predicate` + `call` sobre el módulo, así que una carrera sin `max_porcentaje_carrera/2` simplemente no tiene solución y se trata como sin límite (D7). Ningún valor está hardcodeado en `reglas.pl`: cambiar un porcentaje o el N solo requiere tocar el archivo de la política, sin tocar el código, y dos políticas pueden convivir en las pruebas sin estado global.
+
+#### D3: veredicto por primera regla violada
+
+El veredicto no es un simple `true`/`false`: es `cumple` o `viola(Regla, Detalle)`, donde `Regla` es la primera regla violada en el orden de diseño y `Detalle` es un término que exporta la salida JSON (`carrera/4`, `area/3` o `par/2`). La primera regla violada se busca recorriendo la lista del orden (D5) y cortando en la primera que tenga éxito; el veredicto se decide con negación por falla sobre esa búsqueda, de modo que si ninguna regla se viola, el veredicto es `cumple` (ver Tarea 1 del plan de corrección para el detalle de la implementación).
+
+#### D4: campo `cursos` como salida mínima
+
+Cada registro de salida lleva un campo `cursos` con los pares curso-grupo elegidos, en el formato `{"carrera":"~w","codigo":"~w","grupo":~w}`. Es la salida mínima que exige el enunciado (D4 / Fase 5) y está presente tanto en registros que cumplen como en los que violan. Se genera con `lista_json_cursos/2` en `exportar.pl` y no toca la lógica de generación ni de filtrado; la Etapa 4 puede usarlo para mostrar la combinación al usuario sin volver al catálogo.
+
 #### D5: orden único de las reglas
 
 El enunciado exige que el orden de evaluación sea parte del diseño y que exista un caso donde cambiarlo cambie la razón reportada. El orden vive en un único lugar, `constantes:orden_reglas/1`, con valor `[balance_carreras, limite_por_area, incompatibilidad]`; ningún otro módulo escribe este orden. `razon:evaluar_combinacion/3` recorre esa lista y corta en la primera regla que falla (corte justificado). `razon:evaluar_con_orden/4` recibe el orden explícito para poder probar que cambiarlo cambia la razón sin tocar los módulos. El caso donde el orden cambia la razón está cubierto en `prolog/tests/test_parametros.pl` (`cambio_de_orden_cambia_la_razon`) y en `prolog/tests/test_razon.pl`:
 
 - combinación 11 (viola balance, límite e incompatibilidad): con el orden `[limite_por_area, balance_carreras]` reporta `limite_por_area`; con el orden `[incompatibilidad, balance_carreras, limite_por_area]` reporta `incompatibilidad`. La validez no cambia, solo la razón reportada.
 
-#### D6: detalles de la política
+#### D6: extensión del catálogo a 8 semestres
+
+Los catálogos de la Etapa 1 cubren **ocho semestres** de cada carrera, no seis como se mencionaía inicialmente en la documentación de la Etapa 1. La extensión se justifica con tres motivos. Primero, la Guía de Horarios del TEC incluye cursos de los semestres superiores (por ejemplo, `CE4301`, `CE4302`, `CE4303` en Computadores, o `IF4801`–`IF4804` en Física) que forman parte del plan y que el estudiante puede necesitar si se leiera aprobado. Segundo, la regla de límite por área (Etapa 3) necesita que los cursos de todas las áreas estén representados, y áreas como `química` (`QU1102`, `QU1106`, `QU1107`) o `electiva` (`CE5701`, `IF4704`) solo aparecen en semestres superiores. Tercero, el caso límite de los correquisitos mutuos (2.2.2) muestra que un curso puede tener prerrequisitos que se encuentran en semestres posteriores, así que recortar a seis semestres cortaría cadenas de dependencia que la Etapa 3 necesita evaluar. La extensión no rompe las etapas anteriores porque el generador de la Etapa 2 ya filtra por los cursos habilitados del universo: un curso de octavo semestre que el estudiante no tiene aprobado ni like en sus preferencias simplemente no aparece en `data/combinaciones.jsonl`. El único cambio de contrato es que `data/areas_*.csv` (el quinto argumento de `./cemestre`) ahora tiene 58 líneas en Computadores y 56 en Física, una por curso del catálogo ampliado.
+
+#### D7: detalles de la política
 
 La base del porcentaje son los créditos totales de la combinación y la comparación es con enteros para evitar el redondeo (ver 2.2.2). Hay un único `max_cursos_por_area/1` (no uno por área) y una carrera sin `max_porcentaje_carrera/2` se trata como sin límite, siguiendo el ejemplo sintético de las pruebas. Todos los valores salen de los hechos de `data/politica.pl`: ninguno está escrito en las reglas.
 
-#### D7: estado sin assert ni variables globales
+#### D8: estado sin assert ni variables globales
 
 Como exige el enunciado, no hay `assert`, `retract` ni variables globales. La política se carga desde su archivo como hechos en el módulo `politica`; el veredicto viaja como argumento (`Veredicto = cumple` o `viola(Regla, Detalle)`) y los resultados se escriben al evaluarse cada combinación. La búsqueda de texto sobre `prolog/src/` está en `prolog/docs/auditoria.md`: 0 ocurrencias de `assert`, `retract`, `nb_setval`, `flag` o `abolish`; los cortes y las negaciones por falla están justificados en comentario.
 
-#### D8: organización del repositorio
+#### D9: organización del repositorio
 
 Repositorio único: C en `src/`, Racket en `racket/`, Prolog en `prolog/{src,tests,docs}`, datos compartidos en `data/` sin copias duplicadas.
 
@@ -594,7 +623,7 @@ Los pares incompatibles declarados en `data/politica.pl` (6 pares, la relación 
 
 El caso límite decisivo fue el porcentaje exacto. Con la política de prueba (`computadores` 60 %), la combinación 8 suma 10 créditos, 6 de ellos de `computadores`, es decir el 60 % exacto. Comparar con `<` o `>` mal ubicado rechazaría una combinación legal por culpa del redondeo de enteros. La regla 1 compara en aritmética entera `100 * Creditos > Maximo * Total` (en `reglas.pl`), así que 60 % de 10 con `Maximo = 60` no supera el umbral y `cumple`; un punto por debajo, `Maximo = 59`, sí lo supera y viola. Ambos casos están cubiertos en `prolog/tests/test_parametros.pl` (`porcentaje_exacto_no_viola`, `porcentaje_un_punto_por_debajo_viola`).
 
-Otros casos límite reales cubiertos: una sola carrera sin porcentaje declarado no viola (D6); una sola carrera por encima de su máximo sí viola (`una_sola_carrera_computadores_viola`); un solo curso por encima del máximo de su carrera (`un_solo_curso_viola_por_su_carrera`); un archivo de política sin pares incompatibles — la regla simplemente no tiene soluciones y no viola —; subir o bajar N afecta solo al límite por área (`subir_n_levanta_el_limite`, `bajar_n_activa_el_limite`); y el orden de las reglas cambia la razón sin cambiar la validez (`cambio_de_orden_cambia_la_razon`).
+Otros casos límite reales cubiertos: una sola carrera sin porcentaje declarado no viola (D7); una sola carrera por encima de su máximo sí viola (`una_sola_carrera_computadores_viola`); un solo curso por encima del máximo de su carrera (`un_solo_curso_viola_por_su_carrera`); un archivo de política sin pares incompatibles — la regla simplemente no tiene soluciones y no viola —; subir o bajar N afecta solo al límite por área (`subir_n_levanta_el_limite`, `bajar_n_activa_el_limite`); y el orden de las reglas cambia la razón sin cambiar la validez (`cambio_de_orden_cambia_la_razon`).
 
 ## 2.3 Estructuras de datos desarrolladas
 
@@ -621,7 +650,13 @@ Veredicto = cumple
 
 `combinacion/2` viaja por backtracking; `Veredicto` se devuelve por unificación. Los detalles son los mismos que exporta la salida JSON.
 
-La salida JSON Lines incluye, además de la razón, un campo `cursos` con los pares curso-grupo elegidos, que es la salida mínima que exige el enunciado (ver `prolog/docs/formato_salida.md`):
+La salida JSON Lines incluye, además de la razón, un campo `cursos` con los pares curso-grupo elegidos, que es la salida mínima que exige el enunciado (ver `prolog/docs/formato_salida.md`). Cada línea es un objeto JSON autocontenida; el formato se elige porque Prolog puede leerlo con `json_read_dict/2` de a una línea sin necesidad de materializar todo el archivo, y la Etapa 4 (Java) puede procesarlo en streaming. Los campos extra que no trae la salida de la Etapa 2 son:
+
+- `cursos`: lista de `{"carrera","codigo","grupo"}` con los pares curso-grupo elegidos (salida mínima del enunciado, ver D4).
+- `creditos_totales`: suma de los créditos de todos los cursos de la combinación, usada como base del porcentaje de la regla 1.
+- `detalle`: objeto con los valores concretos que fallaron (carrera, crédito de esa carrera, total, máximo porcentaje; o área, cantidad, máximo; o el par incompatibile).
+- `razon_descripcion`: texto legible de la razón, para que la Etapa 4 pueda mostrarla sin traducir el código de regla.
+- `cursos_areas`: lista de `{area, cursos:[...]}` con los cursos agrupados por área, usada por la regla 2. Aparece tanto en la raíz como dentro de `detalle.cursos` (el mismo contenido, dos formatos) porque la regla 2 recorre `cursos_areas` y la Etapa 4 puede consumir `detalle.cursos` sin reagrupar.
 
 ```json
 {"id":2,"cursos":[{"carrera":"fisica","codigo":"MA1103","grupo":1}],"cumple":false,"razon":"balance_carreras","razon_descripcion":"Balance entre carreras","creditos_totales":12,"detalle":{"carrera":"fisica","creditos_carrera":12,"creditos_totales":12,"maximo_porcentaje":70},"cursos_areas":[]}
@@ -629,25 +664,43 @@ La salida JSON Lines incluye, además de la razón, un campo `cursos` con los pa
 
 Predicados principales, usables en más de un modo (se muestran consultas en los dos modos):
 
+Las consultas se escriben ligando la lista de cursos en la misma línea, así que son copiables y pegables directamente en el intérprete (el separador `;` responde la siguiente alternativa):
+
 ```prolog
 % crédito y carrera de una combinación: modo cálculo
-?- creditos_de_carrera(Cursos, computadores, C).
-Cursos = [curso(a, 1, 4, computadores, programacion),
-          curso(b, 1, 2, computadores, humanidades),
-          curso(c, 1, 4, fisica, matematica)],
+?- Cursos = [curso(a, 1, 4, computadores, programacion),
+             curso(b, 1, 2, computadores, humanidades),
+             curso(c, 1, 4, fisica, matematica)],
+   creditos_de_carrera(Cursos, computadores, C).
 C = 6.
 
+% modo verificación: mismo predicado, carrera instanciada
+?- Cursos = [curso(a, 1, 4, computadores, programacion),
+             curso(b, 1, 2, computadores, humanidades),
+             curso(c, 1, 4, fisica, matematica)],
+   creditos_de_carrera(Cursos, computadores, 6).
+true.
+
 % modo enumeración: carreras presentes y sus créditos
-?- creditos_de_carrera(Cursos, Carrera, C).
+?- Cursos = [curso(a, 1, 4, computadores, programacion),
+             curso(b, 1, 2, computadores, humanidades),
+             curso(c, 1, 4, fisica, matematica)],
+   creditos_de_carrera(Cursos, Carrera, C).
 Carrera = computadores, C = 6 ;
 Carrera = fisica,       C = 4.
 
 % cursos de un área, modo cálculo
-?- cursos_de_area(Cursos, fisica, Codigos).
+?- Cursos = [curso(a, 1, 4, computadores, programacion),
+             curso(b, 1, 2, computadores, humanidades),
+             curso(c, 1, 4, fisica, matematica)],
+   cursos_de_area(Cursos, fisica, Codigos).
 Codigos = [FI1102, FI1202].
 
 % modo enumeración: áreas presentes y sus cursos
-?- cursos_de_area(Cursos, Area, Codigos).
+?- Cursos = [curso(a, 1, 4, computadores, programacion),
+             curso(b, 1, 2, computadores, humanidades),
+             curso(c, 1, 4, fisica, matematica)],
+   cursos_de_area(Cursos, Area, Codigos).
 Area = fisica,       Codigos = [FI1102, FI1202] ;
 Area = matematica,   Codigos = [MA1103] ;
 Area = programacion, Codigos = [CE2103].
@@ -663,14 +716,14 @@ Otro = fisica-'FI1102'.
 
 ### Ejecución y pruebas
 
-Desde la raíz del repositorio (SWI-Prolog 10.0.2; en esta máquina vive en `.dsh-work/swipl` porque no está en el `PATH`, en otra basta `swipl`):
+Desde la raíz del repositorio (SWI-Prolog 10.0.2; en esta máquina basta `swipl`):
 
 ```bash
-# suite plunit completa: 47 pruebas (+25 sub-tests)
-./.dsh-work/swipl -g run_tests -t halt prolog/tests/todas.pl
+# suite plunit completa: 72 pruebas (+25 sub-tests)
+swipl -g run_tests -t halt prolog/tests/todas.pl
 
 # experimento real con los 2255 combinaciones y la política del repositorio
-./.dsh-work/swipl -q -g "main" -t halt prolog/src/main.pl \
+swipl -q -g "main" -t halt prolog/src/main.pl \
     data/combinaciones.jsonl data/politica.pl data/resultados.jsonl
 
 # validación independiente de la salida (como la etapa de Java la leería)
@@ -679,14 +732,14 @@ python3 scripts/validar_resultados.py data/combinaciones.jsonl data/resultados.j
 
 Al validar con los datos reales se obtienen 2255 registros, con los ids 1..2255 en orden; la distribución es `cumple` 1149, `balance_carreras` 682, `limite_por_area` 271, `incompatibilidad` 153, y la salida es byte-idéntica entre corridas repetidas.
 
-Los 47 tests pasan más 25 sub-tests; los errores de datos (archivo inexistente, JSON inválido, campo faltante, línea corrupta) producen mensaje por stderr y código de salida distinto de cero.
+Los 72 tests pasan más 25 sub-tests; los errores de datos (archivo inexistente, JSON inválido, campo faltante, línea corrupta) producen mensaje por stderr y código de salida distinto de cero.
 
 ## 2.4 Uso y estructura de la etapa
 
 ```bash
 ./cemestre data/...           # Etapa 1 (C): salida_computadores/fisica.json
 racket racket/src/main.rkt   # Etapa 2 (Racket): combinaciones.jsonl
-./.dsh-work/swipl -q -g main -t halt prolog/src/main.pl   # Etapa 3 (Prolog): resultados.jsonl
+swipl -q -g main -t halt prolog/src/main.pl   # Etapa 3 (Prolog): resultados.jsonl
 ```
 
 ```
